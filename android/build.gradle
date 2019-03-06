@@ -1,0 +1,46 @@
+group 'com.getui.getuiflut'
+version '1.0-SNAPSHOT'
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.1'
+    }
+}
+rootProject.allprojects {
+    repositories {
+        //Maven URL地址
+        maven {
+            url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
+        }
+        google()
+        jcenter()
+    }
+}
+apply plugin: 'com.android.library'
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "JtdEbOzRyJ7juP6x6VY0D5",
+                GETUI_APP_KEY   : "44dfTANWy86AjKdMOSqtW8",
+                GETUI_APP_SECRET: "vi78zYWTHV69StJani6776"
+        ]
+
+        ndk {
+            abiFilters "armeabi"
+        }
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    implementation 'com.getui:sdk:2.13.0.0'
+}
