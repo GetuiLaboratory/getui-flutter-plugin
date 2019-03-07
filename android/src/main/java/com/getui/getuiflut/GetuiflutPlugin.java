@@ -76,4 +76,19 @@ public class GetuiflutPlugin implements MethodCallHandler {
     PushManager.getInstance().stopService(registrar.context());
   }
 
+  static void transmitMessageReceive(String message, String func) {
+    if (instance == null) {
+      Log.d(TAG, "Getui flutter plugin doesn't exist");
+      return;
+    }
+    GetuiflutPlugin.instance.channel.invokeMethod(func, message);
+  }
+
+  static void transmitMessageReceive(Map<String, Object> message, String func) {
+    if (instance == null) {
+      Log.d(TAG, "Getui flutter plugin doesn't exist");
+      return;
+    }
+    GetuiflutPlugin.instance.channel.invokeMethod(func, message);
+  }
 }

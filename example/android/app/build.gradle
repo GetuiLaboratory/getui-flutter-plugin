@@ -37,9 +37,9 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         manifestPlaceholders = [
-                GETUI_APP_ID    : "JtdEbOzRyJ7juP6x6VY0D5",
-                GETUI_APP_KEY   : "44dfTANWy86AjKdMOSqtW8",
-                GETUI_APP_SECRET: "vi78zYWTHV69StJani6776"
+                GETUI_APP_ID    : "IbmKW6ssr99lveCtPMG9dA",
+                GETUI_APP_KEY   : "RhhDAohWe16Ejdgmw7roB1",
+                GETUI_APP_SECRET: "ytJMQpWxEQ7HhnFMHcjZV2"
         ]
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

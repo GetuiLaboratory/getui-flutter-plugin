@@ -27,7 +27,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         ndk {
-            abiFilters "armeabi"
+            abiFilters "armeabi-v7a"
         }
     }
     lintOptions {
