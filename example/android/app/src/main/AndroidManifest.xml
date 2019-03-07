@@ -29,5 +29,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <service android:name="com.getui.getuiflut.FlutterIntentService" />
+        <service
+            android:name="com.getui.getuiflut.FlutterPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice" />
     </application>
 </manifest>

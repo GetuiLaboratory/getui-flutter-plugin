@@ -10,4 +10,13 @@ class Getuiflut {
     final String version = await _channel.invokeMethod('getPlatformVersion');
     return version;
   }
+
+  /*
+   * 初始化 个推 SDK
+   * */
+  static Future<void> get initGetuiSdk async {
+    await _channel.invokeListMethod('initGetuiPush');
+  }
+  
+
 }

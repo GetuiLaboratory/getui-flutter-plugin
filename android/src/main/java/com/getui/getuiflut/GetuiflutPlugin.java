@@ -43,16 +43,37 @@ public class GetuiflutPlugin implements MethodCallHandler {
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
     } else if (call.method.equals("initGetuiPush")) {
-      initGtSdk(call, result);
+      initGtSdk();
+    } else if (call.method.equals("getClientId")) {
+      result.success(getClientId());
+    } else if (call.method.equals("resume")) {
+      resume();
+    } else if (call.method.equals("stopPush")) {
+      stopPush();
     } else {
       result.notImplemented();
     }
   }
 
-  private void initGtSdk(MethodCall call, Result result) {
+  private void initGtSdk() {
     Log.d(TAG, "init getui sdk...");
     PushManager.getInstance().initialize(registrar.context(), FlutterPushService.class);
     PushManager.getInstance().registerPushIntentService(registrar.context(), FlutterIntentService.class);
+  }
+
+  private String getClientId() {
+    Log.d(TAG, "get client id");
+    return PushManager.getInstance().getClientid(registrar.context());
+  }
+
+  private void resume() {
+    Log.d(TAG, "resume push service");
+    PushManager.getInstance().turnOnPush(registrar.context());
+  }
+
+  private void stopPush() {
+    Log.d(TAG, "stop push service");
+    PushManager.getInstance().stopService(registrar.context());
   }
 
 }

@@ -40,6 +40,14 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> initGetuiSdk() async {
+    try {
+      Getuiflut.initGetuiSdk;
+    } catch(e) {
+      e.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,7 +56,15 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+              children:<Widget>[
+                Text('Running on: $_platformVersion\n'),
+                RaisedButton(
+                  onPressed: () {initGetuiSdk();},
+                  child: const Text('Enabled Button'),
+                ),
+              ]
+          ),
         ),
       ),
     );
