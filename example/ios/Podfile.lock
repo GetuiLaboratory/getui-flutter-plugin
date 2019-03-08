@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - getuiflut (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `.symlinks/flutter/ios`)
+  - getuiflut (from `.symlinks/plugins/getuiflut/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: ".symlinks/flutter/ios"
+  getuiflut:
+    :path: ".symlinks/plugins/getuiflut/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  getuiflut: 6dfe3abba190fd2736d707760774f6712fa15772
+
+PODFILE CHECKSUM: aff02bfeed411c636180d6812254b2daeea14d09
+
+COCOAPODS: 1.5.3
