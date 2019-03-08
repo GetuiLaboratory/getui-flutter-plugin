@@ -6,7 +6,7 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getuiflut: 0.0.1
+  getuiflut: 0.0.2
 ```
 
 ###配置
