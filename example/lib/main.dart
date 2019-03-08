@@ -15,6 +15,7 @@ class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   String _payloadInfo = 'Null';
   String _notificationState = "";
+  String _getClientId = "";
 
   @override
   void initState() {
@@ -81,6 +82,11 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  void getClientId() {
+    Future<String> res = Getuiflut.getClientId();
+    _getClientId = res as String;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -94,9 +100,22 @@ class _MyAppState extends State<MyApp> {
                 Text('clientId: $_platformVersion\n'),
                 Text('payload: $_payloadInfo\n'),
                 Text('notificaiton state: $_notificationState\n'),
+                Text('getClientid: $_getClientId\n'),
                 RaisedButton(
                   onPressed: () {initGetuiSdk();},
-                  child: const Text('Enabled Button'),
+                  child: const Text('initGetuiSdk'),
+                ),
+                RaisedButton(
+                  onPressed: () {getClientId();},
+                  child: const Text('getClientId'),
+                ),
+                RaisedButton(
+                  onPressed: () {Getuiflut().stopPush();},
+                  child: const Text('stop push'),
+                ),
+                RaisedButton(
+                  onPressed: () {Getuiflut().resumePush();},
+                  child: const Text('resume push'),
                 ),
               ]
           ),

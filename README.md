@@ -6,8 +6,8 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getui_flutter: 0.0.1
-  ```
+  getuiflut: 0.0.1
+```
 
 ###配置
 #####Android:

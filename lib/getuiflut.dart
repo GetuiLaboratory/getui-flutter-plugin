@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/services.dart';
 
 
@@ -22,6 +21,19 @@ class Getuiflut {
 
   static Future<void> get initGetuiSdk async {
     await _channel.invokeMethod('initGetuiPush');
+  }
+
+  static Future<String>  getClientId() async {
+    String cid = await _channel.invokeMethod('getClientId');
+    return cid;
+  }
+
+  void resumePush() {
+    _channel.invokeMethod('resumePush');
+  }
+
+  void stopPush() {
+    _channel.invokeMethod('stopPush');
   }
 
   void addEventHandler({
