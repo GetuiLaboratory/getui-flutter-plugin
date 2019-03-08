@@ -1,8 +1,8 @@
-name: getuiflut
-description: getui plugin flutter
+name: getui_flutter
+description: getui flutter plugin
 version: 0.0.1
-author:
-homepage:
+author: wanghaobo <monkeydbobo@gmail.com>
+homepage: https://www.getui.com
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

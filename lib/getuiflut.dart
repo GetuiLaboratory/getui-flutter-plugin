@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/services.dart';
 
@@ -41,11 +40,9 @@ class Getuiflut {
   Future<Null> _handleMethod(MethodCall call) async {
     switch(call.method) {
       case "onReceiveClientId":
-        print("whb onReceiveClientId:" + call.arguments);
         return _onReceiveClientId(call.arguments);
         break;
       case "onReceiveMessageData":
-        print("whb onReceiveMessageData");
         return _onReceiveMessageData(call.arguments.cast<String, dynamic>());
       case "onNotificationMessageArrived":
         return _onNotificationMessageArrived(call.arguments.cast<String, dynamic>());
