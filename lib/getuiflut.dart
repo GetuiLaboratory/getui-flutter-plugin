@@ -23,13 +23,13 @@ class Getuiflut {
     await _channel.invokeMethod('initGetuiPush');
   }
 
-  static Future<String>  getClientId() async {
+  static Future<String> get getClientId async {
     String cid = await _channel.invokeMethod('getClientId');
     return cid;
   }
 
   void resumePush() {
-    _channel.invokeMethod('resumePush');
+    _channel.invokeMethod('resume');
   }
 
   void stopPush() {

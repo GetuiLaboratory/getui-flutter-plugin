@@ -82,9 +82,37 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void getClientId() {
-    Future<String> res = Getuiflut.getClientId();
-    _getClientId = res as String;
+  Future<void> getClientId() async {
+    String getClientId;
+    try {
+      getClientId = await Getuiflut.getClientId;
+      showAlertDialog(context, getClientId);
+    } catch(e) {
+      print(e.toString());
+    }
+  }
+
+  void showAlertDialog(BuildContext context, String content) {
+    NavigatorState navigator= context.rootAncestorStateOfType(const TypeMatcher<NavigatorState>());
+    debugPrint("navigator is null?"+(navigator==null).toString());
+
+
+    showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+            title: new Text("Dialog Title"),
+            content: new Text("This is my content"),
+            actions:<Widget>[
+              new FlatButton(child:new Text("CANCEL"), onPressed: (){
+                Navigator.of(context).pop();
+
+              },),
+              new FlatButton(child:new Text("OK"), onPressed: (){
+                Navigator.of(context).pop();
+
+              },)
+            ]
+        ));
   }
 
   @override
@@ -106,7 +134,7 @@ class _MyAppState extends State<MyApp> {
                   child: const Text('initGetuiSdk'),
                 ),
                 RaisedButton(
-                  onPressed: () {getClientId();},
+                  onPressed: () {showAlertDialog(context, "1111");},
                   child: const Text('getClientId'),
                 ),
                 RaisedButton(
