@@ -29,7 +29,44 @@ android: {
 ```
 ##### iOS:
 
-开发中
+在你项目的main.dart中添加下列代码：
+
+```
+	Getuiflut().startSdk(
+      appId: "8eLAkGIYnGAwA9fVYZU93A",
+      appKey: "VFX8xYxvVF6w59tsvY6XN",
+      appSecret: "Kv3TeED8z19QwnMLdzdI35"
+    );
+    
+```
+
+### API
+
+```
+	Getuiflut().addEventHandler(
+      onReceiveClientId: (String message) async {
+        print("flutter onReceiveClientId: $message");
+        setState(() {
+          _getClientId = "ClientId: $message";
+        });
+      },
+      onRegisterDeviceToken: (String message) async {
+        setState(() {
+          _getDeviceToken = "DeviceToken: $message";
+        });
+      },
+      onReceivePayload: (String message) async {
+        setState(() {
+          _onReceivePayload = "$message";
+        });
+      },
+      onReceiveNotificationResponse: (Map<String, dynamic> message) async {
+        setState(() {
+          _onReceiveNotificationResponse = "$message";
+        });
+      },
+    ）;
+```
 
 ### 使用
 ```dart
@@ -43,7 +80,7 @@ Getuiflut().addEventHandler(
       onReceiveClientId: (String message) async {
         print("flutter onReceiveClientId: $message"); // 注册收到 cid 的回调
         setState(() {
-          _platformVersion = "flutter onReceiveClientId: $message";
+          _getClientId = "flutter onReceiveClientId: $message";
         });
       },
       onReceiveMessageData: (Map<String, dynamic> msg) async {
