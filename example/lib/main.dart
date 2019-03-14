@@ -4,11 +4,12 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:getuiflut/getuiflut.dart';
 
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyAppState createState() =>new _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -16,6 +17,10 @@ class _MyAppState extends State<MyApp> {
   String _payloadInfo = 'Null';
   String _notificationState = "";
   String _getClientId = "";
+  String _getDeviceToken="";
+  String _onReceivePayload="";
+  String _onReceiveNotificationResponse="";
+  //final Getuiflut getui = new Getuiflut();
 
   @override
   void initState() {
@@ -29,8 +34,16 @@ class _MyAppState extends State<MyApp> {
     String payloadInfo="default";
     String notificationState="default";
     // Platform messages may fail, so we use a try/catch PlatformException.
+
+    Getuiflut().startSdk(
+      appId: "8eLAkGIYnGAwA9fVYZU93A",
+      appKey: "VFX8xYxvVF6w59tsvY6XN",
+      appSecret: "Kv3TeED8z19QwnMLdzdI35"
+    );
+
     try {
       platformVersion = await Getuiflut.platformVersion;
+      print('platformVersion' + platformVersion);
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -50,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       onReceiveClientId: (String message) async {
         print("flutter onReceiveClientId: $message");
         setState(() {
-          _platformVersion = "flutter onReceiveClientId: $message";
+          _getClientId = "ClientId: $message";
         });
       },
       onReceiveMessageData: (Map<String, dynamic> msg) async {
@@ -71,6 +84,21 @@ class _MyAppState extends State<MyApp> {
           _notificationState = 'Clicked';
         });
       },
+      onRegisterDeviceToken: (String message) async {
+        setState(() {
+          _getDeviceToken = "DeviceToken: $message";
+        });
+      },
+      onReceivePayload: (String message) async {
+        setState(() {
+          _onReceivePayload = "$message";
+        });
+      },
+      onReceiveNotificationResponse: (Map<String, dynamic> message) async {
+        setState(() {
+          _onReceiveNotificationResponse = "$message";
+        });
+      },
     );
   }
 
@@ -86,38 +114,15 @@ class _MyAppState extends State<MyApp> {
     String getClientId;
     try {
       getClientId = await Getuiflut.getClientId;
-      showAlertDialog(context, getClientId);
     } catch(e) {
       print(e.toString());
     }
   }
 
-  void showAlertDialog(BuildContext context, String content) {
-    NavigatorState navigator= context.rootAncestorStateOfType(const TypeMatcher<NavigatorState>());
-    debugPrint("navigator is null?"+(navigator==null).toString());
-
-
-    showDialog(
-        context: context,
-        builder: (_) => new AlertDialog(
-            title: new Text("Dialog Title"),
-            content: new Text("This is my content"),
-            actions:<Widget>[
-              new FlatButton(child:new Text("CANCEL"), onPressed: (){
-                Navigator.of(context).pop();
-
-              },),
-              new FlatButton(child:new Text("OK"), onPressed: (){
-                Navigator.of(context).pop();
-
-              },)
-            ]
-        ));
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
@@ -125,18 +130,22 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: Column(
               children:<Widget>[
-                Text('clientId: $_platformVersion\n'),
+                Text('platformVersion: $_platformVersion\n'),
+                Text('clientId: $_getClientId\n'),
+                Text(
+                    'Android Public Funcation',
+                    style: TextStyle(
+                        color: Colors.lightBlue,
+                        fontSize: 20.0,
+                    ),
+                ),
                 Text('payload: $_payloadInfo\n'),
                 Text('notificaiton state: $_notificationState\n'),
-                Text('getClientid: $_getClientId\n'),
                 RaisedButton(
                   onPressed: () {initGetuiSdk();},
                   child: const Text('initGetuiSdk'),
                 ),
-                RaisedButton(
-                  onPressed: () {showAlertDialog(context, "1111");},
-                  child: const Text('getClientId'),
-                ),
+
                 RaisedButton(
                   onPressed: () {Getuiflut().stopPush();},
                   child: const Text('stop push'),
@@ -145,6 +154,13 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {Getuiflut().resumePush();},
                   child: const Text('resume push'),
                 ),
+                Text(
+                    'ios Public Funcation',
+                    style: TextStyle(color: Colors.redAccent, fontSize: 20.0,),
+                ),
+                Text('DeviceToken: $_getDeviceToken'),
+                Text('payload: $_onReceivePayload'),
+                Text('onReceiveNotificationResponse: $_onReceiveNotificationResponse'),
               ]
           ),
         ),

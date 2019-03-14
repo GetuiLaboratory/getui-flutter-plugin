@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 
-
 typedef Future<dynamic> EventHandler(String res);
 typedef Future<dynamic> EventHandlerMap(Map<String, dynamic> event);
 
@@ -14,8 +13,18 @@ class Getuiflut {
   EventHandlerMap _onNotificationMessageArrived;
   EventHandlerMap _onNotificationMessageClicked;
 
+
+  // deviceToken
+  EventHandler _onRegisterDeviceToken;
+  //  iOS收到的透传内容
+  EventHandler _onReceivePayload;
+  // ios 收到APNS消息
+  EventHandlerMap _onReceiveNotificationResponse;
+
+
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
+    print(version);
     return version;
   }
 
@@ -41,17 +50,30 @@ class Getuiflut {
     EventHandlerMap onReceiveMessageData,
     EventHandlerMap onNotificationMessageArrived,
     EventHandlerMap onNotificationMessageClicked,
+
+
+    //deviceToken
+    EventHandler onRegisterDeviceToken,
+    //ios 收到的透传内容
+    EventHandler onReceivePayload,
+    // ios 收到APNS消息
+    EventHandlerMap onReceiveNotificationResponse,
   }){
     _onReceiveClientId = onReceiveClientId;
+    _onRegisterDeviceToken = onRegisterDeviceToken;
     _onReceiveMessageData = onReceiveMessageData;
     _onNotificationMessageArrived = onNotificationMessageArrived;
     _onNotificationMessageClicked = onNotificationMessageClicked;
+
+    _onReceivePayload = onReceivePayload;
+    _onReceiveNotificationResponse = onReceiveNotificationResponse;
     _channel.setMethodCallHandler(_handleMethod);
   }
 
   Future<Null> _handleMethod(MethodCall call) async {
     switch(call.method) {
       case "onReceiveClientId":
+        print('onReceiveClientId' + call.arguments);
         return _onReceiveClientId(call.arguments);
         break;
       case "onReceiveMessageData":
@@ -60,9 +82,28 @@ class Getuiflut {
         return _onNotificationMessageArrived(call.arguments.cast<String, dynamic>());
       case "onNotificationMessageClicked":
         return _onNotificationMessageClicked(call.arguments.cast<String, dynamic>());
+      case "onRegisterDeviceToken":
+        return _onRegisterDeviceToken(call.arguments);
+      case "onReceivePayload":
+        return _onReceivePayload(call.arguments);
+      case "onReceiveNotificationResponse":
+        return _onReceiveNotificationResponse(call.arguments.cast<String, dynamic>());
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }
   }
+
+  //ios
+  //初始化SDK
+  void startSdk({
+    String appId,
+    String appKey,
+    String appSecret,
+
+  }) {
+    _channel.invokeMethod('startSdk',{'appId':appId, 'appKey':appKey, 'appSecret':appSecret});
+  }
+
+
 
 }
