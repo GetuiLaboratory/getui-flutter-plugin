@@ -70,6 +70,21 @@ import 'package:getuiflut/getuiflut.dart';
           _onReceiveNotificationResponse = "$message";
         });
       },
+      onAppLinkPayload: (String message) async {
+        setState(() {
+          _onAppLinkPayLoad = "$message";
+        });
+      },
+      onRegisterVoipToken: (String message) async {
+        setState(() {
+          _getVoipToken = "$message";
+        });
+      },
+      onReceiveVoipPayLoad: (Map<String, dynamic> message) async {
+        setState(() {
+          _onReceiveVoipPayLoad = "$message";
+        });
+      },
     ）;
 ```
 
