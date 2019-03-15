@@ -16,10 +16,16 @@ class Getuiflut {
 
   // deviceToken
   EventHandler _onRegisterDeviceToken;
+  // voipToken
+  EventHandler _onRegisterVoipToken;
   //  iOS收到的透传内容
   EventHandler _onReceivePayload;
   // ios 收到APNS消息
   EventHandlerMap _onReceiveNotificationResponse;
+  // ios 收到AppLink消息
+  EventHandler _onAppLinkPayload;
+  // ios 收到VOIP消息
+  EventHandlerMap _onReceiveVoipPayLoad;
 
 
   static Future<String> get platformVersion async {
@@ -54,19 +60,28 @@ class Getuiflut {
 
     //deviceToken
     EventHandler onRegisterDeviceToken,
+    //voipToken
+    EventHandler onRegisterVoipToken,
     //ios 收到的透传内容
     EventHandler onReceivePayload,
     // ios 收到APNS消息
     EventHandlerMap onReceiveNotificationResponse,
+    // ios 收到AppLink消息
+    EventHandler onAppLinkPayload,
+    // ios 收到VOIP消息
+    EventHandlerMap onReceiveVoipPayLoad,
   }){
     _onReceiveClientId = onReceiveClientId;
     _onRegisterDeviceToken = onRegisterDeviceToken;
+    _onRegisterVoipToken = onRegisterVoipToken;
     _onReceiveMessageData = onReceiveMessageData;
     _onNotificationMessageArrived = onNotificationMessageArrived;
     _onNotificationMessageClicked = onNotificationMessageClicked;
 
     _onReceivePayload = onReceivePayload;
     _onReceiveNotificationResponse = onReceiveNotificationResponse;
+    _onAppLinkPayload = onAppLinkPayload;
+    _onReceiveVoipPayLoad = onReceiveVoipPayLoad;
     _channel.setMethodCallHandler(_handleMethod);
   }
 
@@ -88,6 +103,12 @@ class Getuiflut {
         return _onReceivePayload(call.arguments);
       case "onReceiveNotificationResponse":
         return _onReceiveNotificationResponse(call.arguments.cast<String, dynamic>());
+      case "onAppLinkPayload":
+        return _onAppLinkPayload(call.arguments);
+      case "onRegisterVoipToken":
+        return _onRegisterVoipToken(call.arguments);
+      case "onReceiveVoipPayLoad":
+        return _onReceiveVoipPayLoad(call.arguments.cast<String, dynamic>());
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }

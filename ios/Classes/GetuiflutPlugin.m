@@ -1,11 +1,12 @@
 #import "GetuiflutPlugin.h"
 #import <GTSDK/GeTuiSdk.h>
+#import <PushKit/PushKit.h>
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 #import <UserNotifications/UserNotifications.h>
 #endif
 
-@interface  GetuiflutPlugin()<GeTuiSdkDelegate,UNUserNotificationCenterDelegate>
+@interface  GetuiflutPlugin()<GeTuiSdkDelegate,UNUserNotificationCenterDelegate,PKPushRegistryDelegate>
 
 @end
 
@@ -43,6 +44,9 @@
     
     // 注册APNs - custom method - 开发者自定义的方法
     [self registerRemoteNotification];
+    
+    // 注册VoipToken
+    [self voipRegistration];
 }
 
 - (void)registerRemoteNotification {
@@ -146,6 +150,58 @@
     completionHandler();
 }
 #endif
+
+#pragma mark - AppLink
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nonnull))restorationHandler {
+    //系统用 NSUserActivityTypeBrowsingWeb 表示对应的 universal HTTP links 触发
+    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
+        NSURL* webUrl = userActivity.webpageURL;
+        
+        //处理个推APPLink回执统计
+        //APPLink url 示例：https://link.applk.cn/getui?n=payload&p=mid， 其中 n=payload 字段存储下发的透传信息，可以根据透传内容进行业务操作。
+        NSString* payload = [GeTuiSdk handleApplinkFeedback:webUrl];
+        if (payload) {
+            NSLog(@"个推APPLink中携带的透传payload信息: %@,URL : %@", payload, webUrl);
+            //TODO:用户可根据具体 payload 进行业务处理
+            [_channel invokeMethod:@"onAppLinkPayload" arguments:payload];
+        }
+    }
+    return true;
+}
+
+#pragma mark - VOIP接入
+
+/** 注册VOIP服务 */
+- (void)voipRegistration {
+    dispatch_queue_t mainQueue = dispatch_get_main_queue();
+    PKPushRegistry *voipRegistry = [[PKPushRegistry alloc] initWithQueue:mainQueue];
+    voipRegistry.delegate = self;
+    // Set the push type to VoIP
+    voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
+}
+
+// 实现 PKPushRegistryDelegate 协议方法
+
+/** 系统返回VOIPToken，并提交个推服务器 */
+- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
+    //向个推服务器注册 VoipToken 为了方便开发者，建议使用新方法
+    [GeTuiSdk registerVoipTokenCredentials:credentials.token];
+    NSString *token = [[credentials.token description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"\n>>[VoipToken(NSData)]: %@", credentials.token);
+    [_channel invokeMethod:@"onRegisterVoipToken" arguments:token];
+}
+
+/** 接收VOIP推送中的payload进行业务逻辑处理（一般在这里调起本地通知实现连续响铃、接收视频呼叫请求等操作），并执行个推VOIP回执统计 */
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
+    // 个推VOIP回执统计
+    [GeTuiSdk handleVoipNotification:payload.dictionaryPayload];
+    
+    // TODO:接受VOIP推送中的payload内容进行具体业务逻辑处理
+    NSLog(@"[Voip Payload]:%@,%@", payload, payload.dictionaryPayload);
+    [_channel invokeMethod:@"onReceiveVoipPayLoad" arguments:payload.dictionaryPayload];
+}
 
 #pragma mark - GeTuiSdkDelegate
 

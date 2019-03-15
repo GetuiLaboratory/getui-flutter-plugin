@@ -18,8 +18,11 @@ class _MyAppState extends State<MyApp> {
   String _notificationState = "";
   String _getClientId = "";
   String _getDeviceToken="";
+  String _getVoipToken="";
   String _onReceivePayload="";
   String _onReceiveNotificationResponse="";
+  String _onAppLinkPayLoad="";
+  String _onReceiveVoipPayLoad;
   //final Getuiflut getui = new Getuiflut();
 
   @override
@@ -99,6 +102,21 @@ class _MyAppState extends State<MyApp> {
           _onReceiveNotificationResponse = "$message";
         });
       },
+      onAppLinkPayload: (String message) async {
+        setState(() {
+          _onAppLinkPayLoad = "$message";
+        });
+      },
+      onRegisterVoipToken: (String message) async {
+        setState(() {
+          _getVoipToken = "$message";
+        });
+      },
+      onReceiveVoipPayLoad: (Map<String, dynamic> message) async {
+        setState(() {
+          _onReceiveVoipPayLoad = "$message";
+        });
+      },
     );
   }
 
@@ -159,8 +177,11 @@ class _MyAppState extends State<MyApp> {
                     style: TextStyle(color: Colors.redAccent, fontSize: 20.0,),
                 ),
                 Text('DeviceToken: $_getDeviceToken'),
+                Text('VoipToken: $_getVoipToken'),
                 Text('payload: $_onReceivePayload'),
                 Text('onReceiveNotificationResponse: $_onReceiveNotificationResponse'),
+                Text('onAppLinkPayload: $_onAppLinkPayLoad'),
+                Text('onReceiveVoipPayLoad: $_onReceiveVoipPayLoad'),
               ]
           ),
         ),
