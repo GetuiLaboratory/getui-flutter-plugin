@@ -32,15 +32,20 @@ android: {
 在你项目的main.dart中添加下列代码：
 
 ```
-	Getuiflut().startSdk(
+   Getuiflut().startSdk(
       appId: "8eLAkGIYnGAwA9fVYZU93A",
       appKey: "VFX8xYxvVF6w59tsvY6XN",
       appSecret: "Kv3TeED8z19QwnMLdzdI35"
-    );
+   );
     
 ```
 
-### API
+### 使用
+```dart
+import 'package:getuiflut/getuiflut.dart';
+```
+
+### iOS API
 
 ```
 	Getuiflut().addEventHandler(
@@ -68,12 +73,8 @@ android: {
     ）;
 ```
 
-### 使用
-```dart
-import 'package:getuiflut/getuiflut.dart';
-```
 
-### API 
+### Android API 
 
 ```dart
 Getuiflut().addEventHandler(
