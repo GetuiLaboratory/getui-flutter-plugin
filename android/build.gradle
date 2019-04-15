@@ -17,7 +17,6 @@ rootProject.allprojects {
             url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
         }
         google()
-        jcenter()
     }
 }
 apply plugin: 'com.android.library'
