@@ -6,7 +6,9 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getuiflut: ^0.0.3
+  getuiflut: ^0.0.5
+  
+Dart Packages: https://pub.dartlang.org/packages?q=getuiflut
 ```
 
 ### 配置
