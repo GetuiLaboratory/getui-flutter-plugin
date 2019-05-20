@@ -6,10 +6,10 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getuiflut: ^0.0.7
-  
-Dart Packages: https://pub.dartlang.org/packages?q=getuiflut
+  getuiflut: ^0.0.7  
 ```
+Pub.dev:
+<a href=" https://pub.dartlang.org/packages?q=getuiflut" target="_blank">getui-flutter-plugin</a>
 
 ### 配置
 ##### Android:
@@ -29,6 +29,39 @@ android: {
   }    
 }
 ```
+######Android多厂商版本：getuiflut:^0.0.8
+```
+android: {
+  ....
+  defaultConfig {
+    applicationId ""
+    
+    manifestPlaceholders = [
+    		    GETUI_APP_ID    : "",
+                GETUI_APP_KEY   : "",
+                GETUI_APP_SECRET: "",
+
+                XIAOMI_APP_ID : "",
+                XIAOMI_APP_KEY : "",
+
+                MEIZU_APP_ID : "",
+                MEIZU_APP_KEY : "",
+
+                HUAWEI_APP_ID : "",
+
+                OPPO_APP_KEY   : "",
+                OPPO_APP_SECRET  : "",
+
+                VIVO_APP_ID   : "",
+                VIVO_APP_KEY  : "" 
+    ]
+  }    
+}
+```
+个推多厂商的各类参数及服务开通请联系个推官网技术支持
+
+
+
 ##### iOS:
 
 在你项目的main.dart中添加下列代码：
