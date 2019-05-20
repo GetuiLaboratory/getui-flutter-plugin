@@ -37,9 +37,22 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
         manifestPlaceholders = [
-                GETUI_APP_ID    : "IbmKW6ssr99lveCtPMG9dA",
-                GETUI_APP_KEY   : "RhhDAohWe16Ejdgmw7roB1",
-                GETUI_APP_SECRET: "ytJMQpWxEQ7HhnFMHcjZV2"
+                GETUI_APP_ID    : "",
+                GETUI_APP_KEY   : "",
+                GETUI_APP_SECRET: "",
+                XIAOMI_APP_ID   : "",
+                XIAOMI_APP_KEY  : "",
+
+                MEIZU_APP_ID    : "",
+                MEIZU_APP_KEY   : "",
+
+                HUAWEI_APP_ID   : "",
+
+                OPPO_APP_KEY   : "",
+                OPPO_APP_SECRET  : "",
+
+                VIVO_APP_ID   : "",
+                VIVO_APP_KEY  : ""
         ]
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

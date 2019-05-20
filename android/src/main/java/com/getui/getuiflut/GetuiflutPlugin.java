@@ -25,6 +25,7 @@ public class GetuiflutPlugin implements MethodCallHandler {
 
   private final Registrar registrar;
   private final MethodChannel channel;
+
   public static GetuiflutPlugin instance;
 
   public final Map<Integer, Result> callbackMap;
@@ -56,7 +57,8 @@ public class GetuiflutPlugin implements MethodCallHandler {
   }
 
   private void initGtSdk() {
-    Log.d(TAG, "init getui sdk...");
+    Log.d(TAG, "init getui sdk...test");
+
     PushManager.getInstance().initialize(registrar.context(), FlutterPushService.class);
     PushManager.getInstance().registerPushIntentService(registrar.context(), FlutterIntentService.class);
   }

@@ -38,14 +38,17 @@ class _MyAppState extends State<MyApp> {
     String notificationState="default";
     // Platform messages may fail, so we use a try/catch PlatformException.
 
+
+    /*
     Getuiflut().startSdk(
       appId: "8eLAkGIYnGAwA9fVYZU93A",
       appKey: "VFX8xYxvVF6w59tsvY6XN",
       appSecret: "Kv3TeED8z19QwnMLdzdI35"
     );
-
+    */
     try {
       platformVersion = await Getuiflut.platformVersion;
+
       print('platformVersion' + platformVersion);
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';

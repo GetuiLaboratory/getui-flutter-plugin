@@ -26,14 +26,16 @@ android {
     defaultConfig {
         minSdkVersion 16
         ndk {
-            abiFilters "armeabi-v7a"
+            abiFilters "armeabi", "armeabi-v7a", "x86_64"
         }
     }
+    
     lintOptions {
         disable 'InvalidPackage'
     }
 }
 
 dependencies {
-    implementation 'com.getui:sdk-for-google-play:4.3.2.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
 }
