@@ -29,37 +29,6 @@ android: {
   }    
 }
 ```
-##### Android多厂商版本：getuiflut:^0.0.8
-```
-android: {
-  ....
-  defaultConfig {
-    applicationId ""
-    
-    manifestPlaceholders = [
-    		    GETUI_APP_ID    : "",
-                GETUI_APP_KEY   : "",
-                GETUI_APP_SECRET: "",
-
-                XIAOMI_APP_ID : "",
-                XIAOMI_APP_KEY : "",
-
-                MEIZU_APP_ID : "",
-                MEIZU_APP_KEY : "",
-
-                HUAWEI_APP_ID : "",
-
-                OPPO_APP_KEY   : "",
-                OPPO_APP_SECRET  : "",
-
-                VIVO_APP_ID   : "",
-                VIVO_APP_KEY  : "" 
-    ]
-  }    
-}
-```
-个推多厂商的各类参数及服务开通请联系技术人员 🦀boss
-
 
 
 ##### iOS:
