@@ -6,7 +6,7 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getuiflut: ^0.0.7  
+  getuiflut: ^0.0.8  
 ```
 Pub.dev:
 <a href=" https://pub.dartlang.org/packages?q=getuiflut" target="_blank">getui-flutter-plugin</a>
@@ -123,4 +123,5 @@ Getuiflut().addEventHandler(
       },
     );
 ```
+
 
