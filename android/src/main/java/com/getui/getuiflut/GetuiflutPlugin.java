@@ -1,6 +1,10 @@
 package com.getui.getuiflut;
 
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
+import android.os.Handler;
+
 
 import com.igexin.sdk.PushManager;
 
@@ -22,6 +26,21 @@ public class GetuiflutPlugin implements MethodCallHandler {
   }
 
   private static final String TAG = "GetuiflutPlugin";
+  private static final int FLUTTER_CALL_BACK_CID = 1;
+  private static final int FLUTTER_CALL_BACK_MSG =2;
+
+  enum MessageType {
+    Default,
+    onReceiveMessageData,
+    onNotificationMessageArrived,
+    onNotificationMessageClicked
+  }
+
+  enum StateType {
+    Default,
+    onReceiveClientId,
+    onReceiveOnlineState
+  }
 
   private final Registrar registrar;
   private final MethodChannel channel;
@@ -29,6 +48,46 @@ public class GetuiflutPlugin implements MethodCallHandler {
   public static GetuiflutPlugin instance;
 
   public final Map<Integer, Result> callbackMap;
+
+  private static Handler flutterHandler = new Handler(Looper.getMainLooper()) {
+    @Override
+    public void handleMessage(Message msg) {
+      switch (msg.what) {
+        case FLUTTER_CALL_BACK_CID:
+          if (msg.arg1 == StateType.onReceiveClientId.ordinal()) {
+            GetuiflutPlugin.instance.channel.invokeMethod("onReceiveClientId", msg.obj);
+            Log.d("flutterHandler", "onReceiveClientId >>> "+msg.obj);
+
+          } else if (msg.arg1 == StateType.onReceiveOnlineState.ordinal()) {
+            GetuiflutPlugin.instance.channel.invokeMethod("onReceiveOnlineState", msg.obj);
+            Log.d("flutterHandler", "onReceiveOnlineState >>> "+msg.obj);
+          } else  {
+            Log.d(TAG,"default state type...");
+          }
+          break;
+        case  FLUTTER_CALL_BACK_MSG:
+          if (msg.arg1 == MessageType.onReceiveMessageData.ordinal()) {
+            GetuiflutPlugin.instance.channel.invokeMethod("onReceiveMessageData", msg.obj);
+            Log.d("flutterHandler", "onReceiveMessageData >>> "+msg.obj);
+
+          } else if (msg.arg1 == MessageType.onNotificationMessageArrived.ordinal()) {
+            GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageArrived", msg.obj);
+            Log.d("flutterHandler", "onNotificationMessageArrived >>> "+msg.obj);
+
+          } else if (msg.arg1 == MessageType.onNotificationMessageClicked.ordinal()) {
+            GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageClicked", msg.obj);
+            Log.d("flutterHandler", "onNotificationMessageClicked >>> "+msg.obj);
+          } else {
+            Log.d(TAG, "default Message type...");
+          }
+          break;
+
+          default:
+            break;
+      }
+
+    }
+  };
 
 
   private GetuiflutPlugin(Registrar registrar, MethodChannel channel) {
@@ -83,7 +142,19 @@ public class GetuiflutPlugin implements MethodCallHandler {
       Log.d(TAG, "Getui flutter plugin doesn't exist");
       return;
     }
-    GetuiflutPlugin.instance.channel.invokeMethod(func, message);
+    int type;
+    if (func.equals("onReceiveClientId")){
+      type = StateType.onReceiveClientId.ordinal();
+    } else if (func.equals("onReceiveOnlineState")) {
+      type = StateType.onReceiveOnlineState.ordinal();
+    } else {
+      type = StateType.Default.ordinal();
+    }
+    Message msg = Message.obtain();
+    msg.what = FLUTTER_CALL_BACK_CID;
+    msg.arg1 = type;
+    msg.obj = message;
+    flutterHandler.sendMessage(msg);
   }
 
   static void transmitMessageReceive(Map<String, Object> message, String func) {
@@ -91,6 +162,20 @@ public class GetuiflutPlugin implements MethodCallHandler {
       Log.d(TAG, "Getui flutter plugin doesn't exist");
       return;
     }
-    GetuiflutPlugin.instance.channel.invokeMethod(func, message);
+    int type;
+    if (func.equals("onReceiveMessageData")) {
+      type = MessageType.onReceiveMessageData.ordinal();
+    } else if (func.equals("onNotificationMessageArrived")){
+      type = MessageType.onNotificationMessageArrived.ordinal();
+    } else if (func.equals("onNotificationMessageClicked")) {
+      type = MessageType.onNotificationMessageClicked.ordinal();
+    }  else {
+      type = MessageType.Default.ordinal();
+    }
+    Message msg = Message.obtain();
+    msg.what = FLUTTER_CALL_BACK_MSG;
+    msg.arg1 = type;
+    msg.obj = message;
+    flutterHandler.sendMessage(msg);
   }
 }
