@@ -24,7 +24,18 @@ android: {
     manifestPlaceholders = [
     	GETUI_APP_ID    : "USER_APP_ID",
     	GETUI_APP_KEY   : "USER_APP_KEY",
-    	GETUI_APP_SECRET: "USER_APP_SECRET" 
+    	GETUI_APP_SECRET: "USER_APP_SECRET",
+        // 下面是多厂商配置，如需要开通使用请联系技术支持
+        // 如果不需要使用，预留空字段即可
+         XIAOMI_APP_ID   : "",
+         XIAOMI_APP_KEY  : "",
+         MEIZU_APP_ID    : "",
+         MEIZU_APP_KEY   : "",
+         HUAWEI_APP_ID   : "",
+         OPPO_APP_KEY   : "",
+         OPPO_APP_SECRET  : "",
+         VIVO_APP_ID   : "",
+         VIVO_APP_KEY  : ""
     ]
   }    
 }
