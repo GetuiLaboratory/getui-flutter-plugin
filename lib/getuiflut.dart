@@ -50,6 +50,19 @@ class Getuiflut {
   void stopPush() {
     _channel.invokeMethod('stopPush');
   }
+  
+  void bindAlias(String alias,String sn) {
+    _channel.invokeMethod('bindAlias',<String,dynamic>{'alias':alias});
+  }
+
+  void unbindAlias(String alias,String sn) {
+    _channel.invokeMethod('unbindAlias',<String,dynamic>{'alias':alias});
+
+  }
+
+  void setTag(List<dynamic> tags) {
+    _channel.invokeMethod('setTag',<String,dynamic>{'tags':tags});
+  }
 
   void addEventHandler({
     EventHandler onReceiveClientId,

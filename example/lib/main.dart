@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:io';
+
 
 import 'package:flutter/services.dart';
 import 'package:getuiflut/getuiflut.dart';
@@ -39,13 +41,14 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
 
 
-    /*
-    Getuiflut().startSdk(
-      appId: "8eLAkGIYnGAwA9fVYZU93A",
-      appKey: "VFX8xYxvVF6w59tsvY6XN",
-      appSecret: "Kv3TeED8z19QwnMLdzdI35"
-    );
-    */
+    if (Platform.isIOS) {
+      Getuiflut().startSdk(
+          appId: "8eLAkGIYnGAwA9fVYZU93A",
+          appKey: "VFX8xYxvVF6w59tsvY6XN",
+          appSecret: "Kv3TeED8z19QwnMLdzdI35"
+      );
+    }
+
     try {
       platformVersion = await Getuiflut.platformVersion;
 
@@ -174,6 +177,21 @@ class _MyAppState extends State<MyApp> {
                 RaisedButton(
                   onPressed: () {Getuiflut().resumePush();},
                   child: const Text('resume push'),
+                ),
+                RaisedButton(
+                  onPressed: () {Getuiflut().bindAlias('test', '');},
+                  child: const Text('bindAlias test'),
+                ),
+                RaisedButton(
+                  onPressed: () {Getuiflut().unbindAlias('test', '');},
+                  child: const Text('unbindAlias test'),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    List test = new List();
+                    test.add('abc');
+                    Getuiflut().setTag(test);},
+                  child: const Text('setTag test'),
                 ),
                 Text(
                     'ios Public Funcation',

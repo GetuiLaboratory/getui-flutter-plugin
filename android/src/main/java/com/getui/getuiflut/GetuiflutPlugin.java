@@ -1,5 +1,6 @@
 package com.getui.getuiflut;
 
+import android.content.Context;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -7,8 +8,11 @@ import android.os.Handler;
 
 
 import com.igexin.sdk.PushManager;
+import com.igexin.sdk.Tag;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.flutter.plugin.common.MethodCall;
@@ -28,6 +32,8 @@ public class GetuiflutPlugin implements MethodCallHandler {
   private static final String TAG = "GetuiflutPlugin";
   private static final int FLUTTER_CALL_BACK_CID = 1;
   private static final int FLUTTER_CALL_BACK_MSG =2;
+
+  private Context fContext;
 
   enum MessageType {
     Default,
@@ -110,6 +116,15 @@ public class GetuiflutPlugin implements MethodCallHandler {
       resume();
     } else if (call.method.equals("stopPush")) {
       stopPush();
+    } else if (call.method.equals("bindAlias"))  {
+      Log.d(TAG, "bindAlias:"+call.argument("alias").toString());
+      bindAlias(call.argument("alias").toString(),"");
+    } else if (call.method.equals("unbindAlias")) {
+      Log.d(TAG, "unbindAlias:" + call.argument("alias").toString());
+      unbindAlias(call.argument("alias").toString(),"");
+    } else if (call.method.equals("setTag")){
+      Log.d(TAG,"tags:" + (ArrayList<String>) call.argument("tags"));
+      setTag((ArrayList<String>) call.argument("tags"));
     } else {
       result.notImplemented();
     }
@@ -117,7 +132,7 @@ public class GetuiflutPlugin implements MethodCallHandler {
 
   private void initGtSdk() {
     Log.d(TAG, "init getui sdk...test");
-
+    fContext = registrar.context();
     PushManager.getInstance().initialize(registrar.context(), FlutterPushService.class);
     PushManager.getInstance().registerPushIntentService(registrar.context(), FlutterIntentService.class);
   }
@@ -135,6 +150,46 @@ public class GetuiflutPlugin implements MethodCallHandler {
   private void stopPush() {
     Log.d(TAG, "stop push service");
     PushManager.getInstance().stopService(registrar.context());
+  }
+
+  /**
+   * 绑定别名功能:后台可以根据别名进行推送
+   *
+   * @param alias 别名字符串
+   * @param aSn   绑定序列码, Android中无效，仅在iOS有效
+   */
+  public void bindAlias(String alias, String aSn){
+    PushManager.getInstance().bindAlias(registrar.context(), alias);
+  }
+
+  /**
+   *  取消绑定别名功能
+   *
+   *  @param alias 别名字符串
+   *  @param aSn   绑定序列码, Android中无效，仅在iOS有效
+   */
+  public void unbindAlias(String alias, String aSn){
+    PushManager.getInstance().unBindAlias(registrar.context(), alias, false);
+  }
+
+  /**
+   *  给用户打标签 , 后台可以根据标签进行推送
+   *
+   *  @param tags 别名数组
+   */
+  public void setTag(List<String> tags){
+    if (tags == null || tags.size() == 0){
+      return;
+    }
+
+    Tag[] tagArray = new Tag[tags.size()];
+    for (int i = 0; i < tags.size(); i++ ){
+      Tag tag = new Tag();
+      tag.setName(tags.get(i));
+      tagArray[i] = tag;
+    }
+
+    PushManager.getInstance().setTag(registrar.context(), tagArray, "setTag");
   }
 
   static void transmitMessageReceive(String message, String func) {
