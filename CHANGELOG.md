@@ -1,3 +1,7 @@
-## 0.0.9
+## 0.1.0
+
+1.新增bindAlias& unbindAlias接口
+2.新增setTags接口
+3.完善readme
 
 * TODO: Describe initial release.
