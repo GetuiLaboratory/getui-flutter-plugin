@@ -6,7 +6,7 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getuiflut: ^0.0.9
+  getuiflut: ^0.1.0 
 ```
 Pub.dev:
 <a href=" https://pub.dartlang.org/packages?q=getuiflut" target="_blank">getui-flutter-plugin</a>
@@ -103,8 +103,33 @@ import 'package:getuiflut/getuiflut.dart';
     ）;
 ```
 
+### Android API
 
-### Android API 
+```dart
+/**
+	*初始化个推sdk
+	*/
+Getuiflut.initGetuiSdk();
+/**
+	* 绑定别名功能:后台可以根据别名进行推送
+	*
+	* @param alias 别名字符串
+	* @param aSn   绑定序列码, Android中无效，仅在iOS有效
+	*/
+bindAlias(alias, sn);
+unbindAlias(alias, sn);
+
+/**
+  *  给用户打标签 , 后台可以根据标签进行推送
+  *
+  *  @param tags 别名数组
+  */
+setTag(tags);
+```
+
+
+
+#### 回调方法 ：
 
 ```dart
 Getuiflut().addEventHandler(
