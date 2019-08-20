@@ -183,7 +183,7 @@ class _MyAppState extends State<MyApp> {
                   child: const Text('bindAlias test'),
                 ),
                 RaisedButton(
-                  onPressed: () {Getuiflut().unbindAlias('test', '');},
+                  onPressed: () {Getuiflut().unbindAlias('test', '', true);},
                   child: const Text('unbindAlias test'),
                 ),
                 RaisedButton(

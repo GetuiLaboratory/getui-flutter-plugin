@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'dart:io';
 
 typedef Future<dynamic> EventHandler(String res);
 typedef Future<dynamic> EventHandlerMap(Map<String, dynamic> event);
@@ -52,11 +53,20 @@ class Getuiflut {
   }
   
   void bindAlias(String alias,String sn) {
-    _channel.invokeMethod('bindAlias',<String,dynamic>{'alias':alias});
+    if(Platform.isAndroid) {
+      _channel.invokeMethod('bindAlias',<String,dynamic>{'alias':alias});
+    } else {
+      _channel.invokeMethod('bindAlias',<String,dynamic>{'alias':alias,'aSn':sn});
+    }
   }
 
-  void unbindAlias(String alias,String sn) {
-    _channel.invokeMethod('unbindAlias',<String,dynamic>{'alias':alias});
+  void unbindAlias(String alias,String sn,bool isSelf) {
+    if(Platform.isAndroid) {
+      _channel.invokeMethod('unbindAlias',<String,dynamic>{'alias':alias});
+    } else {
+      _channel.invokeMethod('unbindAlias',<String,dynamic>{'alias':alias,'aSn':sn,'isSelf':isSelf});
+    }
+
 
   }
 

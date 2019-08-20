@@ -32,6 +32,12 @@
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
   } else if([@"startSdk" isEqualToString:call.method]) {
       [self startSdk:call result:result];
+  } else if([@"bindAlias" isEqualToString:call.method]) {
+      [self bindAlias:call result:result];
+  } else if([@"unbindAlias" isEqualToString:call.method]) {
+      [self unbindAlias:call result:result];
+  } else if([@"setTag" isEqualToString:call.method]) {
+      [self setTag:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -232,5 +238,19 @@
 
 #pragma mark - GTSDKfunction
 
+- (void)bindAlias:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    [GeTuiSdk bindAlias:ConfigurationInfo[@"alias"] andSequenceNum:ConfigurationInfo[@"aSn"]];
+}
+
+- (void)unbindAlias:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    [GeTuiSdk unbindAlias:ConfigurationInfo[@"alias"] andSequenceNum:ConfigurationInfo[@"aSn"] andIsSelf:ConfigurationInfo[@"isSelf"]];
+}
+
+- (void)setTag:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    [GeTuiSdk setTags:ConfigurationInfo[@"tags"]];
+}
 
 @end
