@@ -18,5 +18,6 @@ getui plugin flutter
   s.dependency 'GTSDK'
 
   s.ios.deployment_target = '8.0'
+  s.static_framework = true
 end
 
