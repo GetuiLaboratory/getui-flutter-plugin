@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
       },
       onRegisterDeviceToken: (String message) async {
         setState(() {
-          _getDeviceToken = "DeviceToken: $message";
+          _getDeviceToken = "$message";
         });
       },
       onReceivePayload: (String message) async {

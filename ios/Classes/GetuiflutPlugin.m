@@ -106,9 +106,10 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // [3]:向个推服务器注册deviceToken 为了方便开发者，建议使用新方法
     [GeTuiSdk registerDeviceTokenData:deviceToken];
-    NSLog(@"\n>>>[DeviceToken(NSData)]: %@\n\n", deviceToken);
-    NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *token = [self getHexStringForData:deviceToken];
+    NSLog(@"\n>>>[DeviceToken(NSString)]: %@\n\n", token);
+    //NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    //token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
     [_channel invokeMethod:@"onRegisterDeviceToken" arguments:token];
 }
 
@@ -193,9 +194,10 @@
 - (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
     //向个推服务器注册 VoipToken 为了方便开发者，建议使用新方法
     [GeTuiSdk registerVoipTokenCredentials:credentials.token];
-    NSString *token = [[credentials.token description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSLog(@"\n>>[VoipToken(NSData)]: %@", credentials.token);
+    //NSString *token = [[credentials.token description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    //token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *token = [self getHexStringForData:credentials.token];
+    NSLog(@"\n>>[VoipToken(NSString)]: %@", token);
     [_channel invokeMethod:@"onRegisterVoipToken" arguments:token];
 }
 
@@ -251,6 +253,18 @@
 - (void)setTag:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
     [GeTuiSdk setTags:ConfigurationInfo[@"tags"]];
+}
+
+#pragma mark - utils
+
+- (NSString *)getHexStringForData:(NSData *)data {
+    NSUInteger len = [data length];
+        char *chars = (char *) [data bytes];
+        NSMutableString *hexString = [[NSMutableString alloc] init];
+        for (NSUInteger i = 0; i < len; i++) {
+            [hexString appendString:[NSString stringWithFormat:@"%0.2hhx", chars[i]]];
+        }
+        return hexString;
 }
 
 @end
