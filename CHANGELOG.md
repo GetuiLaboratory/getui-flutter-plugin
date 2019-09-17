@@ -1,4 +1,4 @@
-## 0.1.2
+## 0.1.3
 
 1.新增bindAlias& unbindAlias接口
 2.新增setTags接口

@@ -20,7 +20,7 @@ class Getuiflut {
   // voipToken
   EventHandler _onRegisterVoipToken;
   //  iOS收到的透传内容
-  EventHandler _onReceivePayload;
+  EventHandlerMap _onReceivePayload;
   // ios 收到APNS消息
   EventHandlerMap _onReceiveNotificationResponse;
   // ios 收到AppLink消息
@@ -86,7 +86,7 @@ class Getuiflut {
     //voipToken
     EventHandler onRegisterVoipToken,
     //ios 收到的透传内容
-    EventHandler onReceivePayload,
+    EventHandlerMap onReceivePayload,
     // ios 收到APNS消息
     EventHandlerMap onReceiveNotificationResponse,
     // ios 收到AppLink消息
@@ -123,7 +123,7 @@ class Getuiflut {
       case "onRegisterDeviceToken":
         return _onRegisterDeviceToken(call.arguments);
       case "onReceivePayload":
-        return _onReceivePayload(call.arguments);
+        return _onReceivePayload(call.arguments.cast<String, dynamic>());
       case "onReceiveNotificationResponse":
         return _onReceiveNotificationResponse(call.arguments.cast<String, dynamic>());
       case "onAppLinkPayload":

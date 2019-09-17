@@ -43,9 +43,9 @@ class _MyAppState extends State<MyApp> {
 
     if (Platform.isIOS) {
       Getuiflut().startSdk(
-          appId: "8eLAkGIYnGAwA9fVYZU93A",
-          appKey: "VFX8xYxvVF6w59tsvY6XN",
-          appSecret: "Kv3TeED8z19QwnMLdzdI35"
+          appId: "iMahVVxurw6BNr7XSn9EF2",
+          appKey: "yIPfqwq6OMAPp6dkqgLpG5",
+          appSecret: "G0aBqAD6t79JfzTB6Z5lo5"
       );
     }
 
@@ -98,7 +98,7 @@ class _MyAppState extends State<MyApp> {
           _getDeviceToken = "$message";
         });
       },
-      onReceivePayload: (String message) async {
+      onReceivePayload: (Map<String, dynamic> message) async {
         setState(() {
           _onReceivePayload = "$message";
         });
