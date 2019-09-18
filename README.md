@@ -75,7 +75,7 @@ import 'package:getuiflut/getuiflut.dart';
           _getDeviceToken = "DeviceToken: $message";
         });
       },
-      onReceivePayload: (String message) async {
+      onReceivePayload: (Map<String, dynamic> message) async {
         setState(() {
           _onReceivePayload = "$message";
         });
