@@ -38,6 +38,8 @@
       [self unbindAlias:call result:result];
   } else if([@"setTag" isEqualToString:call.method]) {
       [self setTag:call result:result];
+  } else if([@"getClientId" isEqualToString:call.method]) {
+      result([GeTuiSdk clientId]);
   } else {
     result(FlutterMethodNotImplemented);
   }

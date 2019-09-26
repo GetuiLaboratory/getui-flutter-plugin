@@ -138,6 +138,7 @@ class _MyAppState extends State<MyApp> {
     String getClientId;
     try {
       getClientId = await Getuiflut.getClientId;
+      print(getClientId);
     } catch(e) {
       print(e.toString());
     }
@@ -169,7 +170,10 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {initGetuiSdk();},
                   child: const Text('initGetuiSdk'),
                 ),
-
+                RaisedButton(
+                  onPressed: () {getClientId();},
+                  child: const Text('getClientId11111111'),
+                ),
                 RaisedButton(
                   onPressed: () {Getuiflut().stopPush();},
                   child: const Text('stop push'),
