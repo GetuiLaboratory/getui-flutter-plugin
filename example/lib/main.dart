@@ -166,40 +166,73 @@ class _MyAppState extends State<MyApp> {
                 ),
                 Text('payload: $_payloadInfo\n'),
                 Text('notificaiton state: $_notificationState\n'),
-                RaisedButton(
+                FlatButton(
                   onPressed: () {initGetuiSdk();},
                   child: const Text('initGetuiSdk'),
                 ),
-                RaisedButton(
-                  onPressed: () {getClientId();},
-                  child: const Text('getClientId11111111'),
-                ),
-                RaisedButton(
-                  onPressed: () {Getuiflut().stopPush();},
-                  child: const Text('stop push'),
-                ),
-                RaisedButton(
-                  onPressed: () {Getuiflut().resumePush();},
-                  child: const Text('resume push'),
-                ),
-                RaisedButton(
-                  onPressed: () {Getuiflut().bindAlias('test', '');},
-                  child: const Text('bindAlias test'),
-                ),
-                RaisedButton(
-                  onPressed: () {Getuiflut().unbindAlias('test', '', true);},
-                  child: const Text('unbindAlias test'),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    List test = new List();
-                    test.add('abc');
-                    Getuiflut().setTag(test);},
-                  child: const Text('setTag test'),
-                ),
                 Text(
-                    'ios Public Funcation',
-                    style: TextStyle(color: Colors.redAccent, fontSize: 20.0,),
+                  'SDK Public Funcation',
+                  style: TextStyle(
+                    color: Colors.lightBlue,
+                    fontSize: 20.0,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () {getClientId();},
+                      child: const Text('getClientId'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {Getuiflut().stopPush();},
+                      child: const Text('stop push'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {Getuiflut().resumePush();},
+                      child: const Text('resume push'),
+                    ),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () {Getuiflut().bindAlias('test', '');},
+                      child: const Text('bindAlias'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {Getuiflut().unbindAlias('test', '', true);},
+                      child: const Text('unbindAlias'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        List test = new List();
+                        test.add('abc');
+                        Getuiflut().setTag(test);},
+                      child: const Text('setTag'),
+                    ),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () {Getuiflut().setBadge(5);},
+                      child: const Text('setBadge'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {Getuiflut().resetBadge();},
+                      child: const Text('resetBadge'),
+                    ),
+                  ],
+                ),
+
+                Text(
+                  'ios Public Funcation',
+                  style: TextStyle(color: Colors.redAccent, fontSize: 20.0,),
                 ),
                 Text('DeviceToken: $_getDeviceToken'),
                 Text('VoipToken: $_getVoipToken'),
@@ -207,8 +240,7 @@ class _MyAppState extends State<MyApp> {
                 Text('onReceiveNotificationResponse: $_onReceiveNotificationResponse'),
                 Text('onAppLinkPayload: $_onAppLinkPayLoad'),
                 Text('onReceiveVoipPayLoad: $_onReceiveVoipPayLoad'),
-              ]
-          ),
+              ]),
         ),
       ),
     );

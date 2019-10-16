@@ -6,7 +6,7 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getuiflut: ^0.1.4
+  getuiflut: ^0.1.5
 ```
 Pub.dev:
 <a href=" https://pub.dartlang.org/packages?q=getuiflut" target="_blank">getui-flutter-plugin</a>
@@ -110,6 +110,8 @@ import 'package:getuiflut/getuiflut.dart';
 	*初始化个推sdk
 	*/
 Getuiflut.initGetuiSdk();
+
+### 公用 API
 /**
 	* 绑定别名功能:后台可以根据别名进行推送
 	*
@@ -125,8 +127,27 @@ unbindAlias(alias, sn);
   *  @param tags 别名数组
   */
 setTag(tags);
+
+/**
+  *  停止SDK服务
+  *
+  */
+stopPush();
 ```
 
+### iOS API
+
+/**
+  *  同步角标
+  *
+  */
+setBadge();
+
+/**
+  *  复位角标
+  *
+  */
+resetBadge();
 
 
 #### 回调方法 ：

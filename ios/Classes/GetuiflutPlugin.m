@@ -40,7 +40,13 @@
       [self setTag:call result:result];
   } else if([@"getClientId" isEqualToString:call.method]) {
       result([GeTuiSdk clientId]);
-  } else {
+  } else if([@"setBadge" isEqualToString:call.method]) {
+      [self setBadge:call result:result];
+  } else if([@"resetBadge" isEqualToString:call.method]) {
+      [GeTuiSdk resetBadge];
+  } else if([@"resetBadge" isEqualToString:call.method]) {
+      [GeTuiSdk resume];
+  }else {
     result(FlutterMethodNotImplemented);
   }
 }
@@ -110,8 +116,6 @@
     [GeTuiSdk registerDeviceTokenData:deviceToken];
     NSString *token = [self getHexStringForData:deviceToken];
     NSLog(@"\n>>>[DeviceToken(NSString)]: %@\n\n", token);
-    //NSString *token = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    //token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
     [_channel invokeMethod:@"onRegisterDeviceToken" arguments:token];
 }
 
@@ -196,8 +200,7 @@
 - (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
     //向个推服务器注册 VoipToken 为了方便开发者，建议使用新方法
     [GeTuiSdk registerVoipTokenCredentials:credentials.token];
-    //NSString *token = [[credentials.token description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
-    //token = [token stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
     NSString *token = [self getHexStringForData:credentials.token];
     NSLog(@"\n>>[VoipToken(NSString)]: %@", token);
     [_channel invokeMethod:@"onRegisterVoipToken" arguments:token];
@@ -257,6 +260,12 @@
     NSDictionary *ConfigurationInfo = call.arguments;
     [GeTuiSdk setTags:ConfigurationInfo[@"tags"]];
 }
+
+- (void)setBadge:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    [GeTuiSdk setBadge:(NSUInteger)ConfigurationInfo[@"badge"]];
+}
+
 
 #pragma mark - utils
 

@@ -66,8 +66,22 @@ class Getuiflut {
     } else {
       _channel.invokeMethod('unbindAlias',<String,dynamic>{'alias':alias,'aSn':sn,'isSelf':isSelf});
     }
+  }
 
+  void setBadge(int badge) {
+    if(Platform.isAndroid) {
 
+    } else {
+      _channel.invokeMethod('setBadge',<String,dynamic>{'badge':badge});
+    }
+  }
+
+  void resetBadge() {
+    if(Platform.isAndroid) {
+
+    } else {
+      _channel.invokeMethod('resetBadge');
+    }
   }
 
   void setTag(List<dynamic> tags) {
