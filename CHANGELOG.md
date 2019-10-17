@@ -1,4 +1,4 @@
-## 0.1.5
+## 0.1.6
 
 1.新增bindAlias& unbindAlias &setBadge & resetBadge接口
 2.新增setTags接口
