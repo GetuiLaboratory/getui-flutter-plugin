@@ -263,7 +263,8 @@
 
 - (void)setBadge:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
-    [GeTuiSdk setBadge:(NSUInteger)ConfigurationInfo[@"badge"]];
+    NSUInteger value = [ConfigurationInfo[@"badge"] integerValue];
+    [GeTuiSdk setBadge:value];
 }
 
 
