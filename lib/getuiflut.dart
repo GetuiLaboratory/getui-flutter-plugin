@@ -51,6 +51,10 @@ class Getuiflut {
   void stopPush() {
     _channel.invokeMethod('stopPush');
   }
+
+  void onActivityCreate() {
+    _channel.invokeMethod('onActivityCreate');
+  }
   
   void bindAlias(String alias,String sn) {
     if(Platform.isAndroid) {

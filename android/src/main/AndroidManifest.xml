@@ -117,7 +117,6 @@
         <service
             android:name="com.getui.getuiflut.FlutterIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
         <!-- 配置SDK核心服务 -->
         <service
             android:name="com.getui.getuiflut.FlutterPushService"
@@ -160,7 +159,15 @@
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
+        <!-- Flutter动态看护 -->
+        <activity
+            android:name="com.getui.getuiflut.GetuiPluginActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:process=":pushservice"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            />
         <!-- meizu push -->
         <service
             android:name="com.meizu.cloud.pushsdk.NotificationService"

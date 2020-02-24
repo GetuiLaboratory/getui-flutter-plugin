@@ -10,6 +10,7 @@ import android.os.Handler;
 import com.igexin.sdk.PushManager;
 import com.igexin.sdk.Tag;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -125,6 +126,9 @@ public class GetuiflutPlugin implements MethodCallHandler {
     } else if (call.method.equals("setTag")){
       Log.d(TAG,"tags:" + (ArrayList<String>) call.argument("tags"));
       setTag((ArrayList<String>) call.argument("tags"));
+    } else if (call.method.equals("onActivityCreate")) {
+      Log.d(TAG,"do onActivityCreate");
+      onActivityCreate();
     } else {
       result.notImplemented();
     }
@@ -135,6 +139,16 @@ public class GetuiflutPlugin implements MethodCallHandler {
     fContext = registrar.context();
     PushManager.getInstance().initialize(registrar.context(), FlutterPushService.class);
     PushManager.getInstance().registerPushIntentService(registrar.context(), FlutterIntentService.class);
+  }
+
+  private void onActivityCreate() {
+    try {
+      Method method = PushManager.class.getDeclaredMethod("registerPushActivity", Context.class, Class.class);
+      method.setAccessible(true);
+      method.invoke(PushManager.getInstance(), registrar.context(), GetuiPluginActivity.class);
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
   }
 
   private String getClientId() {

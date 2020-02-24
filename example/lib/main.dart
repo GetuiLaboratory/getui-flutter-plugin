@@ -177,6 +177,10 @@ class _MyAppState extends State<MyApp> {
                     fontSize: 20.0,
                   ),
                 ),
+                RaisedButton(
+                  onPressed: () {Getuiflut().onActivityCreate();},
+                  child: const Text('onActivityCreate'),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
@@ -192,6 +196,7 @@ class _MyAppState extends State<MyApp> {
                       onPressed: () {Getuiflut().resumePush();},
                       child: const Text('resume push'),
                     ),
+
                   ],
                 ),
 
