@@ -3,7 +3,7 @@ PODS:
   - getuiflut (0.0.1):
     - Flutter
     - GTSDK
-  - GTSDK (2.3.1.0)
+  - GTSDK (2.4.1.0)
 
 DEPENDENCIES:
   - Flutter (from `.symlinks/flutter/ios`)
