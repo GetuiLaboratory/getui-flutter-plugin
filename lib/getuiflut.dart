@@ -49,7 +49,9 @@ class Getuiflut {
   }
 
   void stopPush() {
-    _channel.invokeMethod('stopPush');
+    if(Platform.isAndroid) {
+       _channel.invokeMethod('stopPush');
+    }
   }
 
   void onActivityCreate() {

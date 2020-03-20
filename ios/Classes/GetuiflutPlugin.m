@@ -44,7 +44,7 @@
       [self setBadge:call result:result];
   } else if([@"resetBadge" isEqualToString:call.method]) {
       [GeTuiSdk resetBadge];
-  } else if([@"resetBadge" isEqualToString:call.method]) {
+  } else if([@"resume" isEqualToString:call.method]) {
       [GeTuiSdk resume];
   }else {
     result(FlutterMethodNotImplemented);
