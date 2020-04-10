@@ -20,6 +20,7 @@
   instance.channel = channel;
   [registrar addApplicationDelegate:instance];
   [registrar addMethodCallDelegate:instance channel:channel];
+  [instance registerRemoteNotification];
 }
 
 - (id)init {
@@ -55,9 +56,6 @@
     NSDictionary *ConfigurationInfo = call.arguments;
     // [ GTSdk ]：使用APPID/APPKEY/APPSECRENT启动个推
     [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self];
-    
-    // 注册APNs - custom method - 开发者自定义的方法
-    [self registerRemoteNotification];
     
     // 注册VoipToken
     [self voipRegistration];
