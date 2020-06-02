@@ -99,11 +99,13 @@ class _MyAppState extends State<MyApp> {
         });
       },
       onReceivePayload: (Map<String, dynamic> message) async {
+        print("flutter onReceivePayload: $message");
         setState(() {
           _onReceivePayload = "$message";
         });
       },
-      onReceiveNotificationResponse: (Map<String, dynamic> message) async {
+      onReceiveNotificationResponse: (Map<String, dynamic> message) async { 
+        print("flutter onReceiveNotificationResponse: $message");
         setState(() {
           _onReceiveNotificationResponse = "$message";
         });
@@ -231,6 +233,19 @@ class _MyAppState extends State<MyApp> {
                     RaisedButton(
                       onPressed: () {Getuiflut().resetBadge();},
                       child: const Text('resetBadge'),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    RaisedButton(
+                      onPressed: () {Getuiflut().setLocalBadge(5);},
+                      child: const Text('setLocalBadge(5)'),
+                    ),
+                    RaisedButton(
+                      onPressed: () {Getuiflut().setLocalBadge(0);},
+                      child: const Text('setLocalBadge(0)'),
                     ),
                   ],
                 ),

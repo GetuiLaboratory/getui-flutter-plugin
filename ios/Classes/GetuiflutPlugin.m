@@ -45,7 +45,10 @@
       [self setBadge:call result:result];
   } else if([@"resetBadge" isEqualToString:call.method]) {
       [GeTuiSdk resetBadge];
-  } else if([@"resume" isEqualToString:call.method]) {
+  } else if([@"setLocalBadge" isEqualToString:call.method]) {
+      [self setLocalBadge:call result:result];
+  }
+  else if([@"resume" isEqualToString:call.method]) {
       [GeTuiSdk resume];
   }else {
     result(FlutterMethodNotImplemented);
@@ -103,6 +106,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    if (launchOptions != nil) {
+       NSDictionary *launchDic = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+        [_channel invokeMethod:@"onReceiveNotificationResponse" arguments:launchDic];
+        // [ GTSdk ]：将收到的APNs信息传给个推统计
+        [GeTuiSdk handleRemoteNotification:launchDic];
+    }
     return YES;
 }
 
@@ -265,6 +274,12 @@
     [GeTuiSdk setBadge:value];
 }
 
+- (void)setLocalBadge:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    NSUInteger value = [ConfigurationInfo[@"badge"] integerValue];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = value;
+    
+}
 
 #pragma mark - utils
 

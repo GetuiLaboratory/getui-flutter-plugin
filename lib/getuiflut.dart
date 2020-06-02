@@ -89,6 +89,14 @@ class Getuiflut {
       _channel.invokeMethod('resetBadge');
     }
   }
+   
+  void setLocalBadge(int badge) {
+    if(Platform.isAndroid) {
+
+    } else {
+      _channel.invokeMethod('setLocalBadge',<String,dynamic>{'badge':badge});
+    }
+  }
 
   void setTag(List<dynamic> tags) {
     _channel.invokeMethod('setTag',<String,dynamic>{'tags':tags});
