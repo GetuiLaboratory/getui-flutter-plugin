@@ -246,7 +246,7 @@
     if (payloadData) {
         payloadMsg = [[NSString alloc] initWithBytes:payloadData.bytes length:payloadData.length encoding:NSUTF8StringEncoding];
     }
-    NSDictionary *payloadMsgDic = @{@"payloadMsg" : payloadMsg, @"offLine" : @(offLine)};
+    NSDictionary *payloadMsgDic = @{ @"taskId": taskId ?: @"", @"messageId": msgId ?: @"", @"payloadMsg" : payloadMsg, @"offLine" : @(offLine)};
     [_channel invokeMethod:@"onReceivePayload" arguments:payloadMsgDic];
     NSLog(@"%@",payloadMsg);
 }
