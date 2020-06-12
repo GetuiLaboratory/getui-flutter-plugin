@@ -6,7 +6,9 @@
 #import <UserNotifications/UserNotifications.h>
 #endif
 
-@interface  GetuiflutPlugin()<GeTuiSdkDelegate,UNUserNotificationCenterDelegate,PKPushRegistryDelegate>
+@interface  GetuiflutPlugin()<GeTuiSdkDelegate,UNUserNotificationCenterDelegate,PKPushRegistryDelegate> {
+    NSDictionary *_launchNotification;
+}
 
 @end
 
@@ -47,10 +49,11 @@
       [GeTuiSdk resetBadge];
   } else if([@"setLocalBadge" isEqualToString:call.method]) {
       [self setLocalBadge:call result:result];
-  }
-  else if([@"resume" isEqualToString:call.method]) {
-      [GeTuiSdk resume];
-  }else {
+  } else if([@"resume" isEqualToString:call.method]) {
+        [GeTuiSdk resume];
+  } else if([@"getLaunchNotification" isEqualToString:call.method]) {
+      result(_launchNotification ?: @{});
+  } else {
     result(FlutterMethodNotImplemented);
   }
 }
@@ -107,10 +110,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     if (launchOptions != nil) {
-       NSDictionary *launchDic = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-        [_channel invokeMethod:@"onReceiveNotificationResponse" arguments:launchDic];
-        // [ GTSdk ]：将收到的APNs信息传给个推统计
-        [GeTuiSdk handleRemoteNotification:launchDic];
+        _launchNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     }
     return YES;
 }
