@@ -11,6 +11,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
+    <!-- OPPO 辅助 SDK -->
+    <uses-permission android:name="com.coloros.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+    <uses-permission android:name="com.heytap.mcs.permission.RECIEVE_MCS_MESSAGE"/>
+
     <!-- 自定义权限 -->
     <uses-permission android:name="getui.permission.GetuiService.${applicationId}" />
 
@@ -299,13 +303,22 @@
         </service>
 
         <!-- oppopush -->
-        <service
-            android:name="com.igexin.sdk.OppoPushService"
+        <service android:name="com.igexin.sdk.OppoPushService" 
+            android:permission="com.coloros.mcs.permission.SEND_MCS_MESSAGE" 
             android:process=":pushservice">
             <intent-filter>
-                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE" />
-            </intent-filter>
+                <action android:name="com.coloros.mcs.action.RECEIVE_MCS_MESSAGE"/>
+            </intent-filter> 
         </service>
+
+        <service android:name="com.igexin.sdk.OppoAppPushService" 
+            android:permission="com.heytap.mcs.permission.SEND_MCS_MESSAGE" 
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.heytap.mcs.action.RECEIVE_MCS_MESSAGE"/>
+            </intent-filter> 
+        </service>   
+
 
         <!-- vivopush -->
         <service
