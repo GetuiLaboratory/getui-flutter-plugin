@@ -44,6 +44,11 @@ class Getuiflut {
     return cid;
   }
 
+  static Future<Map> get getLaunchNotification async {
+    Map info = await _channel.invokeMethod('getLaunchNotification');
+    return info;
+  }
+
   void resumePush() {
     _channel.invokeMethod('resume');
   }
