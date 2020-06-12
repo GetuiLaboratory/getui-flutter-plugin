@@ -6,7 +6,7 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getuiflut: ^0.2.1
+  getuiflut: ^0.2.3
 ```
 Pub.dev:
 <a href=" https://pub.dartlang.org/packages?q=getuiflut" target="_blank">getui-flutter-plugin</a>
@@ -101,6 +101,7 @@ import 'package:getuiflut/getuiflut.dart';
         });
       },
     ）;
+ 
 ```
 
 ### Android API
@@ -155,6 +156,12 @@ resetBadge();
   */
 setLocalBadge(badge); 
 
+
+/**
+  *  获取冷启动Apns参数
+  *
+  */
+getLaunchNotification();
 
 #### 回调方法 ：
 
