@@ -10,3 +10,6 @@
 1.新增setLocalBadge接口
 
 * TODO: Describe initial release.
+
+## 0.2.2
+1.升级了 OPPO VIVO 厂商渠道的推送
