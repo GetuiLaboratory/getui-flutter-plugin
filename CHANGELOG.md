@@ -12,4 +12,6 @@
 ## 0.2.3
 1.新增getLaunchNotification
 
+## 0.2.4
+1. iOS application:continueUserActivity:restorationHandler 避免userActivity被系统清除
 * TODO: Describe initial release.

@@ -187,7 +187,7 @@
             [_channel invokeMethod:@"onAppLinkPayload" arguments:payload];
         }
     }
-    return true;
+    return NO;
 }
 
 #pragma mark - VOIP接入
