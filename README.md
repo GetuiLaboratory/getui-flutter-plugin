@@ -144,7 +144,7 @@ Getuiflut().addEventHandler(
           _onReceivePayload = "$message";
         });
       },
-    	// 推送回调
+    	// 点击通知回调
       onReceiveNotificationResponse: (Map<String, dynamic> message) async {
         setState(() {
           _onReceiveNotificationResponse = "$message";
