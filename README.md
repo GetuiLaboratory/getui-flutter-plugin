@@ -60,49 +60,7 @@ android: {
 import 'package:getuiflut/getuiflut.dart';
 ```
 
-### iOS API
-
-```
-	Getuiflut().addEventHandler(
-      onReceiveClientId: (String message) async {
-        print("flutter onReceiveClientId: $message");
-        setState(() {
-          _getClientId = "ClientId: $message";
-        });
-      },
-      onRegisterDeviceToken: (String message) async {
-        setState(() {
-          _getDeviceToken = "DeviceToken: $message";
-        });
-      },
-      onReceivePayload: (Map<String, dynamic> message) async {
-        setState(() {
-          _onReceivePayload = "$message";
-        });
-      },
-      onReceiveNotificationResponse: (Map<String, dynamic> message) async {
-        setState(() {
-          _onReceiveNotificationResponse = "$message";
-        });
-      },
-      onAppLinkPayload: (String message) async {
-        setState(() {
-          _onAppLinkPayLoad = "$message";
-        });
-      },
-      onRegisterVoipToken: (String message) async {
-        setState(() {
-          _getVoipToken = "$message";
-        });
-      },
-      onReceiveVoipPayLoad: (Map<String, dynamic> message) async {
-        setState(() {
-          _onReceiveVoipPayLoad = "$message";
-        });
-      },
-    ）;
- 
-```
+​	
 
 ### Android API
 
@@ -140,58 +98,80 @@ stopPush();
 
 /**
   *  同步服务端角标
-  *
-  */
+    *
+    */
 setBadge(badge);
 
 /**
   *  复位服务端角标
-  *
-  */
+    *
+    */
 resetBadge();
 
 /**
   *  同步App本地角标
-  *
-  */
+    *
+    */
 setLocalBadge(badge); 
 
 
 /**
   *  获取冷启动Apns参数
-  *
-  */
+    *
+    */
 getLaunchNotification();
 
-#### 回调方法 ：
+#### 回调方法
 
 ```dart
 Getuiflut().addEventHandler(
+    	// 注册收到 cid 的回调
       onReceiveClientId: (String message) async {
-        print("flutter onReceiveClientId: $message"); // 注册收到 cid 的回调
+        print("flutter onReceiveClientId: $message");
         setState(() {
-          _getClientId = "flutter onReceiveClientId: $message";
+          _getClientId = "ClientId: $message";
         });
       },
-      onReceiveMessageData: (Map<String, dynamic> msg) async {
-        print("flutter onReceiveMessageData: $msg"); // 透传消息的内容都会走到这里
+    	// 注册 DeviceToken 回调
+      onRegisterDeviceToken: (String message) async {
         setState(() {
-          _payloadInfo = msg['payload'];
+          _getDeviceToken = "DeviceToken: $message";
         });
       },
-      onNotificationMessageArrived: (Map<String, dynamic> msg) async {
-        print("flutter onNotificationMessageArrived"); // 消息到达的回调
+    	// SDK收到透传消息回调
+      onReceivePayload: (Map<String, dynamic> message) async {
         setState(() {
-          _notificationState = 'Arrived';
+          _onReceivePayload = "$message";
         });
       },
-      onNotificationMessageClicked: (Map<String, dynamic> msg) async {
-        print("flutter onNotificationMessageClicked"); // 消息点击的回调
+    	// 推送回调
+      onReceiveNotificationResponse: (Map<String, dynamic> message) async {
         setState(() {
-          _notificationState = 'Clicked';
+          _onReceiveNotificationResponse = "$message";
         });
       },
-    );
+    	// APPLink中携带的透传payload信息
+      onAppLinkPayload: (String message) async {
+        setState(() {
+          _onAppLinkPayLoad = "$message";
+        });
+      },
+    	// VOIPTokenh回调
+      onRegisterVoipToken: (String message) async {
+        setState(() {
+          _getVoipToken = "$message";
+        });
+      },
+    	// VOIP推送回调
+      onReceiveVoipPayLoad: (Map<String, dynamic> message) async {
+        setState(() {
+          _onReceiveVoipPayLoad = "$message";
+        });
+      },
+    ）;
+ 
 ```
+
+
 
 
