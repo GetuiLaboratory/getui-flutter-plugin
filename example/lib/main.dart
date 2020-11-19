@@ -214,7 +214,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    Getuiflut().stopPush();
+                    Getuiflut().turnOffPush();
                   },
                   child: const Text('stop push'),
                 ),

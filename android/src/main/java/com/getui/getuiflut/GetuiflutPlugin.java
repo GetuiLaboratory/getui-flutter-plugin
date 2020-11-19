@@ -21,6 +21,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import com.huawei.agconnect.config.AGConnectServicesConfig;
 
 /** GetuiflutPlugin */
 public class GetuiflutPlugin implements MethodCallHandler {
@@ -163,7 +164,7 @@ public class GetuiflutPlugin implements MethodCallHandler {
 
   private void stopPush() {
     Log.d(TAG, "stop push service");
-    PushManager.getInstance().stopService(registrar.context());
+    PushManager.getInstance().turnOffPush(registrar.context());
   }
 
   /**

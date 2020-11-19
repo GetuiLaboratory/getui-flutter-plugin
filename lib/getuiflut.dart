@@ -49,11 +49,11 @@ class Getuiflut {
     return info;
   }
 
-  void resumePush() {
+  void turnOnPush() {
     _channel.invokeMethod('resume');
   }
 
-  void stopPush() {
+  void turnOffPush() {
     if(Platform.isAndroid) {
        _channel.invokeMethod('stopPush');
     }
