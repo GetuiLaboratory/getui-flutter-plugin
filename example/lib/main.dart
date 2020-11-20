@@ -220,7 +220,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    Getuiflut().resumePush();
+                    Getuiflut().turnOnPush();
                   },
                   child: const Text('resume push'),
                 ),
