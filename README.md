@@ -221,6 +221,9 @@ turnOnPush();
 
 ### iOS API
 
+- GTSDK<=2.4.6.0版本，需要使用插件版本<=0.2.5
+- GTSDK>2.4.6.0版本，需要使用最新插件版本
+
 /**
   *  同步服务端角标
     *
@@ -281,13 +284,13 @@ Getuiflut().addEventHandler(
           _onAppLinkPayLoad = "$message";
         });
       },
-    	// VOIPTokenh回调
+    	// VOIPTokenh回调 0.2.6版本之后废弃
       onRegisterVoipToken: (String message) async {
         setState(() {
           _getVoipToken = "$message";
         });
       },
-    	// VOIP推送回调
+    	// VOIP推送回调  0.2.6版本之后废弃
       onReceiveVoipPayLoad: (Map<String, dynamic> message) async {
         setState(() {
           _onReceiveVoipPayLoad = "$message";
