@@ -40,11 +40,11 @@ class _MyAppState extends State<MyApp> {
 
     if (Platform.isIOS) {
       Getuiflut().startSdk(
-          appId: "iMahVVxurw6BNr7XSn9EF2",
-          appKey: "yIPfqwq6OMAPp6dkqgLpG5",
-          appSecret: "G0aBqAD6t79JfzTB6Z5lo5"
+          appId: "xXmjbbab3b5F1m7wAYZoG2",
+          appKey: "BZF4dANEYr8dwLhj6lRfx2",
+          appSecret: "yXRS5zRxDt8WhMW8DD8W05"
       );
-    }
+    } 
 
     try {
       platformVersion = await Getuiflut.platformVersion;
@@ -231,13 +231,13 @@ class _MyAppState extends State<MyApp> {
               children: <Widget>[
                 RaisedButton(
                   onPressed: () {
-                    Getuiflut().bindAlias('test', '');
+                    Getuiflut().bindAlias('test', 'test');
                   },
                   child: const Text('bindAlias'),
                 ),
                 RaisedButton(
                   onPressed: () {
-                    Getuiflut().unbindAlias('test', '', true);
+                    Getuiflut().unbindAlias('test', 'test', true);
                   },
                   child: const Text('unbindAlias'),
                 ),
