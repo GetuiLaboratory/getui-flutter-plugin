@@ -59,7 +59,6 @@
 
 - (void)startSdk:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
-    
     [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self];
     
     // 注册远程通知
@@ -117,42 +116,23 @@
     completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
 }
 
-//  iOS 10: 点击通知进入App时触发
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler  API_AVAILABLE(ios(10.0)){
-    [GeTuiSdk handleRemoteNotification:response.notification.request.content.userInfo];
+- (void)GeTuiSdkDidReceiveNotification:(NSDictionary *)userInfo notificationCenter:(UNUserNotificationCenter *)center response:(UNNotificationResponse *)response fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
     NSDate *time = response.notification.date;
-    NSDictionary *userInfo = response.notification.request.content.userInfo;
+//    NSDictionary *userInfo = response.notification.request.content.userInfo;
     NSLog(@"\n%@\nTime:%@\n%@", NSStringFromSelector(_cmd), time, userInfo);
     [_channel invokeMethod:@"onReceiveNotificationResponse" arguments:userInfo];
-    completionHandler();
-}
-
-///** APP已经接收到“远程”通知(推送) - (App运行在后台)  */
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-    // [ GTSdk ]：将收到的APNs信息传给个推统计
-    [GeTuiSdk handleRemoteNotification:userInfo];
-
-    // 显示APNs信息到页面
-    NSString *record = [NSString stringWithFormat:@"[APN]%@, %@", [NSDate date], userInfo];
-    NSLog(@"%@",record);
-    [_channel invokeMethod:@"onReceiveNotificationResponse" arguments:userInfo];
-    completionHandler(UIBackgroundFetchResultNewData);
-}
- 
-/** SDK收到透传消息回调 */
-- (void)GeTuiSdkDidReceivePayloadData:(NSData *)payloadData andTaskId:(NSString *)taskId andMsgId:(NSString *)msgId andOffLine:(BOOL)offLine fromGtAppId:(NSString *)appId {
-    // [ GTSdk ]：汇报个推自定义事件(反馈透传消息)
-//    [GeTuiSdk sendFeedbackMessage:90001 andTaskId:taskId andMsgId:msgId];
-
-    // 数据转换
-    NSString *payloadMsg = nil;
-    if (payloadData) {
-        payloadMsg = [[NSString alloc] initWithBytes:payloadData.bytes length:payloadData.length encoding:NSUTF8StringEncoding];
+    if (completionHandler) {
+        completionHandler(UIBackgroundFetchResultNoData);
     }
-    NSDictionary *payloadMsgDic = @{ @"taskId": taskId ?: @"", @"messageId": msgId ?: @"", @"payloadMsg" : payloadMsg, @"offLine" : @(offLine)};
-    NSLog(@"%@", payloadMsgDic);
+}
+
+- (void)GeTuiSdkDidReceiveSlience:(NSDictionary *)userInfo fromGetui:(BOOL)fromGetui offLine:(BOOL)offLine appId:(NSString *)appId taskId:(NSString *)taskId msgId:(NSString *)msgId fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSString *payloadMsg = userInfo[@"payload"];
+    NSDictionary *payloadMsgDic = @{ @"taskId": taskId ?: @"", @"messageId": msgId ?: @"", @"payloadMsg" : payloadMsg, @"offLine" : @(offLine), @"fromGetui": @(fromGetui)};
+    NSLog(@"GeTuiSdkDidReceiveSlience:%@", payloadMsgDic);
     [_channel invokeMethod:@"onReceivePayload" arguments:payloadMsgDic];
+    
 }
 
 /// MARK: - AppLink
