@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:getuiflut/getuiflut.dart';
 
@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   String _onReceivePayload = "";
   String _onReceiveNotificationResponse = "";
   String _onAppLinkPayLoad = "";
-  String _onReceiveVoipPayLoad;
+  String? _onReceiveVoipPayLoad;
   //final Getuiflut getui = new Getuiflut();
 
   @override
@@ -42,9 +42,8 @@ class _MyAppState extends State<MyApp> {
       Getuiflut().startSdk(
           appId: "xXmjbbab3b5F1m7wAYZoG2",
           appKey: "BZF4dANEYr8dwLhj6lRfx2",
-          appSecret: "yXRS5zRxDt8WhMW8DD8W05"
-      );
-    } 
+          appSecret: "yXRS5zRxDt8WhMW8DD8W05");
+    }
 
     try {
       platformVersion = await Getuiflut.platformVersion;
@@ -243,8 +242,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    List test = new List();
-                    test.add('abc');
+                    List<String> test = ['abc'];
                     Getuiflut().setTag(test);
                   },
                   child: const Text('setTag'),
