@@ -27,3 +27,6 @@
 
 ## 0.2.7
 1. 修复GTSDK兼容性问题 
+
+## 0.3.0-nullsafety.1
+1. 兼容flutter2.0 nullsafety
