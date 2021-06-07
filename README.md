@@ -6,7 +6,7 @@
 在工程 pubspec.yaml 中加入 dependencies
 ```yaml
 dependencies:
-  getuiflut: ^0.2.7
+  getuiflut: ^0.2.8
 ```
 Pub.dev:
 <a href=" https://pub.dartlang.org/packages?q=getuiflut" target="_blank">getui-flutter-plugin</a>
@@ -284,18 +284,30 @@ Getuiflut().addEventHandler(
           _onAppLinkPayLoad = "$message";
         });
       },
-    	// VOIPTokenh回调 0.2.6版本之后废弃
-      onRegisterVoipToken: (String message) async {
-        setState(() {
-          _getVoipToken = "$message";
-        });
+    	//通知服务开启\关闭回调
+      onPushModeResult: (Map<String, dynamic> message) async {
+        print("flutter onPushModeResult: $message");
       },
-    	// VOIP推送回调  0.2.6版本之后废弃
-      onReceiveVoipPayLoad: (Map<String, dynamic> message) async {
-        setState(() {
-          _onReceiveVoipPayLoad = "$message";
-        });
+	// SetTag回调
+      onSetTagResult: (Map<String, dynamic> message) async {
+        print("flutter onSetTagResult: $message");
       },
+	//设置别名回调
+      onAliasResult: (Map<String, dynamic> message) async {
+        print("flutter onAliasResult: $message");
+      },
+	//查询别名回调
+      onQueryTagResult: (Map<String, dynamic> message) async {
+        print("flutter onQueryTagResult: $message");
+      },
+	//APNs通知即将展示回调
+      onWillPresentNotification: (Map<String, dynamic> message) async {
+        print("flutter onWillPresentNotification: $message");
+      }, 
+	//APNs通知设置跳转回调
+      onOpenSettingsForNotification: (Map<String, dynamic> message) async {
+        print("flutter onOpenSettingsForNotification: $message");
+      }, 
     ）;
  
 ```

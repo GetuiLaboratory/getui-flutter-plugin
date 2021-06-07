@@ -49,7 +49,7 @@
   } else if([@"setLocalBadge" isEqualToString:call.method]) {
       [self setLocalBadge:call result:result];
   } else if([@"resume" isEqualToString:call.method]) {
-        [GeTuiSdk resume];
+//        [GeTuiSdk resume];
   } else if([@"getLaunchNotification" isEqualToString:call.method]) {
       result(_launchNotification ?: @{});
   } else {
@@ -97,7 +97,7 @@
 /** SDK启动成功返回cid */
 - (void)GeTuiSdkDidRegisterClient:(NSString *)clientId {
     // [ GTSdk ]：个推SDK已注册，返回clientId
-    NSLog(@">>[GTSdk RegisterClient]:%@", clientId);
+    NSLog(@">>[GTSDK RegisterClient]:%@", clientId);
     if ([clientId isEqualToString:@""]) {
         return;
     }
@@ -110,14 +110,13 @@
 /// @param notification notification
 /// @param completionHandler completionHandler
 - (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification completionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    NSLog(@">>[GTSdk willPresentNotification]: %@", notification.request.content.userInfo);
-
+    NSLog(@"willPresentNotification :%@", notification.request.content.userInfo);
     // 根据APP需要，判断是否要提示用户Badge、Sound、Alert
     completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
+    [_channel invokeMethod:@"onWillPresentNotification" arguments:notification.request.content.userInfo];
 }
 
 - (void)GeTuiSdkDidReceiveNotification:(NSDictionary *)userInfo notificationCenter:(UNUserNotificationCenter *)center response:(UNNotificationResponse *)response fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    
     NSDate *time = response.notification.date;
 //    NSDictionary *userInfo = response.notification.request.content.userInfo;
     NSLog(@"\n%@\nTime:%@\n%@", NSStringFromSelector(_cmd), time, userInfo);
@@ -125,6 +124,11 @@
     if (completionHandler) {
         completionHandler(UIBackgroundFetchResultNoData);
     }
+}
+
+- (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification {
+    NSLog(@"openSettingsForNotification :%@", notification.request.content.userInfo);
+    [_channel invokeMethod:@"onOpenSettingsForNotification" arguments:notification.request.content.userInfo];
 }
 
 - (void)GeTuiSdkDidReceiveSlience:(NSDictionary *)userInfo fromGetui:(BOOL)fromGetui offLine:(BOOL)offLine appId:(NSString *)appId taskId:(NSString *)taskId msgId:(NSString *)msgId fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
@@ -187,25 +191,33 @@
 
 /** SDK设置推送模式回调 */
 - (void)GeTuiSdkDidSetPushMode:(BOOL)isModeOff error:(NSError *)error {
-    
+    NSLog(@"GeTuiSdkDidSetPushMode isModeOff:%@ error:%@", @(isModeOff), error);
+    NSDictionary *dic = @{@"result": @(isModeOff), @"error": error ? [error localizedDescription] : @""};
+    [_channel invokeMethod:@"onPushModeResult" arguments:dic];
+}
+
+- (void)GeTuiSdkDidSetTagsAction:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)aError {
+    NSLog(@"GeTuiSdkDidSetTagsAction sn:%@ result:%@ error:%@", sequenceNum, @(isSuccess), aError);
+    NSDictionary *dic = @{@"sn": sequenceNum?:@"", @"result": @(isSuccess), @"error": aError ? [aError localizedDescription] : @""};
+    [_channel invokeMethod:@"onSetTagResult" arguments:dic];
 }
 
 - (void)GeTuiSdkDidAliasAction:(NSString *)action result:(BOOL)isSuccess sequenceNum:(NSString *)aSn error:(NSError *)aError {
-    if ([kGtResponseBindType isEqualToString:action]) {
-        NSLog(@"绑定结果 ：%@ !, sn : %@", isSuccess ? @"成功" : @"失败", aSn);
-        if (!isSuccess) {
-            NSLog(@"失败原因: %@", aError);
-        }
-    } else if ([kGtResponseUnBindType isEqualToString:action]) {
-        NSLog(@"绑定结果 ：%@ !, sn : %@", isSuccess ? @"成功" : @"失败", aSn);
-        if (!isSuccess) {
-            NSLog(@"失败原因: %@", aError);
-        }
+    NSLog(@"GeTuiSdkDidAliasAction action: %@ sn:%@ result:%@ error:%@",[kGtResponseBindType isEqualToString:action] ? @"绑定" : @"解绑", aSn, @(isSuccess), aError);
+    NSDictionary *dic = @{@"action": action, @"sn": aSn?:@"", @"result": @(isSuccess), @"error": aError ? [aError localizedDescription] : @""};
+    [_channel invokeMethod:@"onAliasResult" arguments:dic];
+    //akak test
+    {
+        NSArray*aTags = @[@"aa",@"bb",@"cc"];
+    NSDictionary *dic = @{@"tags": aTags, @"sn": aSn?:@"", @"error": aError ? [aError localizedDescription] : @""};
+    [_channel invokeMethod:@"onQueryTagResult" arguments:dic];
     }
 }
 
 - (void)GetuiSdkDidQueryTag:(NSArray *)aTags sequenceNum:(NSString *)aSn error:(NSError *)aError {
     NSLog(@"GetuiSdkDidQueryTag : %@, SN : %@, error :%@", aTags, aSn, aError);
+    NSDictionary *dic = @{@"tags": aTags, @"sn": aSn?:@"", @"error": aError ? [aError localizedDescription] : @""};
+    [_channel invokeMethod:@"onQueryTagResult" arguments:dic];
 }
 
 

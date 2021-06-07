@@ -28,6 +28,12 @@ class Getuiflut {
   // ios 收到VOIP消息
   EventHandlerMap _onReceiveVoipPayLoad;
 
+  EventHandlerMap _onPushModeResult;
+  EventHandlerMap _onSetTagResult;
+  EventHandlerMap _onAliasResult;
+  EventHandlerMap _onQueryTagResult;
+  EventHandlerMap _onWillPresentNotification;
+  EventHandlerMap _onOpenSettingsForNotification;
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -126,6 +132,20 @@ class Getuiflut {
     EventHandler onAppLinkPayload,
     // ios 收到VOIP消息
     EventHandlerMap onReceiveVoipPayLoad,
+
+    // ios收到pushmode回调
+    EventHandlerMap onPushModeResult,
+    // ios收到setTag回调
+    EventHandlerMap onSetTagResult,
+    // ios收到别名回调
+    EventHandlerMap onAliasResult,
+    // ios收到查询tag回调
+    EventHandlerMap onQueryTagResult,
+    // ios收到APNs即将展示回调
+    EventHandlerMap onWillPresentNotification,
+    // ios收到APNs通知设置跳转回调
+    EventHandlerMap onOpenSettingsForNotification,
+
   }){
     _onReceiveClientId = onReceiveClientId;
     _onRegisterDeviceToken = onRegisterDeviceToken;
@@ -138,6 +158,18 @@ class Getuiflut {
     _onReceiveNotificationResponse = onReceiveNotificationResponse;
     _onAppLinkPayload = onAppLinkPayload;
     _onReceiveVoipPayLoad = onReceiveVoipPayLoad;
+
+    _onPushModeResult = onPushModeResult;
+    _onSetTagResult = onSetTagResult;
+    _onAliasResult = onAliasResult;
+
+    _onQueryTagResult = onQueryTagResult;
+    _onWillPresentNotification = onWillPresentNotification;
+    _onOpenSettingsForNotification = onOpenSettingsForNotification;
+    _onQueryTagResult = onQueryTagResult;
+    _onWillPresentNotification = onWillPresentNotification;
+    _onOpenSettingsForNotification = onOpenSettingsForNotification;
+  
     _channel.setMethodCallHandler(_handleMethod);
   }
 
@@ -165,6 +197,22 @@ class Getuiflut {
         return _onRegisterVoipToken(call.arguments);
       case "onReceiveVoipPayLoad":
         return _onReceiveVoipPayLoad(call.arguments.cast<String, dynamic>());
+        
+      case "onPushModeResult":
+        return _onPushModeResult(call.arguments.cast<String, dynamic>());
+      case "onSetTagResult":
+        return _onSetTagResult(call.arguments.cast<String, dynamic>());
+      case "onAliasResult":
+        return _onAliasResult(call.arguments.cast<String, dynamic>());
+      
+      case "onWillPresentNotification":
+        return _onWillPresentNotification(call.arguments.cast<String, dynamic>());
+      case "onOpenSettingsForNotification":
+        return _onOpenSettingsForNotification(call.arguments.cast<String, dynamic>());
+      case "onQueryTagResult":
+        return _onQueryTagResult(call.arguments.cast<String, dynamic>());
+
+
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }
