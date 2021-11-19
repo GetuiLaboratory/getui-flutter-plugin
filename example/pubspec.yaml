@@ -1,4 +1,5 @@
-name: getuiflut_example
+name: 'getuiflut_example'
+number: 1.0.0
 description: Demonstrates how to use the getuiflut plugin.
 publish_to: 'none'
 

@@ -206,12 +206,6 @@
     NSLog(@"GeTuiSdkDidAliasAction action: %@ sn:%@ result:%@ error:%@",[kGtResponseBindType isEqualToString:action] ? @"绑定" : @"解绑", aSn, @(isSuccess), aError);
     NSDictionary *dic = @{@"action": action, @"sn": aSn?:@"", @"result": @(isSuccess), @"error": aError ? [aError localizedDescription] : @""};
     [_channel invokeMethod:@"onAliasResult" arguments:dic];
-    //akak test
-    {
-        NSArray*aTags = @[@"aa",@"bb",@"cc"];
-    NSDictionary *dic = @{@"tags": aTags, @"sn": aSn?:@"", @"error": aError ? [aError localizedDescription] : @""};
-    [_channel invokeMethod:@"onQueryTagResult" arguments:dic];
-    }
 }
 
 - (void)GetuiSdkDidQueryTag:(NSArray *)aTags sequenceNum:(NSString *)aSn error:(NSError *)aError {
