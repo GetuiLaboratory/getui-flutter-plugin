@@ -184,6 +184,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: Column(children: <Widget>[
+
             Text('platformVersion: $_platformVersion\n'),
             Text('clientId: $_getClientId\n'),
             Text(
@@ -195,7 +196,7 @@ class _MyAppState extends State<MyApp> {
             ),
             Text('payload: $_payloadInfo\n'),
             Text('notificaiton state: $_notificationState\n'),
-            FlatButton(
+            ElevatedButton(
               onPressed: () {
                 initGetuiSdk();
               },
@@ -211,7 +212,7 @@ class _MyAppState extends State<MyApp> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       if (Platform.isIOS) {
                         Getuiflut().onActivityCreate();
@@ -219,7 +220,7 @@ class _MyAppState extends State<MyApp> {
                     },
                     child: const Text('onActivityCreate'),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     onPressed: () {
                       getLaunchNotification();
                     },
@@ -229,13 +230,13 @@ class _MyAppState extends State<MyApp> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     getClientId();
                   },
                   child: const Text('getClientId'),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     Getuiflut().turnOffPush();
                   },
@@ -252,22 +253,21 @@ class _MyAppState extends State<MyApp> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     Getuiflut().bindAlias('test', 'test');
                   },
                   child: const Text('bindAlias'),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     Getuiflut().unbindAlias('test', 'test', true);
                   },
                   child: const Text('unbindAlias'),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
-                    List test = new List();
-                    test.add('abc');
+                    List test = List.filled(1,'abc' );
                     Getuiflut().setTag(test);
                   },
                   child: const Text('setTag'),
@@ -277,13 +277,13 @@ class _MyAppState extends State<MyApp> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     Getuiflut().setBadge(5);
                   },
                   child: const Text('setBadge'),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     Getuiflut().resetBadge();
                   },
@@ -294,7 +294,7 @@ class _MyAppState extends State<MyApp> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     Getuiflut().setLocalBadge(0);
                   },
