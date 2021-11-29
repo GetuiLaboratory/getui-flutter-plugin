@@ -37,9 +37,9 @@ android {
         minSdkVersion 17
         targetSdkVersion 28
         manifestPlaceholders = [
-                GETUI_APP_ID    : "",
-                GETUI_APP_KEY   : "",
-                GETUI_APP_SECRET: "",
+                GETUI_APP_ID    : "djYjSlFVMf6p5YOy2OQUs8",
+                GETUI_APP_KEY   : "lR9JzG3HyX9R4YG22qcDZ4",
+                GETUI_APP_SECRET: "nZlNP5s3Ha5ZE9FbRUuf76",
                 XIAOMI_APP_ID   : "",
                 XIAOMI_APP_KEY  : "",
 

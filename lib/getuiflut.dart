@@ -6,38 +6,37 @@ typedef Future<dynamic> EventHandler(String res);
 typedef Future<dynamic> EventHandlerMap(Map<String, dynamic> event);
 
 class Getuiflut {
-
   static const MethodChannel _channel = const MethodChannel('getuiflut');
 
-  late EventHandler _onReceiveClientId;
-  late EventHandlerMap _onReceiveMessageData;
-  late EventHandlerMap _onNotificationMessageArrived;
-  late EventHandlerMap _onNotificationMessageClicked;
+  EventHandler _onReceiveClientId;
+  EventHandlerMap _onReceiveMessageData;
+  EventHandlerMap _onNotificationMessageArrived;
+  EventHandlerMap _onNotificationMessageClicked;
 
   // deviceToken
-  late EventHandler _onRegisterDeviceToken;
+  EventHandler _onRegisterDeviceToken;
 
   // voipToken
-  EventHandler? _onRegisterVoipToken;
+  EventHandler _onRegisterVoipToken;
 
   //  iOS收到的透传内容
-  late EventHandlerMap _onReceivePayload;
+  EventHandlerMap _onReceivePayload;
 
   // ios 收到APNS消息
-  late EventHandlerMap _onReceiveNotificationResponse;
+  EventHandlerMap _onReceiveNotificationResponse;
 
   // ios 收到AppLink消息
-  late EventHandler _onAppLinkPayload;
+  EventHandler _onAppLinkPayload;
 
   // ios 收到VOIP消息
-  EventHandlerMap? _onReceiveVoipPayLoad;
+  EventHandlerMap _onReceiveVoipPayLoad;
 
-  late EventHandlerMap _onPushModeResult;
-  late EventHandlerMap _onSetTagResult;
-  late EventHandlerMap _onAliasResult;
-  late EventHandlerMap _onQueryTagResult;
-  late EventHandlerMap _onWillPresentNotification;
-  late EventHandlerMap _onOpenSettingsForNotification;
+  EventHandlerMap _onPushModeResult;
+  EventHandlerMap _onSetTagResult;
+  EventHandlerMap _onAliasResult;
+  EventHandlerMap _onQueryTagResult;
+  EventHandlerMap _onWillPresentNotification;
+  EventHandlerMap _onOpenSettingsForNotification;
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -117,42 +116,41 @@ class Getuiflut {
   }
 
   void addEventHandler({
-    required EventHandler onReceiveClientId,
-    required EventHandlerMap onReceiveMessageData,
-    required EventHandlerMap onNotificationMessageArrived,
-    required EventHandlerMap onNotificationMessageClicked,
+    EventHandler onReceiveClientId,
+    EventHandlerMap onReceiveMessageData,
+    EventHandlerMap onNotificationMessageArrived,
+    EventHandlerMap onNotificationMessageClicked,
 
     //deviceToken
-    required EventHandler onRegisterDeviceToken,
+    EventHandler onRegisterDeviceToken,
     //voipToken
-    EventHandler? onRegisterVoipToken,
+    EventHandler onRegisterVoipToken,
     //ios 收到的透传内容
-    required EventHandlerMap onReceivePayload,
+    EventHandlerMap onReceivePayload,
     // ios 收到APNS消息
-    required EventHandlerMap onReceiveNotificationResponse,
+    EventHandlerMap onReceiveNotificationResponse,
     // ios 收到AppLink消息
-    required EventHandler onAppLinkPayload,
+    EventHandler onAppLinkPayload,
     // ios 收到VOIP消息
-    EventHandlerMap? onReceiveVoipPayLoad,
+    EventHandlerMap onReceiveVoipPayLoad,
 
     // ios收到pushmode回调
-    required EventHandlerMap onPushModeResult,
+    EventHandlerMap onPushModeResult,
     // ios收到setTag回调
-    required EventHandlerMap onSetTagResult,
+    EventHandlerMap onSetTagResult,
     // ios收到别名回调
-    required EventHandlerMap onAliasResult,
+    EventHandlerMap onAliasResult,
     // ios收到查询tag回调
-    required EventHandlerMap onQueryTagResult,
+    EventHandlerMap onQueryTagResult,
     // ios收到APNs即将展示回调
-    required EventHandlerMap onWillPresentNotification,
+    EventHandlerMap onWillPresentNotification,
     // ios收到APNs通知设置跳转回调
-    required EventHandlerMap onOpenSettingsForNotification,
+    EventHandlerMap onOpenSettingsForNotification,
   }) {
     _onReceiveClientId = onReceiveClientId;
     _onRegisterDeviceToken = onRegisterDeviceToken;
-    if (onRegisterVoipToken != null) {
-      _onRegisterVoipToken = onRegisterVoipToken;
-    }
+
+    _onRegisterVoipToken = onRegisterVoipToken;
 
     _onReceiveMessageData = onReceiveMessageData;
     _onNotificationMessageArrived = onNotificationMessageArrived;
@@ -161,9 +159,8 @@ class Getuiflut {
     _onReceivePayload = onReceivePayload;
     _onReceiveNotificationResponse = onReceiveNotificationResponse;
     _onAppLinkPayload = onAppLinkPayload;
-    if (onReceiveVoipPayLoad != null) {
-      _onReceiveVoipPayLoad = onReceiveVoipPayLoad;
-    }
+
+    _onReceiveVoipPayLoad = onReceiveVoipPayLoad;
 
     _onPushModeResult = onPushModeResult;
     _onSetTagResult = onSetTagResult;
@@ -183,46 +180,93 @@ class Getuiflut {
     switch (call.method) {
       case "onReceiveClientId":
         print('onReceiveClientId' + call.arguments);
+        if (_onReceiveClientId == null) {
+          break;
+        }
         return _onReceiveClientId(call.arguments);
 
       case "onReceiveMessageData":
+        if (_onReceiveMessageData == null) {
+          break;
+        }
         return _onReceiveMessageData(call.arguments.cast<String, dynamic>());
       case "onNotificationMessageArrived":
+        if (_onNotificationMessageArrived == null) {
+          break;
+        }
         return _onNotificationMessageArrived(
             call.arguments.cast<String, dynamic>());
       case "onNotificationMessageClicked":
+        if (_onNotificationMessageClicked == null) {
+          break;
+        }
         return _onNotificationMessageClicked(
             call.arguments.cast<String, dynamic>());
       case "onRegisterDeviceToken":
+        if (_onRegisterDeviceToken == null) {
+          break;
+        }
         return _onRegisterDeviceToken(call.arguments);
       case "onReceivePayload":
+        if (_onReceivePayload == null) {
+          break;
+        }
         return _onReceivePayload(call.arguments.cast<String, dynamic>());
       case "onReceiveNotificationResponse":
+        if (_onReceiveNotificationResponse == null) {
+          break;
+        }
         return _onReceiveNotificationResponse(
             call.arguments.cast<String, dynamic>());
       case "onAppLinkPayload":
+        if (_onAppLinkPayload == null) {
+          break;
+        }
         return _onAppLinkPayload(call.arguments);
       case "onRegisterVoipToken":
-        return _onRegisterVoipToken!(call.arguments);
+        if (_onRegisterVoipToken == null) {
+          break;
+        }
+        return _onRegisterVoipToken(call.arguments);
       case "onReceiveVoipPayLoad":
-        return _onReceiveVoipPayLoad!(call.arguments.cast<String, dynamic>());
+        if (_onReceiveVoipPayLoad == null) {
+          break;
+        }
+        return _onReceiveVoipPayLoad(call.arguments.cast<String, dynamic>());
 
       case "onPushModeResult":
+        if (_onPushModeResult == null) {
+          break;
+        }
         return _onPushModeResult(call.arguments.cast<String, dynamic>());
       case "onSetTagResult":
+        if (_onSetTagResult == null) {
+          break;
+        }
         return _onSetTagResult(call.arguments.cast<String, dynamic>());
       case "onAliasResult":
+        if (_onAliasResult == null) {
+          break;
+        }
         return _onAliasResult(call.arguments.cast<String, dynamic>());
 
       case "onWillPresentNotification":
+        if (_onWillPresentNotification == null) {
+          break;
+        }
         return _onWillPresentNotification(
             call.arguments.cast<String, dynamic>());
       case "onOpenSettingsForNotification":
+        if (_onOpenSettingsForNotification == null) {
+          break;
+        }
         return _onOpenSettingsForNotification(
             call.arguments.cast<String, dynamic>());
       case "onQueryTagResult":
+        if (_onQueryTagResult == null) {
+          break;
+        }
         return _onQueryTagResult(call.arguments.cast<String, dynamic>());
-
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }
@@ -231,9 +275,9 @@ class Getuiflut {
   //ios
   //初始化SDK
   void startSdk({
-    required String appId,
-    required String appKey,
-    required String appSecret,
+    String appId,
+    String appKey,
+    String appSecret,
   }) {
     _channel.invokeMethod(
         'startSdk', {'appId': appId, 'appKey': appKey, 'appSecret': appSecret});
