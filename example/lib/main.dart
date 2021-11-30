@@ -131,18 +131,7 @@ class _MyAppState extends State<MyApp> {
       onOpenSettingsForNotification: (Map<String, dynamic> message) async {
         print("flutter onOpenSettingsForNotification: $message");
       }, 
- 
-      // 已废弃
-      // onRegisterVoipToken: (String message) async {
-      //   setState(() {
-      //     _getVoipToken = "$message";
-      //   });
-      // },
-      // onReceiveVoipPayLoad: (Map<String, dynamic> message) async {
-      //   setState(() {
-      //     _onReceiveVoipPayLoad = "$message";
-      //   });
-      // },
+
     );
   }
 
