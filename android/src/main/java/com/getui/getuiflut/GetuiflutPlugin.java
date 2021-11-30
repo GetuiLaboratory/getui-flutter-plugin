@@ -3,7 +3,6 @@ package com.getui.getuiflut;
 import android.content.Context;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.os.Handler;
 
@@ -47,14 +46,14 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
     }
 
     @Override
-    public void onAttachedToEngine(@NonNull FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
+    public void onAttachedToEngine( FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
         fContext = flutterPluginBinding.getApplicationContext();
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "getuiflut");
         channel.setMethodCallHandler(this);
     }
 
     @Override
-    public void onDetachedFromEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
+    public void onDetachedFromEngine( FlutterPlugin.FlutterPluginBinding binding) {
         channel.setMethodCallHandler(null);
     }
 
@@ -115,7 +114,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
 
 
     @Override
-    public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+    public void onMethodCall( MethodCall call, Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
         } else if (call.method.equals("initGetuiPush")) {
