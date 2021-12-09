@@ -167,7 +167,7 @@ class Getuiflut {
   Future _handleMethod(MethodCall call) async {
     switch (call.method) {
       case "onReceiveClientId":
-        print('onReceiveClientId' + call.arguments);
+        print('onReceiveClientId:' + call.arguments);
         return _onReceiveClientId(call.arguments);
       case "onReceiveMessageData":
         return _onReceiveMessageData(call.arguments.cast<String, dynamic>());

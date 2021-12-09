@@ -2,19 +2,34 @@
 
 
 
-### 引用
-在工程 pubspec.yaml 中加入 dependencies
+## 1、引用
+
+Pub.dev:
+<a href="https://pub.dev/packages/getuiflut" target="_blank">getui-flutter-plugin</a>
+
+增加依赖：
+
+```shell
+flutter pub add getuiflut
+```
+
+或者手动在工程 pubspec.yaml 中加入 dependencies：
+
 ```yaml
 dependencies:
   getuiflut: ^0.2.11
 ```
-Pub.dev:
-<a href=" https://pub.dartlang.org/packages?q=getuiflut" target="_blank">getui-flutter-plugin</a>
+下载依赖：
 
-### 配置
-### Android:
+```shell
+flutter pub get
+```
 
-#### 1.添加相关配置：
+## 2、配置
+
+### 2.1、Android:
+
+#### 2.1.1、添加相关配置：
 
 在 `/android/app/build.gradle` 中添加下列代码：
 ```groovy
@@ -43,9 +58,9 @@ android: {
 }
 ```
 
-#### 2.添加依赖地址
+#### 2.1.2、添加依赖地址
 
-```
+```groovy
 buildscript {
     repositories {
         jcenter()
@@ -59,7 +74,6 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
-
 }
 
 allprojects {
@@ -73,9 +87,9 @@ allprojects {
 }
 ```
 
-### 集成 HMS SDK
+#### 2.1.3、集成多厂商- HMS SDK
 
-#### 1. 添加应用的 AppGallery Connect 配置文件
+##### 1） 添加应用的 AppGallery Connect 配置文件
 
 1. 登录 AppGallery Connect 网站，选择“我的应用”。找到应用所在的产品，点击应用名称。
 
@@ -95,11 +109,11 @@ allprojects {
      | ......
    ```
 
-#### 2. 配置相应依赖
+##### 2）配置相应依赖
 
 1.在以项目名为命名的**顶层** `build.gradle` 文件的 `buildscript.repositories` 和 `allprojects.repositories` 中，添加 HMS SDK 的 maven 仓地址 `maven {url 'http://developer.huawei.com/repo/'}`。在 `buildscript.dependencies` 添加 `classpath 'com.huawei.agconnect:agcp:${version}'` 如下所示：
 
-```
+```groovy
 buildscript {
     repositories {
         jcenter()
@@ -126,7 +140,7 @@ allprojects {
 
 2.该步骤需要在模块级别 `app/build.gradle` 中文件头配置 `apply plugin: 'com.huawei.agconnect'` 以及在 `dependencies` 块配置 HMS Push 依赖 `implementation 'com.huawei.hms:push:${version}'`，如下：
 
-```
+```groovy
 apply plugin: 'com.android.application'
 apply plugin: 'com.huawei.agconnect'
 android { 
@@ -140,7 +154,7 @@ dependencies {
 
 3.配置签名信息：将步骤一【创建华为应用】中官方文档**生成签名证书指纹步骤中生成的签名文件拷贝到工程的 app 目录下**，在 app/build.gradle 文件中配置签名。如下（具体请根据您当前项目的配置修改）：
 
-```
+```groovy
 signingConfigs {
      config {
          keyAlias 'pushdemo'
@@ -161,35 +175,28 @@ signingConfigs {
  }
 ```
 
-### iOS:
+### 2.2、iOS:
 
 在你项目的main.dart中添加下列代码：
-
-```
+```dart
    Getuiflut().startSdk(
       appId: "8eLAkGIYnGAwA9fVYZU93A",
       appKey: "VFX8xYxvVF6w59tsvY6XN",
       appSecret: "Kv3TeED8z19QwnMLdzdI35"
    );
-    
 ```
+启用notification：xcode主工程配置 > Signing & Capabilities > +Push Noticifations
 
-### 使用
+## 3、使用
 ```dart
 import 'package:getuiflut/getuiflut.dart';
 ```
 
-​	
+### 3.1、公共 API
 
-### Android API
+* 公共 API
 
 ```dart
-/**
-	*初始化个推sdk
-	*/
-Getuiflut.initGetuiSdk();
-
-### 公用 API
 /**
 	* 绑定别名功能:后台可以根据别名进行推送
 	*
@@ -219,37 +226,7 @@ turnOffPush();
 turnOnPush();
 ```
 
-### iOS API
-
-- GTSDK<=2.4.6.0版本，需要使用插件版本<=0.2.5
-- GTSDK>2.4.6.0版本，需要使用最新插件版本
-
-/**
-  *  同步服务端角标
-    *
-    */
-setBadge(badge);
-
-/**
-  *  复位服务端角标
-    *
-    */
-resetBadge();
-
-/**
-  *  同步App本地角标
-    *
-    */
-setLocalBadge(badge); 
-
-
-/**
-  *  获取冷启动Apns参数
-    *
-    */
-getLaunchNotification();
-
-#### 回调方法
+* 回调方法
 
 ```dart
 Getuiflut().addEventHandler(
@@ -309,9 +286,47 @@ Getuiflut().addEventHandler(
         print("flutter onOpenSettingsForNotification: $message");
       }, 
     ）;
- 
 ```
 
+### 3.2、Android API
+
+```dart
+/**
+	*初始化个推sdk
+	*/
+Getuiflut.initGetuiSdk();
+```
+
+### 3.2、iOS API
+
+- GTSDK<=2.4.6.0版本，需要使用插件版本<=0.2.5
+- GTSDK>2.4.6.0版本，需要使用最新插件版本
+```dart
+/**
+  *  同步服务端角标
+    *
+    */
+    setBadge(badge);
+
+/**
+  *  复位服务端角标
+    *
+    */
+    resetBadge();
+
+/**
+  *  同步App本地角标
+    *
+    */
+    setLocalBadge(badge); 
+
+
+/**
+  *  获取冷启动Apns参数
+    *
+    */
+    getLaunchNotification();
+```
 
 
 

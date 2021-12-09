@@ -80,18 +80,19 @@ class _MyAppState extends State<MyApp> {
         });
       },
       onNotificationMessageArrived: (Map<String, dynamic> msg) async {
-        print("flutter onNotificationMessageArrived");
+        print("flutter onNotificationMessageArrived: $msg");
         setState(() {
           _notificationState = 'Arrived';
         });
       },
       onNotificationMessageClicked: (Map<String, dynamic> msg) async {
-        print("flutter onNotificationMessageClicked");
+        print("flutter onNotificationMessageClicked: $msg");
         setState(() {
           _notificationState = 'Clicked';
         });
       },
       onRegisterDeviceToken: (String message) async {
+        print("flutter onRegisterDeviceToken: $message");
         setState(() {
           _getDeviceToken = "$message";
         });
@@ -109,6 +110,7 @@ class _MyAppState extends State<MyApp> {
         });
       },
       onAppLinkPayload: (String message) async {
+        print("flutter onAppLinkPayload: $message");
         setState(() {
           _onAppLinkPayLoad = "$message";
         });
