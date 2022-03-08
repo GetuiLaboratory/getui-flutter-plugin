@@ -4,6 +4,7 @@
         <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
         <service
             android:name="com.getui.getuiflut.FlutterIntentService"
+            android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <!-- 配置SDK核心服务 -->
         <service
