@@ -5,9 +5,9 @@ buildscript {
         google()
         jcenter()
         maven {
-            url "http://mvn.gt.getui.com/nexus/content/repositories/releases/"
+            url "https://mvn.getui.com/nexus/content/repositories/releases/"
         }
-        maven {url 'http://developer.huawei.com/repo/'}
+        maven {url 'https://developer.huawei.com/repo/'}
     }
 
     dependencies {
@@ -19,9 +19,9 @@ rootProject.allprojects {
     repositories {
         //Maven URL地址
         maven {
-            url "http://mvn.gt.getui.com/nexus/content/repositories/releases/"
+            url "https://mvn.getui.com/nexus/content/repositories/releases/"
         }
-        maven {url 'http://developer.huawei.com/repo/'}
+        maven {url 'https://developer.huawei.com/repo/'}
         jcenter()
         google()
     }
