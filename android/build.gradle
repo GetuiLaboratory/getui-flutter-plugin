@@ -44,11 +44,11 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.getui:sdk-for-google-play:4.3.5.13'
+    implementation 'com.getui:sdk-for-google-play:4.3.9.0'
     implementation ('com.getui:hwp-v4:2.0.0'){
         exclude group: 'com.getui', module: 'sdk'
     }
-    implementation ('com.getui:mzp:1.0.7'){
+    implementation ('com.getui:mzp:3.2.0'){
         exclude group: 'com.getui', module: 'sdk'
     }
     implementation ('com.assist:oppo:1.0.7'){
