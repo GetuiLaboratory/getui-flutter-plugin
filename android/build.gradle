@@ -48,7 +48,7 @@ dependencies {
     implementation ('com.getui:hwp-v4:2.0.0'){
         exclude group: 'com.getui', module: 'sdk'
     }
-    implementation ('com.getui:mzp:3.2.0'){
+    implementation ('com.getui:mzp:1.0.7'){
         exclude group: 'com.getui', module: 'sdk'
     }
     implementation ('com.assist:oppo:1.0.7'){
