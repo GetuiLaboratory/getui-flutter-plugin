@@ -44,7 +44,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.getui:sdk-for-google-play:4.3.9.0'
+    implementation 'com.getui:sdk-for-google-play:4.3.5.13'
     implementation ('com.getui:hwp-v4:2.0.0'){
         exclude group: 'com.getui', module: 'sdk'
     }
