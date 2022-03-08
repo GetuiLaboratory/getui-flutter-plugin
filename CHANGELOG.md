@@ -43,3 +43,4 @@
 
 ## 0.2.11+1
 1. Android中maven使用https
+2. 适配Android 12
