@@ -48,6 +48,8 @@
       [GeTuiSdk resetBadge];
   } else if([@"setLocalBadge" isEqualToString:call.method]) {
       [self setLocalBadge:call result:result];
+  } else if([@"setPushMode" isEqualToString:call.method]) {
+      [self setPushMode:call result:result];
   } else if([@"resume" isEqualToString:call.method]) {
 //        [GeTuiSdk resume];
   } else if([@"getLaunchNotification" isEqualToString:call.method]) {
@@ -59,7 +61,7 @@
 
 - (void)startSdk:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
-    [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self];
+    [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self launchingOptions:_launchNotification ?: @{}];
     
     // 注册远程通知
     [GeTuiSdk registerRemoteNotification: (UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge)];
@@ -186,7 +188,12 @@
     NSDictionary *ConfigurationInfo = call.arguments;
     NSUInteger value = [ConfigurationInfo[@"badge"] integerValue];
     [UIApplication sharedApplication].applicationIconBadgeNumber = value;
-    
+}
+
+- (void)setPushMode:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    BOOL value = [ConfigurationInfo[@"mode"] boolValue];
+    [GeTuiSdk setPushModeForOff:value];
 }
 
 /** SDK设置推送模式回调 */

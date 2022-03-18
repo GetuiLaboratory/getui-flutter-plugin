@@ -43,9 +43,8 @@ class _MyAppState extends State<MyApp> {
       Getuiflut().startSdk(
           appId: "xXmjbbab3b5F1m7wAYZoG2",
           appKey: "BZF4dANEYr8dwLhj6lRfx2",
-          appSecret: "yXRS5zRxDt8WhMW8DD8W05"
-      );
-    } 
+          appSecret: "yXRS5zRxDt8WhMW8DD8W05");
+    }
 
     try {
       platformVersion = await Getuiflut.platformVersion;
@@ -129,11 +128,10 @@ class _MyAppState extends State<MyApp> {
       },
       onWillPresentNotification: (Map<String, dynamic> message) async {
         print("flutter onWillPresentNotification: $message");
-      }, 
+      },
       onOpenSettingsForNotification: (Map<String, dynamic> message) async {
         print("flutter onOpenSettingsForNotification: $message");
-      }, 
-
+      },
     );
   }
 
@@ -168,149 +166,166 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Column(children: <Widget>[
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: ListView(
+            children: <Widget>[
+              Container(
+                // height: 200,
+                alignment: Alignment.center,
 
-            Text('platformVersion: $_platformVersion\n'),
-            Text('clientId: $_getClientId\n'),
-            Text(
-              'Android Public Function',
-              style: TextStyle(
-                color: Colors.lightBlue,
-                fontSize: 20.0,
-              ),
-            ),
-            Text('payload: $_payloadInfo\n'),
-            Text('notificaiton state: $_notificationState\n'),
-            ElevatedButton(
-              onPressed: () {
-                initGetuiSdk();
-              },
-              child: const Text('initGetuiSdk'),
-            ),
-            Text(
-              'SDK Public Function',
-              style: TextStyle(
-                color: Colors.lightBlue,
-                fontSize: 20.0,
-              ),
-            ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {
-                      if (Platform.isIOS) {
-                        Getuiflut().onActivityCreate();
-                      }
-                    },
-                    child: const Text('onActivityCreate'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      getLaunchNotification();
-                    },
-                    child: const Text('getLaunchNotification'),
-                  )
-                ]),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    getClientId();
-                  },
-                  child: const Text('getClientId'),
+                child: Column(
+                  children: <Widget>[
+                    Text('platformVersion: $_platformVersion\n'),
+                    Text('clientId: $_getClientId\n'),
+                    Text(
+                      'Android Public Function',
+                      style: TextStyle(
+                        color: Colors.lightBlue,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    Text('payload: $_payloadInfo\n'),
+                    Text('notificaiton state: $_notificationState\n'),
+                    ElevatedButton(
+                      onPressed: () {
+                        initGetuiSdk();
+                      },
+                      child: const Text('initGetuiSdk'),
+                    ),
+                    Text(
+                      'SDK Public Function',
+                      style: TextStyle(
+                        color: Colors.lightBlue,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              if (Platform.isIOS) {
+                                Getuiflut().onActivityCreate();
+                              }
+                            },
+                            child: const Text('onActivityCreate'),
+                          ),
+                        ]),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            getClientId();
+                          },
+                          child: const Text('getClientId'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Getuiflut().turnOffPush();
+                          },
+                          child: const Text('stop push'),
+                        ),
+                        // RaisedButton(
+                        //   onPressed: () {
+                        //     Getuiflut().turnOnPush();
+                        //   },
+                        //   child: const Text('resume push'),
+                        // ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Getuiflut().bindAlias('test', 'test');
+                          },
+                          child: const Text('bindAlias'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Getuiflut().unbindAlias('test', 'test', true);
+                          },
+                          child: const Text('unbindAlias'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            List test = List.filled(1, 'abc');
+                            Getuiflut().setTag(test);
+                          },
+                          child: const Text('setTag'),
+                        ),
+                      ],
+                    ),
+
+                    Text(
+                      'ios Public Function',
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    Text('DeviceToken: $_getDeviceToken'),
+                    Text('onAppLinkPayload: $_onAppLinkPayLoad'),
+                    Text('Payload: $_onReceivePayload'),
+                    Text('APNs: $_onReceiveNotificationResponse'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            getLaunchNotification();
+                          },
+                          child: const Text('getLaunchNotification'),
+                        ),
+                      ],
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          ElevatedButton(
+                            onPressed: () {
+                              Getuiflut().setBadge(5);
+                            },
+                            child: const Text('setBadge'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Getuiflut().setLocalBadge(0);
+                            },
+                            child: const Text('setLocalBadge(0)'),
+                          ),
+                        ]),
+                    // 已废弃
+                    // Text('VoipToken: $_getVoipToken'),
+                    // Text('onReceiveVoipPayLoad: $_onReceiveVoipPayLoad'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Getuiflut().resetBadge();
+                          },
+                          child: const Text('resetBadge'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Getuiflut().setPushMode(0);
+                          },
+                          child: const Text('setPushMode(0)'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Getuiflut().turnOffPush();
-                  },
-                  child: const Text('stop push'),
-                ),
-                // RaisedButton(
-                //   onPressed: () {
-                //     Getuiflut().turnOnPush();
-                //   },
-                //   child: const Text('resume push'),
-                // ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    Getuiflut().bindAlias('test', 'test');
-                  },
-                  child: const Text('bindAlias'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Getuiflut().unbindAlias('test', 'test', true);
-                  },
-                  child: const Text('unbindAlias'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    List test = List.filled(1,'abc' );
-                    Getuiflut().setTag(test);
-                  },
-                  child: const Text('setTag'),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    Getuiflut().setBadge(5);
-                  },
-                  child: const Text('setBadge'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Getuiflut().resetBadge();
-                  },
-                  child: const Text('resetBadge'),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    Getuiflut().setLocalBadge(0);
-                  },
-                  child: const Text('setLocalBadge(0)'),
-                ),
-              ],
-            ),
-            Text(
-              'ios Public Function',
-              style: TextStyle(
-                color: Colors.redAccent,
-                fontSize: 20.0,
-              ),
-            ),
-            Text('DeviceToken: $_getDeviceToken'),
-            Text('onAppLinkPayload: $_onAppLinkPayLoad'),
-            Text('Payload: $_onReceivePayload'),
-            Text('APNs: $_onReceiveNotificationResponse'),
-                
-            // 已废弃
-            // Text('VoipToken: $_getVoipToken'),
-            // Text('onReceiveVoipPayLoad: $_onReceiveVoipPayLoad'),
-          ]),
-        ),
-      ),
-    );
+              )
+            ],
+          ),
+        ));
   }
 }

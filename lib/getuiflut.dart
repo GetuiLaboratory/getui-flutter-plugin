@@ -84,6 +84,13 @@ class Getuiflut {
     }
   }
 
+  void setPushMode(int mode) {
+    if (Platform.isAndroid) {
+    } else {
+      _channel.invokeMethod('setPushMode', <String, dynamic>{'mode': mode});
+    }
+  }
+
   void setBadge(int badge) {
     if (Platform.isAndroid) {
     } else {
