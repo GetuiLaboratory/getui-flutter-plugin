@@ -44,3 +44,6 @@
 ## 0.2.12
 1. 兼容iOS GTSDK 2.6.4.0
 2. 增加setPushMode API
+
+## 0.2.13
+1.修改Android集成方式

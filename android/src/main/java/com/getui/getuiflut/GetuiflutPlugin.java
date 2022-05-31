@@ -145,8 +145,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
     private void initGtSdk() {
         Log.d(TAG, "init getui sdk...test");
 
-        PushManager.getInstance().initialize(fContext, FlutterPushService.class);
-        PushManager.getInstance().registerPushIntentService(fContext, FlutterIntentService.class);
+        PushManager.getInstance().initialize(fContext);
 
     }
 

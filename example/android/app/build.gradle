@@ -8,7 +8,7 @@ if (localPropertiesFile.exists()) {
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
-    throw new FileNotFoundException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
@@ -22,10 +22,10 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+//apply plugin: 'com.huawei.agconnect'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'com.huawei.agconnect'
 android {
-    compileSdkVersion 28
+    compileSdkVersion 31
 
     lintOptions {
         disable 'InvalidPackage'
@@ -34,12 +34,12 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.getui.getuiflut_example"
-        minSdkVersion 17
-        targetSdkVersion 28
+        minSdkVersion 19
+        targetSdkVersion 31
         manifestPlaceholders = [
-                GETUI_APP_ID    : "djYjSlFVMf6p5YOy2OQUs8",
-                GETUI_APP_KEY   : "lR9JzG3HyX9R4YG22qcDZ4",
-                GETUI_APP_SECRET: "nZlNP5s3Ha5ZE9FbRUuf76",
+
+                GETUI_APPID     : "djYjSlFVMf6p5YOy2OQUs8",
+
                 XIAOMI_APP_ID   : "",
                 XIAOMI_APP_KEY  : "",
 
@@ -48,23 +48,35 @@ android {
 
                 HUAWEI_APP_ID   : "",
 
-                OPPO_APP_KEY   : "",
-                OPPO_APP_SECRET  : "",
+                OPPO_APP_KEY    : "",
+                OPPO_APP_SECRET : "",
 
-                VIVO_APP_ID   : "",
-                VIVO_APP_KEY  : ""
+                VIVO_APP_ID     : "",
+                VIVO_APP_KEY    : ""
         ]
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+
     }
 
-
     buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+           // signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+           // signingConfig signingConfigs.debug
+        }
+    }
+
+    signingConfigs {
+        debug {
         }
     }
 }
@@ -74,8 +86,18 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.huawei.hms:push:5.0.2.300'
+    implementation 'com.getui:gtsdk:3.2.10.0'
+    implementation 'com.getui:gtc:3.1.9.0'
 
-   // compileOnly files("$flutterRoot/bin/cache/artifacts/engine/android-arm/flutter.jar")
+//    // 根据所需厂商选择集成
+//    implementation 'com.getui.opt:hwp:3.1.0'   // 华为
+//    implementation 'com.huawei.hms:push:6.1.0.300'
+
+    implementation 'com.getui.opt:xmp:3.2.0'   // 小米
+    implementation 'com.assist-v3:oppo:3.1.0'  // oppo
+    implementation 'com.assist-v3:vivo:3.1.0'  // vivo
+    // 魅族
+    implementation ('com.getui.opt:mzp:3.2.0')
+    implementation 'com.meizu.flyme.internet:push-internal:4.1.4'
 
 }
