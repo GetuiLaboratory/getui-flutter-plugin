@@ -31,8 +31,10 @@ flutter run
 ### 2.1、Android:
 
 flutter插件默认包含自定义组件，Flutter用户不用处理以下配置：
-    Android->集成指南-> 3.配置推送服务-> FlutterPushService ("继承自 com.igexin.sdk.PushService 的自定义 Service")
-    Android->集成指南-> 6.编写集成代码-> FlutterIntentService ("继承自 com.igexin.sdk.GTIntentService 的自定义 Service")
+
+- Android->集成指南-> 3.配置推送服务-> FlutterPushService ("继承自 com.igexin.sdk.PushService 的自定义 Service")
+
+- Android->集成指南-> 6.编写集成代码-> FlutterIntentService ("继承自 com.igexin.sdk.GTIntentService 的自定义 Service")
 
 其他配置
 参考官网文档中心：https://docs.getui.com/getui/mobile/android/overview/
