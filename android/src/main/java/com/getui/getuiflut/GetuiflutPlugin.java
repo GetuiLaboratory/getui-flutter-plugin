@@ -30,6 +30,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
     private static final String TAG = "GetuiflutPlugin";
     private static final int FLUTTER_CALL_BACK_CID = 1;
     private static final int FLUTTER_CALL_BACK_MSG = 2;
+    private static final int FLUTTER_CALL_BACK_MSG_USER = 3;
 
 
     /// The MethodChannel that will the communication between Flutter and native Android
@@ -46,14 +47,14 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
     }
 
     @Override
-    public void onAttachedToEngine( FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
+    public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
         fContext = flutterPluginBinding.getApplicationContext();
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "getuiflut");
         channel.setMethodCallHandler(this);
     }
 
     @Override
-    public void onDetachedFromEngine( FlutterPlugin.FlutterPluginBinding binding) {
+    public void onDetachedFromEngine(FlutterPlugin.FlutterPluginBinding binding) {
         channel.setMethodCallHandler(null);
     }
 
@@ -105,6 +106,10 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
                     }
                     break;
 
+                case FLUTTER_CALL_BACK_MSG_USER:
+                    GetuiflutPlugin.instance.channel.invokeMethod("onTransmitUserMessageReceive", msg.obj);
+                    Log.d(TAG, "default user Message >>> " + msg.obj);
+                    break;
                 default:
                     break;
             }
@@ -114,7 +119,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
 
 
     @Override
-    public void onMethodCall( MethodCall call, Result result) {
+    public void onMethodCall(MethodCall call, Result result) {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
         } else if (call.method.equals("initGetuiPush")) {
@@ -256,5 +261,10 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
         flutterHandler.sendMessage(msg);
     }
 
-
+    public static void transmitUserMessage(Map<String, Object> message) {
+        Message msg = Message.obtain();
+        msg.what = FLUTTER_CALL_BACK_MSG_USER;
+        msg.obj = message;
+        flutterHandler.sendMessage(msg);
+    }
 }

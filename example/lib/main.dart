@@ -15,12 +15,14 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   String _payloadInfo = 'Null';
+  String _userMsg = "";
   String _notificationState = "";
   String _getClientId = "";
   String _getDeviceToken = "";
   String _onReceivePayload = "";
   String _onReceiveNotificationResponse = "";
   String _onAppLinkPayLoad = "";
+
   // 已废弃
   // String _getVoipToken = "";
   // String _onReceiveVoipPayLoad;
@@ -88,6 +90,12 @@ class _MyAppState extends State<MyApp> {
         print("flutter onNotificationMessageClicked: $msg");
         setState(() {
           _notificationState = 'Clicked';
+        });
+      },
+      onTransmitUserMessageReceive: (Map<String, dynamic>  msg) async {
+        print("flutter onTransmitUserMessageReceive:$msg");
+        setState(() {
+          _userMsg = msg["msg"];
         });
       },
       onRegisterDeviceToken: (String message) async {
@@ -188,6 +196,7 @@ class _MyAppState extends State<MyApp> {
                         fontSize: 20.0,
                       ),
                     ),
+                    Text('userMsg: $_userMsg\n'),
                     Text('payload: $_payloadInfo\n'),
                     Text('notificaiton state: $_notificationState\n'),
                     ElevatedButton(

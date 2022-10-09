@@ -47,3 +47,6 @@
 
 ## 0.2.13
 1.修改Android集成方式
+
+## 0.2.14
+提供函数给用户传递信息 GetuiflutPlugin.transmitUserMessage(map)

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 
@@ -12,6 +13,7 @@ class Getuiflut {
   late EventHandlerMap _onReceiveMessageData;
   late EventHandlerMap _onNotificationMessageArrived;
   late EventHandlerMap _onNotificationMessageClicked;
+  late EventHandlerMap _onTransmitUserMessageReceive;
 
   // deviceToken
   late EventHandler _onRegisterDeviceToken;
@@ -121,6 +123,7 @@ class Getuiflut {
     required EventHandlerMap onReceiveMessageData,
     required EventHandlerMap onNotificationMessageArrived,
     required EventHandlerMap onNotificationMessageClicked,
+    required EventHandlerMap onTransmitUserMessageReceive,
 
     //deviceToken
     required EventHandler onRegisterDeviceToken,
@@ -167,14 +170,14 @@ class Getuiflut {
     _onQueryTagResult = onQueryTagResult;
     _onWillPresentNotification = onWillPresentNotification;
     _onOpenSettingsForNotification = onOpenSettingsForNotification;
-
+    _onTransmitUserMessageReceive = onTransmitUserMessageReceive;
     _channel.setMethodCallHandler(_handleMethod);
   }
 
   Future _handleMethod(MethodCall call) async {
+    print('_handleMethod:' + call.method);
     switch (call.method) {
       case "onReceiveClientId":
-        print('onReceiveClientId:' + call.arguments);
         return _onReceiveClientId(call.arguments);
       case "onReceiveMessageData":
         return _onReceiveMessageData(call.arguments.cast<String, dynamic>());
@@ -209,6 +212,8 @@ class Getuiflut {
             call.arguments.cast<String, dynamic>());
       case "onQueryTagResult":
         return _onQueryTagResult(call.arguments.cast<String, dynamic>());
+      case "onTransmitUserMessageReceive":
+        return _onTransmitUserMessageReceive(call.arguments.cast<String, dynamic>());
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }
