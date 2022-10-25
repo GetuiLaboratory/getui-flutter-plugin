@@ -95,7 +95,11 @@
 /// MARK: - APP运行中接收到通知(推送)处理 - iOS 10以下版本收到推送
 
 /// MARK: - GeTuiSdkDelegate
+- (void)GetuiSdkGrantAuthorization:(BOOL)granted error:(NSError *)error {
+    NSLog(@">>[GTSDK GetuiSdkGrantAuthorization]: granted:%@ error:%@", @(granted), error);
 
+    [_channel invokeMethod:@"onGrantAuthorization" arguments:[NSString stringWithFormat:@"%@",@(granted)]];
+}
 /** SDK启动成功返回cid */
 - (void)GeTuiSdkDidRegisterClient:(NSString *)clientId {
     // [ GTSdk ]：个推SDK已注册，返回clientId
@@ -155,6 +159,7 @@
             NSLog(@"个推APPLink中携带的透传payload信息: %@,URL : %@", payload, webUrl);
             //TODO:用户可根据具体 payload 进行业务处理
             [_channel invokeMethod:@"onAppLinkPayload" arguments:payload];
+            return YES;
         }
     }
     return NO;

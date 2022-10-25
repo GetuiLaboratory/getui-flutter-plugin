@@ -149,6 +149,9 @@ Getuiflut().addEventHandler(
       onOpenSettingsForNotification: (Map<String, dynamic> message) async {
         print("flutter onOpenSettingsForNotification: $message");
       }, 
+      onGrantAuthorization: (String granted) async {
+        print("flutter onGrantAuthorization: $granted");
+      },
     ）;
 ```
 

@@ -50,3 +50,9 @@
 
 ## 0.2.14
 提供函数给用户传递信息 GetuiflutPlugin.transmitUserMessage(map)
+
+## 0.2.15
+1. 兼容iOS GTSDK 2.7.0.0
+2. iOS增加授权状态回调 onGrantAuthorization
+3. continueUserActivity返回YES
+

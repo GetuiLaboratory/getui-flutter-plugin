@@ -2,8 +2,10 @@ PODS:
   - Flutter (1.0.0)
   - getuiflut (0.0.1):
     - Flutter
-    - GTSDK
-  - GTSDK (2.6.4.0)
+    - GTSDK (= 2.7.0.0)
+  - GTSDK (2.7.0.0):
+    - ZXSDK
+  - ZXSDK (3.1.1)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -12,6 +14,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - GTSDK
+    - ZXSDK
 
 EXTERNAL SOURCES:
   Flutter:
@@ -20,10 +23,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/getuiflut/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  getuiflut: 8628ba2b64a738a847a07d2b67e0ac305778e2ee
-  GTSDK: f83b77427f4dfbd8e93b942bbf073a81ed66a2ac
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  getuiflut: 74f28d04d5af72de59ccad86f5a0f7938d6e4f9c
+  GTSDK: 2bfff924a23f84294254c104e3b570893797560e
+  ZXSDK: 0b39b45bca947d8ec17cba9b9dbb52c5cc2485d4
 
-PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
+PODFILE CHECKSUM: 663715e941f9adb426e33bf9376914006f9ea95b
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.11.3

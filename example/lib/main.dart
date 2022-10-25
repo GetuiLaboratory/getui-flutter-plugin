@@ -140,6 +140,9 @@ class _MyAppState extends State<MyApp> {
       onOpenSettingsForNotification: (Map<String, dynamic> message) async {
         print("flutter onOpenSettingsForNotification: $message");
       },
+      onGrantAuthorization: (String granted) async {
+        print("flutter onGrantAuthorization: $granted");
+      },
     );
   }
 

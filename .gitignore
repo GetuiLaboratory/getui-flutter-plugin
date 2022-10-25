@@ -6,6 +6,8 @@
 /.idea
 build/
 /build
+android/.idea/*
+#.vscode/*
 
 Example/ios/Index/*
 example/.flutter-plugins-dependencies

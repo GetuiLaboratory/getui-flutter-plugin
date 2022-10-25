@@ -33,6 +33,7 @@ class Getuiflut {
   late EventHandlerMap _onQueryTagResult;
   late EventHandlerMap _onWillPresentNotification;
   late EventHandlerMap _onOpenSettingsForNotification;
+  late EventHandler _onGrantAuthorization;
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -147,6 +148,8 @@ class Getuiflut {
     required EventHandlerMap onWillPresentNotification,
     // ios收到APNs通知设置跳转回调
     required EventHandlerMap onOpenSettingsForNotification,
+    // ios通知授权结果
+    required EventHandler onGrantAuthorization,
   }) {
     _onReceiveClientId = onReceiveClientId;
 
@@ -170,7 +173,11 @@ class Getuiflut {
     _onQueryTagResult = onQueryTagResult;
     _onWillPresentNotification = onWillPresentNotification;
     _onOpenSettingsForNotification = onOpenSettingsForNotification;
+
     _onTransmitUserMessageReceive = onTransmitUserMessageReceive;
+
+    _onGrantAuthorization = onGrantAuthorization;
+
     _channel.setMethodCallHandler(_handleMethod);
   }
 
@@ -212,8 +219,13 @@ class Getuiflut {
             call.arguments.cast<String, dynamic>());
       case "onQueryTagResult":
         return _onQueryTagResult(call.arguments.cast<String, dynamic>());
+
       case "onTransmitUserMessageReceive":
         return _onTransmitUserMessageReceive(call.arguments.cast<String, dynamic>());
+
+      case "onGrantAuthorization":
+        return _onGrantAuthorization(call.arguments);
+
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }
