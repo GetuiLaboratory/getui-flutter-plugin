@@ -18,7 +18,7 @@
             android:name="com.getui.getuiflut.GetuiPluginActivity"
             android:excludeFromRecents="true"
             android:exported="true"
-            android:launchMode="singleInstance"
+            android:taskAffinity="${applicationId}.GetuiPluginActivity"
             android:process=":pushservice"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 

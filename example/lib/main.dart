@@ -226,6 +226,12 @@ class _MyAppState extends State<MyApp> {
                             },
                             child: const Text('onActivityCreate'),
                           ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Getuiflut().setBadge(5);
+                            },
+                            child: const Text('setBadge'),
+                          ),
                         ]),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,

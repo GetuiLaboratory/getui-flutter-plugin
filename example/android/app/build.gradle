@@ -86,7 +86,7 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.getui:gtsdk:3.2.12.0'
+    implementation 'com.getui:gtsdk:3.2.13.0'
     implementation 'com.getui:gtc:3.1.12.0'
 
 //    // 根据所需厂商选择集成

@@ -95,10 +95,7 @@ class Getuiflut {
   }
 
   void setBadge(int badge) {
-    if (Platform.isAndroid) {
-    } else {
-      _channel.invokeMethod('setBadge', <String, dynamic>{'badge': badge});
-    }
+    _channel.invokeMethod('setBadge', <String, dynamic>{'badge': badge});
   }
 
   void resetBadge() {
@@ -221,7 +218,8 @@ class Getuiflut {
         return _onQueryTagResult(call.arguments.cast<String, dynamic>());
 
       case "onTransmitUserMessageReceive":
-        return _onTransmitUserMessageReceive(call.arguments.cast<String, dynamic>());
+        return _onTransmitUserMessageReceive(
+            call.arguments.cast<String, dynamic>());
 
       case "onGrantAuthorization":
         return _onGrantAuthorization(call.arguments);

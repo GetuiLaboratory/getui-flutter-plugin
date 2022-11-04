@@ -17,7 +17,7 @@ flutter pub add getuiflut
 
 ```yaml
 dependencies:
-  getuiflut: ^0.2.14
+  getuiflut: ^0.2.16
 ```
 下载依赖：
 
@@ -162,6 +162,10 @@ Getuiflut().addEventHandler(
 	*初始化个推sdk
 	*/
 Getuiflut.initGetuiSdk();
+/**
+*设置角标
+*/
+  setBadge(badge);
 ```
 
 ### 3.2、iOS API
@@ -171,8 +175,8 @@ Getuiflut.initGetuiSdk();
 ```dart
 /**
   *  同步服务端角标
-    *
-    */
+  *
+ */
     setBadge(badge);
 
 /**

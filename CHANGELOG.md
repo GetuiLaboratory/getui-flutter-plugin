@@ -56,3 +56,5 @@
 2. iOS增加授权状态回调 onGrantAuthorization
 3. continueUserActivity返回YES
 
+## 0.2.16
+1. 兼容Android setBadge接口

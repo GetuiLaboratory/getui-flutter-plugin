@@ -142,6 +142,9 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
         } else if (call.method.equals("onActivityCreate")) {
             Log.d(TAG, "do onActivityCreate");
             onActivityCreate();
+        } else if (call.method.equals("setBadge")) {
+            Log.d(TAG, "do setBadge");
+            setBadge((int) call.argument("badge"));
         } else {
             result.notImplemented();
         }
@@ -162,6 +165,10 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
         } catch (Throwable e) {
             e.printStackTrace();
         }
+    }
+
+    private void setBadge(int badgeNum) {
+        PushManager.getInstance().setBadgeNum(fContext,badgeNum);
     }
 
     private String getClientId() {
