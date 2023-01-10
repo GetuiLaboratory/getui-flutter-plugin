@@ -58,3 +58,8 @@
 
 ## 0.2.16
 1. 兼容Android setBadge接口
+
+## 0.2.17
+1. iOS 添加startSdkSimple、registerRemoteNotification、sdkVersion插件方法
+
+
