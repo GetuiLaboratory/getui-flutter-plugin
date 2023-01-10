@@ -34,6 +34,10 @@
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
   } else if([@"startSdk" isEqualToString:call.method]) {
       [self startSdk:call result:result];
+  } else if([@"startSdkSimple" isEqualToString:call.method]) {
+      [self onlyStartSdk:call result:result];
+  } else if([@"registerRemoteNotification" isEqualToString:call.method]) {
+      [self registerRemoteNotification:call result:result];
   } else if([@"bindAlias" isEqualToString:call.method]) {
       [self bindAlias:call result:result];
   } else if([@"unbindAlias" isEqualToString:call.method]) {
@@ -54,6 +58,8 @@
 //        [GeTuiSdk resume];
   } else if([@"getLaunchNotification" isEqualToString:call.method]) {
       result(_launchNotification ?: @{});
+  } else if([@"sdkVersion" isEqualToString:call.method]) {
+      result([GeTuiSdk version]);
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -64,6 +70,15 @@
     [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self launchingOptions:_launchNotification ?: @{}];
     
     // 注册远程通知
+    [GeTuiSdk registerRemoteNotification: (UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge)];
+}
+
+- (void)onlyStartSdk:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self launchingOptions:_launchNotification ?: @{}];
+}
+
+- (void)registerRemoteNotification:(FlutterMethodCall*)call result:(FlutterResult)result {
     [GeTuiSdk registerRemoteNotification: (UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge)];
 }
 
@@ -200,6 +215,7 @@
     BOOL value = [ConfigurationInfo[@"mode"] boolValue];
     [GeTuiSdk setPushModeForOff:value];
 }
+
 
 /** SDK设置推送模式回调 */
 - (void)GeTuiSdkDidSetPushMode:(BOOL)isModeOff error:(NSError *)error {

@@ -50,6 +50,11 @@ class Getuiflut {
     return cid;
   }
 
+  static Future<String> get sdkVersion async {
+    String ver = await _channel.invokeMethod('sdkVersion');
+    return ver;
+  }
+
   static Future<Map> get getLaunchNotification async {
     Map info = await _channel.invokeMethod('getLaunchNotification');
     return info;
@@ -238,5 +243,22 @@ class Getuiflut {
   }) {
     _channel.invokeMethod(
         'startSdk', {'appId': appId, 'appKey': appKey, 'appSecret': appSecret});
+  }
+
+  void startSdkSimple({
+    required String appId,
+    required String appKey,
+    required String appSecret,
+  }) {
+    if (Platform.isIOS) {
+      _channel.invokeMethod('startSdkSimple',
+          {'appId': appId, 'appKey': appKey, 'appSecret': appSecret});
+    }
+  }
+
+  void registerRemoteNotification() {
+    if (Platform.isIOS) {
+      _channel.invokeMethod('registerRemoteNotification');
+    }
   }
 }

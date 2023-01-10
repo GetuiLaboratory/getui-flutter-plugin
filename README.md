@@ -173,6 +173,37 @@ Getuiflut.initGetuiSdk();
 - GTSDK<=2.4.6.0版本，需要使用插件版本<=0.2.5
 - GTSDK>2.4.6.0版本，需要使用最新插件版本
 ```dart
+
+/**
+    *  启动sdk+通知授权
+    *
+    */ 
+    startSdk(appId,appKey,appSecret);
+    }
+
+/**
+    *  启动sdk
+    *
+    */ 
+    startSdkSimple(appId,appKey,appSecret);
+    }
+
+
+
+/**
+    *  通知授权,需要先启动sdk。
+    *
+    */ 
+    registerRemoteNotification(appId,appKey,appSecret);
+    }
+
+
+/**
+  *  获取冷启动Apns参数
+    *
+    */
+    getLaunchNotification();
+
 /**
   *  同步服务端角标
   *
@@ -191,12 +222,6 @@ Getuiflut.initGetuiSdk();
     */
     setLocalBadge(badge); 
 
-
-/**
-  *  获取冷启动Apns参数
-    *
-    */
-    getLaunchNotification();
 ```
 
 

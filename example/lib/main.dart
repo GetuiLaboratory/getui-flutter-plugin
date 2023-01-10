@@ -42,6 +42,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
 
     if (Platform.isIOS) {
+      getSdkVersion();
       Getuiflut().startSdk(
           appId: "xXmjbbab3b5F1m7wAYZoG2",
           appKey: "BZF4dANEYr8dwLhj6lRfx2",
@@ -92,7 +93,7 @@ class _MyAppState extends State<MyApp> {
           _notificationState = 'Clicked';
         });
       },
-      onTransmitUserMessageReceive: (Map<String, dynamic>  msg) async {
+      onTransmitUserMessageReceive: (Map<String, dynamic> msg) async {
         print("flutter onTransmitUserMessageReceive:$msg");
         setState(() {
           _userMsg = msg["msg"];
@@ -159,6 +160,16 @@ class _MyAppState extends State<MyApp> {
     try {
       getClientId = await Getuiflut.getClientId;
       print(getClientId);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> getSdkVersion() async {
+    String ver;
+    try {
+      ver = await Getuiflut.sdkVersion;
+      print(ver);
     } catch (e) {
       print(e.toString());
     }
@@ -336,6 +347,27 @@ class _MyAppState extends State<MyApp> {
                             Getuiflut().setPushMode(0);
                           },
                           child: const Text('setPushMode(0)'),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            Getuiflut().startSdkSimple(
+                                appId: "xXmjbbab3b5F1m7wAYZoG2",
+                                appKey: "BZF4dANEYr8dwLhj6lRfx2",
+                                appSecret: "yXRS5zRxDt8WhMW8DD8W05");
+                          },
+                          child: const Text('startSimple(仅启动sdk)'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            //需要先启动sdk
+                            Getuiflut().registerRemoteNotification();
+                          },
+                          child: const Text('注册通知权限'),
                         ),
                       ],
                     ),
