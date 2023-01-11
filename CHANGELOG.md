@@ -61,5 +61,5 @@
 
 ## 0.2.17
 1. iOS 添加startSdkSimple、registerRemoteNotification、sdkVersion插件方法
-
+2. android 适配Android 13。
 

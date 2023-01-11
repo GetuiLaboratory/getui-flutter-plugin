@@ -25,7 +25,7 @@ apply plugin: 'com.android.application'
 //apply plugin: 'com.huawei.agconnect'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     lintOptions {
         disable 'InvalidPackage'
@@ -35,7 +35,7 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.getui.getuiflut_example"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 33
         manifestPlaceholders = [
 
                 GETUI_APPID     : "djYjSlFVMf6p5YOy2OQUs8",
@@ -86,8 +86,8 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.getui:gtsdk:3.2.13.0'
-    implementation 'com.getui:gtc:3.1.12.0'
+    implementation 'com.getui:gtsdk:3.2.14.0'
+    implementation 'com.getui:gtc:3.2.1.0'
 
 //    // 根据所需厂商选择集成
 //    implementation 'com.getui.opt:hwp:3.1.0'   // 华为
