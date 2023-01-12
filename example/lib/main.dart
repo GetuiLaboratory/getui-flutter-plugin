@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:getuiflut/getuiflut.dart';
+import 'package:bmwpushflut/bmwpushflut.dart';
 
 void main() => runApp(MyApp());
 

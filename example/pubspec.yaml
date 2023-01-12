@@ -18,7 +18,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  getuiflut:
+  bmwpushflut:
     path: ../
 
 # For information on the generic Dart part of this file, see the

@@ -394,7 +394,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
-					"-l\"getuiflut\"",
+					"-l\"bmwpushflut\"",
 					"-l\"resolv\"",
 					"-l\"sqlite3.0\"",
 					"-l\"z\"",
@@ -552,7 +552,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
-					"-l\"getuiflut\"",
+					"-l\"bmwpushflut\"",
 					"-l\"resolv\"",
 					"-l\"sqlite3.0\"",
 					"-l\"z\"",
@@ -611,7 +611,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-l\"c++\"",
-					"-l\"getuiflut\"",
+					"-l\"bmwpushflut\"",
 					"-l\"resolv\"",
 					"-l\"sqlite3.0\"",
 					"-l\"z\"",
