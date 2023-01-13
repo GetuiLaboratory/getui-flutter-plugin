@@ -206,7 +206,7 @@
 
 - (void)setLocalBadge:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
-    NSUInteger value = [ConfigurationInfo[@"badge"] integerValue];
+    NSInteger value = [ConfigurationInfo[@"badge"] integerValue];
     [UIApplication sharedApplication].applicationIconBadgeNumber = value;
 }
 
