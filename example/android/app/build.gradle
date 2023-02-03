@@ -38,7 +38,7 @@ android {
         targetSdkVersion 33
         manifestPlaceholders = [
 
-                GETUI_APPID     : "djYjSlFVMf6p5YOy2OQUs8",
+                GETUI_APPID     : "LLNstWgyGm8UM2SsherlU3",
 
                 XIAOMI_APP_ID   : "",
                 XIAOMI_APP_KEY  : "",
@@ -86,7 +86,8 @@ flutter {
 }
 
 dependencies {
-    implementation 'com.getui:gtsdk:3.2.14.0'
+    //    implementation 'com.getui:gtsdk:3.2.14.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'com.getui:gtc:3.2.1.0'
 
 //    // 根据所需厂商选择集成

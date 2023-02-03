@@ -51,12 +51,19 @@ public class FlutterIntentService extends GTIntentService {
     public void onNotificationMessageArrived(Context context, GTNotificationMessage message) {
         Log.d(TAG, "onNotificationMessageArrived -> " + "appid = " + message.getAppid() + "\ntaskid = " + message.getTaskId() + "\nmessageid = "
                 + message.getMessageId() + "\npkg = " + message.getPkgName() + "\ncid = " + message.getClientId() + "\ntitle = "
-                + message.getTitle() + "\ncontent = " + message.getContent());
+                + message.getTitle() + "\ncontent = " + message.getContent()+"\nurl = "+message.getUrl()+"\nintentUri = "+message.getIntentUri()+"\npayload = "+message.getPayload());
+
         Map<String, Object> notification = new HashMap<String, Object>();
         notification.put("messageId",message.getMessageId());
         notification.put("taskId",message.getTaskId());
         notification.put("title",message.getTitle());
         notification.put("content",message.getContent());
+        //add at 3.2.14.4  20230203 by ak
+        notification.put("url",message.getUrl());
+        notification.put("intentUri",message.getIntentUri());
+        notification.put("payload",message.getPayload());
+
+
         GetuiflutPlugin.transmitMessageReceive(notification, "onNotificationMessageArrived");
     }
 
@@ -64,12 +71,17 @@ public class FlutterIntentService extends GTIntentService {
     public void onNotificationMessageClicked(Context context, GTNotificationMessage message) {
         Log.d(TAG, "onNotificationMessageClicked -> " + "appid = " + message.getAppid() + "\ntaskid = " + message.getTaskId() + "\nmessageid = "
                 + message.getMessageId() + "\npkg = " + message.getPkgName() + "\ncid = " + message.getClientId() + "\ntitle = "
-                + message.getTitle() + "\ncontent = " + message.getContent());
+                + message.getTitle() + "\ncontent = " + message.getContent()+"\nurl = "+message.getUrl()+"\nintentUri = "+message.getIntentUri()+"\npayload = "+message.getPayload());
         Map<String, Object> notification = new HashMap<String, Object>();
         notification.put("messageId",message.getMessageId());
         notification.put("taskId",message.getTaskId());
         notification.put("title",message.getTitle());
         notification.put("content",message.getContent());
+        //add at 3.2.14.4  20230203 by ak
+        notification.put("url",message.getUrl());
+        notification.put("intentUri",message.getIntentUri());
+        notification.put("payload",message.getPayload());
+
         GetuiflutPlugin.transmitMessageReceive(notification, "onNotificationMessageClicked");
     }
 }
