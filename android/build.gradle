@@ -37,12 +37,6 @@ android {
     }
 }
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 dependencies {
     // implementation files('libs/3.2.14.4-20230202_135657-release/classes.jar')
     // 导入libs所有aar
@@ -52,5 +46,6 @@ dependencies {
     // compileOnly fileTree(dir: "libs", include: ['*.aar'])
 
     // compileOnly('com.getui:gtsdk:3.2.15.0')
+    
     implementation 'com.getui:gtsdk:3.2.15.0'
 }

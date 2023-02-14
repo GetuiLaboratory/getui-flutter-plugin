@@ -87,7 +87,7 @@ flutter {
 
 dependencies {
     //    implementation 'com.getui:gtsdk:3.2.14.0'
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+    // implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'com.getui:gtc:3.2.1.0'
 
 //    // 根据所需厂商选择集成
