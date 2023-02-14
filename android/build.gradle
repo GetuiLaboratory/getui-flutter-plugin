@@ -1,4 +1,5 @@
 group 'com.getui.getuiflut'
+
 version '1.0-SNAPSHOT'
 buildscript {
     repositories {
@@ -23,19 +24,33 @@ rootProject.allprojects {
     }
 }
 apply plugin: 'com.android.library'
+
 android {
     compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 17
     }
-    
+
     lintOptions {
         disable 'InvalidPackage'
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-//     implementation 'com.getui:gtsdk:3.2.14.0'
+    // implementation files('libs/3.2.14.4-20230202_135657-release/classes.jar')
+    // 导入libs所有aar
+    // implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+
+    // 参与编译，不在打包产物中
+    // compileOnly fileTree(dir: "libs", include: ['*.aar'])
+
+    // compileOnly('com.getui:gtsdk:3.2.15.0')
+    implementation 'com.getui:gtsdk:3.2.15.0'
 }
