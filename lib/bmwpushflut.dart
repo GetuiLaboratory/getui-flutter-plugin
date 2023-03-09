@@ -121,6 +121,11 @@ class Getuiflut {
     _channel.invokeMethod('setTag', <String, dynamic>{'tags': tags});
   }
 
+  void registerActivityToken(String token) {
+    _channel.invokeMethod(
+        'registerActivityToken', <String, dynamic>{'token': token});
+  }
+
   void addEventHandler({
     required EventHandler onReceiveClientId,
     required EventHandlerMap onReceiveMessageData,

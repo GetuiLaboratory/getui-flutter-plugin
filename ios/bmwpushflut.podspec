@@ -16,7 +16,7 @@ getui plugin flutter
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
   #s.dependency 'GTSDK'
-  s.dependency 'GTSDK', '2.7.2.1-noidfa'
+  s.dependency 'GTSDK', '2.7.4.0-noidfa'
 
   s.ios.deployment_target = '8.0'
   s.static_framework = true

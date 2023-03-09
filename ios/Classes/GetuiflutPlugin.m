@@ -60,8 +60,10 @@
       result(_launchNotification ?: @{});
   } else if([@"sdkVersion" isEqualToString:call.method]) {
       result([GeTuiSdk version]);
+  } else if([@"registerActivityToken" isEqualToString:call.method]) {
+      [self registerActivityToken:call result:result];
   } else {
-    result(FlutterMethodNotImplemented);
+      result(FlutterMethodNotImplemented);
   }
 }
 
@@ -216,6 +218,10 @@
     [GeTuiSdk setPushModeForOff:value];
 }
 
+- (void)registerActivityToken:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    [GeTuiSdk registerActivityToken:ConfigurationInfo[@"token"]];
+}
 
 /** SDK设置推送模式回调 */
 - (void)GeTuiSdkDidSetPushMode:(BOOL)isModeOff error:(NSError *)error {
