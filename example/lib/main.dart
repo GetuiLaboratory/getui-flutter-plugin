@@ -371,6 +371,20 @@ class _MyAppState extends State<MyApp> {
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            //开发者需自行获取token
+                            String token =
+                                "8048e0825f0034231ce2f638743584f47fb4fd49b5a6ad2a8a91b154966997465e6292780ff648edfea69168cb5c0df55bdc1da919c7b423053f127dbc79b9520366c95bbc40d6c8c9b1f9f4d4c1e452";
+                            Getuiflut().registerActivityToken(token);
+                          },
+                          child: const Text('registerActivityToken'),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               )
