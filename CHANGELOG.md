@@ -65,4 +65,7 @@
 
 ## 0.2.18
 1. iOS 添加registerActivityToken插件方法
+2. 
+## 0.2.19
+1.android 不再默认依赖GTSDK
 

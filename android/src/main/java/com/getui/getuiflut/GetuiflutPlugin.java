@@ -152,8 +152,18 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
 
     private void initGtSdk() {
         Log.d(TAG, "init getui sdk...test");
-
-        PushManager.getInstance().initialize(fContext);
+        try {
+            PushManager.getInstance().initialize(fContext);
+        } catch (Throwable e) {
+            try {
+                Method setPrivacyPolicyStrategy = PushManager.class.getDeclaredMethod("setPrivacyPolicyStrategy", Context.class, boolean.class);
+                setPrivacyPolicyStrategy.invoke(PushManager.getInstance(), fContext, true);
+            } catch (Throwable ex) {
+                throw new RuntimeException(ex);
+            }
+            PushManager.getInstance().registerPushIntentService(fContext, FlutterIntentService.class);
+            PushManager.getInstance().initialize(fContext, FlutterPushService.class);
+        }
 
     }
 
@@ -168,7 +178,11 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
     }
 
     private void setBadge(int badgeNum) {
-        PushManager.getInstance().setBadgeNum(fContext,badgeNum);
+        try {
+           // PushManager.getInstance().setBadgeNum(fContext, badgeNum);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     private String getClientId() {

@@ -17,7 +17,7 @@ flutter pub add getuiflut
 
 ```yaml
 dependencies:
-  getuiflut: ^0.2.18
+  getuiflut: ^0.2.19
 ```
 下载依赖：
 
@@ -38,6 +38,14 @@ flutter插件默认包含自定义组件，Flutter用户不用处理以下配置
 
 - Android->集成指南-> 6.编写集成代码-> FlutterIntentService ("继承自 com.igexin.sdk.GTIntentService 的自定义 Service")
 
+**注意：**
+^0.2.19开始getuiflut不再默认依赖GTSDK，请自己在android/app/build.gradle文件下增加依赖，如：
+```yaml
+dependencies {
+    implementation 'com.getui:gtsdk:3.2.18.0'  //个推SDK
+    implementation 'com.getui:gtc:3.2.6.0'  //个推核心组件
+}
+```
 
 ### 2.2、iOS:
 

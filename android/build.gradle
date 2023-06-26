@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:4.2.0'
     }
 }
 rootProject.allprojects {
@@ -34,7 +34,13 @@ android {
         disable 'InvalidPackage'
     }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
-     implementation 'com.getui:gtsdk:3.2.14.0'
+
+     compileOnly('com.getui:gtsdk:3.2.14.0')
+
 }

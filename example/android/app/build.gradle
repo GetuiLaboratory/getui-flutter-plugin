@@ -79,15 +79,26 @@ android {
         debug {
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 flutter {
     source '../..'
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
-    implementation 'com.getui:gtsdk:3.2.14.0'
-    implementation 'com.getui:gtc:3.2.1.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.getui:gtsdk:3.2.18.0'  //个推SDK
+    implementation 'com.getui:gtc:3.2.6.0'  //个推核心组件
 
 //    // 根据所需厂商选择集成
 //    implementation 'com.getui.opt:hwp:3.1.0'   // 华为
