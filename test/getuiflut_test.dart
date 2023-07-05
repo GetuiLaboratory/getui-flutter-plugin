@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:getuiflut/getuiflut.dart';
+import 'package:bmwpushflut/bmwpushflut.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('getuiflut');
