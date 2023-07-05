@@ -16,5 +16,9 @@
 ## 0.0.6
 1. ios gtsdk固定为2.7.2.1-noidfa
 
- ## 0.0.7
- 1. iOS 添加registerActivityToken插件方法, 依赖2.7.4.0-noidfa
+## 0.0.7
+1. iOS 添加registerActivityToken插件方法, 依赖2.7.4.0-noidfa
+
+## 0.0.8
+1. Android 去除jcenter,默认依赖
+

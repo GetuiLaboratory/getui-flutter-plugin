@@ -86,7 +86,7 @@ flutter {
 }
 
 dependencies {
-    //    implementation 'com.getui:gtsdk:3.2.14.0'
+        implementation 'com.getui:gtsdk:3.2.15.0'
     // implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
     implementation 'com.getui:gtc:3.2.1.0'
 
