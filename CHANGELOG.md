@@ -22,3 +22,6 @@
 ## 0.0.8
 1. Android 去除jcenter,默认依赖
 
+## 0.0.9
+1. Android 修复FlutterIntentService的TAG
+
