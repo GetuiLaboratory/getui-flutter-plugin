@@ -39,7 +39,7 @@ android {
         manifestPlaceholders = [
 
                 GETUI_APPID     : "LLNstWgyGm8UM2SsherlU3",
-
+                GETUI_APP_ID    : "djYjSlFVMf6p5YOy2OQUs8",
                 XIAOMI_APP_ID   : "",
                 XIAOMI_APP_KEY  : "",
 
@@ -84,21 +84,26 @@ android {
 flutter {
     source '../..'
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
-        implementation 'com.getui:gtsdk:3.2.15.0'
-    // implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    implementation 'com.getui:gtc:3.2.1.0'
-
+//        implementation 'com.getui:gtsdk:3.2.15.0'
+     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+//    implementation 'com.getui:gtc:3.2.1.0'
+//    implementation 'com.getui:sdk-for-gj:4.4.3.4'
+    implementation 'com.getui:gtsdk:3.3.0.0'
 //    // 根据所需厂商选择集成
 //    implementation 'com.getui.opt:hwp:3.1.0'   // 华为
 //    implementation 'com.huawei.hms:push:6.1.0.300'
 
-    implementation 'com.getui.opt:xmp:3.2.0'   // 小米
-    implementation 'com.assist-v3:oppo:3.1.0'  // oppo
-    implementation 'com.assist-v3:vivo:3.1.0'  // vivo
+//    implementation 'com.getui.opt:xmp:3.2.0'   // 小米
+//    implementation 'com.assist-v3:oppo:3.1.0'  // oppo
+//    implementation 'com.assist-v3:vivo:3.1.0'  // vivo
     // 魅族
-    implementation ('com.getui.opt:mzp:3.2.0')
-    implementation 'com.meizu.flyme.internet:push-internal:4.1.4'
+//    implementation ('com.getui.opt:mzp:3.2.0')
+//    implementation 'com.meizu.flyme.internet:push-internal:4.1.4'
 
 }

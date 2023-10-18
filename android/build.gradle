@@ -37,5 +37,5 @@ android {
 }
 
 dependencies {
-     compileOnly('com.getui:gtsdk:3.2.15.0')
+     compileOnly('com.getui:gtsdk:3.3.1.0')
 }

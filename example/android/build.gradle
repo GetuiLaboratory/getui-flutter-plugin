@@ -4,7 +4,7 @@ buildscript {
         jcenter()
         mavenCentral()
 
-        maven {url 'https://developer.huawei.com/repo/'}
+        maven { url 'https://developer.huawei.com/repo/' }
     }
 
     dependencies {
@@ -18,7 +18,7 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven {url 'https://developer.huawei.com/repo/'}
+        maven { url 'https://developer.huawei.com/repo/' }
         maven {
             url 'https://maven.columbus.heytapmobi.com/repository/releases/'
             credentials {
@@ -36,8 +36,12 @@ allprojects {
         maven {
             url "https://mvn.getui.com/nexus/content/repositories/releases/"
         }
-
+//        maven {
+//            url "http://192.168.17.217:8081/nexus/content/repositories/snapshots/"
+//        }
     }
+
+
 }
 
 rootProject.buildDir = '../build'
