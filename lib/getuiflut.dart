@@ -75,7 +75,8 @@ class Getuiflut {
 
   void bindAlias(String alias, String sn) {
     if (Platform.isAndroid) {
-      _channel.invokeMethod('bindAlias', <String, dynamic>{'alias': alias});
+      _channel.invokeMethod(
+          'bindAlias', <String, dynamic>{'alias': alias, 'aSn': sn});
     } else {
       _channel.invokeMethod(
           'bindAlias', <String, dynamic>{'alias': alias, 'aSn': sn});

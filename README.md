@@ -1,7 +1,6 @@
 # Getui Flutter Plugin
 
 
-
 ## 1、引用
 
 Pub.dev:
@@ -17,7 +16,7 @@ flutter pub add getuiflut
 
 ```yaml
 dependencies:
-  getuiflut: ^0.2.20
+  getuiflut: ^0.2.21
 ```
 下载依赖：
 

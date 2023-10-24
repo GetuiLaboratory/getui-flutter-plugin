@@ -131,11 +131,11 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
         } else if (call.method.equals("stopPush")) {
             stopPush();
         } else if (call.method.equals("bindAlias")) {
-            Log.d(TAG, "bindAlias:" + call.argument("alias").toString());
-            bindAlias(call.argument("alias").toString(), "");
+            Log.d(TAG, "bindAlias:" + call.argument("alias").toString() + call.argument("aSn").toString());
+            bindAlias(call.argument("alias").toString(), call.argument("aSn").toString());
         } else if (call.method.equals("unbindAlias")) {
-            Log.d(TAG, "unbindAlias:" + call.argument("alias").toString() + call.argument("aSn").toString() +call.argument("isSelf").toString());
-            unbindAlias(call.argument("alias").toString(), call.argument("aSn"), call.argument("isSelf"));
+            Log.d(TAG, "unbindAlias:" + call.argument("alias").toString() + call.argument("aSn").toString() + call.argument("isSelf").toString());
+            unbindAlias(call.argument("alias").toString(), call.argument("aSn").toString(), Boolean.parseBoolean( call.argument("isSelf").toString()));
         } else if (call.method.equals("setTag")) {
             Log.d(TAG, "tags:" + (ArrayList<String>) call.argument("tags"));
             setTag((ArrayList<String>) call.argument("tags"));
@@ -179,7 +179,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
 
     private void setBadge(int badgeNum) {
         try {
-           // PushManager.getInstance().setBadgeNum(fContext, badgeNum);
+            // PushManager.getInstance().setBadgeNum(fContext, badgeNum);
         } catch (Throwable e) {
             e.printStackTrace();
         }

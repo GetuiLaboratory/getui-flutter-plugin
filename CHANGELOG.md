@@ -73,3 +73,6 @@
 ## 0.2.20
 1.android 扩展unbindAlias函数
 
+## 0.2.21
+1.android 扩展unbindAlias函数,bindAlias函数
+
