@@ -69,3 +69,7 @@
 ## 0.2.19
 1.android 不再默认依赖GTSDK
 
+
+## 0.2.20
+1.android 扩展unbindAlias函数
+

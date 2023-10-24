@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 
@@ -85,7 +84,8 @@ class Getuiflut {
 
   void unbindAlias(String alias, String sn, bool isSelf) {
     if (Platform.isAndroid) {
-      _channel.invokeMethod('unbindAlias', <String, dynamic>{'alias': alias});
+      _channel.invokeMethod('unbindAlias',
+          <String, dynamic>{'alias': alias, 'aSn': sn, 'isSelf': isSelf});
     } else {
       _channel.invokeMethod('unbindAlias',
           <String, dynamic>{'alias': alias, 'aSn': sn, 'isSelf': isSelf});

@@ -134,8 +134,8 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
             Log.d(TAG, "bindAlias:" + call.argument("alias").toString());
             bindAlias(call.argument("alias").toString(), "");
         } else if (call.method.equals("unbindAlias")) {
-            Log.d(TAG, "unbindAlias:" + call.argument("alias").toString());
-            unbindAlias(call.argument("alias").toString(), "");
+            Log.d(TAG, "unbindAlias:" + call.argument("alias").toString() + call.argument("aSn").toString() +call.argument("isSelf").toString());
+            unbindAlias(call.argument("alias").toString(), call.argument("aSn"), call.argument("isSelf"));
         } else if (call.method.equals("setTag")) {
             Log.d(TAG, "tags:" + (ArrayList<String>) call.argument("tags"));
             setTag((ArrayList<String>) call.argument("tags"));
@@ -213,11 +213,12 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
     /**
      * 取消绑定别名功能
      *
-     * @param alias 别名字符串
-     * @param aSn   绑定序列码, Android中无效，仅在iOS有效
+     * @param alias  别名字符串
+     * @param aSn    绑定序列码, Android中无效，仅在iOS有效
+     * @param isSelf boolean 是否只对当前cid有效，如果是true，只对当前cid做解绑；如果是false，对所有绑定该别名的cid列表做解绑.
      */
-    public void unbindAlias(String alias, String aSn) {
-        PushManager.getInstance().unBindAlias(fContext, alias, false);
+    public void unbindAlias(String alias, String aSn, boolean isSelf) {
+        PushManager.getInstance().unBindAlias(fContext, alias, isSelf, aSn);
     }
 
     /**
