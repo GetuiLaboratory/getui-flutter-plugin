@@ -25,3 +25,5 @@
 ## 0.0.9
 1. Android 修复FlutterIntentService的TAG
 
+## 0.1.0
+1. iOS 修复APNs静默回调问题
