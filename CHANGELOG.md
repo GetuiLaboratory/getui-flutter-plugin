@@ -79,3 +79,5 @@
 ## 0.2.22
 1.android 修复setBadge函数
 
+## 0.2.23
+1. iOS 修复APNs静默回调问题,  新增runBackgroundEnable
