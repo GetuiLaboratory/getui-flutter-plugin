@@ -179,7 +179,9 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
 
     private void setBadge(int badgeNum) {
         try {
-            // PushManager.getInstance().setBadgeNum(fContext, badgeNum);
+            Method method = PushManager.class.getDeclaredMethod("setBadgeNum", Context.class, int.class);
+            method.setAccessible(true);
+            method.invoke(PushManager.getInstance(), fContext, badgeNum);
         } catch (Throwable e) {
             e.printStackTrace();
         }
