@@ -62,6 +62,8 @@
       result([GeTuiSdk version]);
   } else if([@"registerActivityToken" isEqualToString:call.method]) {
       [self registerActivityToken:call result:result];
+  } else if([@"runBackgroundEnable" isEqualToString:call.method]) {
+      [self runBackgroundEnable:call result:result];
   } else {
       result(FlutterMethodNotImplemented);
   }
@@ -221,6 +223,13 @@
 - (void)registerActivityToken:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
     [GeTuiSdk registerActivityToken:ConfigurationInfo[@"token"]];
+}
+
+- (void)runBackgroundEnable:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    BOOL value = [ConfigurationInfo[@"enable"] boolValue];
+    NSLog(@"runBackgroundEnable %@",@(value));
+    [GeTuiSdk runBackgroundEnable:value];
 }
 
 /** SDK设置推送模式回调 */

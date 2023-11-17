@@ -100,6 +100,13 @@ class Getuiflut {
     }
   }
 
+  void runBackgroundEnable(int enable) {
+    if (Platform.isAndroid) {
+    } else {
+      _channel.invokeMethod('runBackgroundEnable', <String, dynamic>{'enable': enable});
+    }
+  }
+
   void setBadge(int badge) {
     _channel.invokeMethod('setBadge', <String, dynamic>{'badge': badge});
   }

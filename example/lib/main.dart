@@ -383,6 +383,12 @@ class _MyAppState extends State<MyApp> {
                           },
                           child: const Text('registerActivityToken'),
                         ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Getuiflut().runBackgroundEnable(1);
+                          },
+                          child: const Text('runBackgroundEnable(0)'),
+                        ),
                       ],
                     ),
                   ],
