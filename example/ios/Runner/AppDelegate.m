@@ -10,4 +10,8 @@
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    //warning: 如果在这里重写了，application:didReceiveRemoteNotification:fetchCompletionHandler，gtsdk的hook就会生效，否则无法hook到
+    
+}
 @end

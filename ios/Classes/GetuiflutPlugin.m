@@ -22,14 +22,14 @@
 @implementation GetuiflutPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"getuiflut"
-            binaryMessenger:[registrar messenger]];
-  GetuiflutPlugin *instance = [[GetuiflutPlugin alloc] init];
-  instance.channel = channel;
-  [registrar addApplicationDelegate:instance];
-  [registrar addMethodCallDelegate:instance channel:channel];
-//  [instance registerRemoteNotification];
+    FlutterMethodChannel* channel = [FlutterMethodChannel
+                                     methodChannelWithName:@"getuiflut"
+                                     binaryMessenger:[registrar messenger]];
+    GetuiflutPlugin *instance = [[GetuiflutPlugin alloc] init];
+    instance.channel = channel;
+    [registrar addApplicationDelegate:instance];
+    [registrar addMethodCallDelegate:instance channel:channel];
+    //  [instance registerRemoteNotification];
 }
 
 - (id)init {
@@ -38,41 +38,41 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([@"getPlatformVersion" isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  } else if([@"startSdk" isEqualToString:call.method]) {
-      [self startSdk:call result:result];
-  } else if([@"startSdkSimple" isEqualToString:call.method]) {
-      [self onlyStartSdk:call result:result];
-  } else if([@"registerRemoteNotification" isEqualToString:call.method]) {
-      [self registerRemoteNotification:call result:result];
-  } else if([@"bindAlias" isEqualToString:call.method]) {
-      [self bindAlias:call result:result];
-  } else if([@"unbindAlias" isEqualToString:call.method]) {
-      [self unbindAlias:call result:result];
-  } else if([@"setTag" isEqualToString:call.method]) {
-      [self setTag:call result:result];
-  } else if([@"getClientId" isEqualToString:call.method]) {
-      result([GeTuiSdk clientId]);
-  } else if([@"setBadge" isEqualToString:call.method]) {
-      [self setBadge:call result:result];
-  } else if([@"resetBadge" isEqualToString:call.method]) {
-      [GeTuiSdk resetBadge];
-  } else if([@"setLocalBadge" isEqualToString:call.method]) {
-      [self setLocalBadge:call result:result];
-  } else if([@"setPushMode" isEqualToString:call.method]) {
-      [self setPushMode:call result:result];
-  } else if([@"resume" isEqualToString:call.method]) {
-//        [GeTuiSdk resume];
-  } else if([@"getLaunchNotification" isEqualToString:call.method]) {
-      result(_launchNotification ?: @{});
-  } else if([@"sdkVersion" isEqualToString:call.method]) {
-      result([GeTuiSdk version]);
-  } else if([@"registerActivityToken" isEqualToString:call.method]) {
-      [self registerActivityToken:call result:result];
-  } else {
-      result(FlutterMethodNotImplemented);
-  }
+    if ([@"getPlatformVersion" isEqualToString:call.method]) {
+        result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
+    } else if([@"startSdk" isEqualToString:call.method]) {
+        [self startSdk:call result:result];
+    } else if([@"startSdkSimple" isEqualToString:call.method]) {
+        [self onlyStartSdk:call result:result];
+    } else if([@"registerRemoteNotification" isEqualToString:call.method]) {
+        [self registerRemoteNotification:call result:result];
+    } else if([@"bindAlias" isEqualToString:call.method]) {
+        [self bindAlias:call result:result];
+    } else if([@"unbindAlias" isEqualToString:call.method]) {
+        [self unbindAlias:call result:result];
+    } else if([@"setTag" isEqualToString:call.method]) {
+        [self setTag:call result:result];
+    } else if([@"getClientId" isEqualToString:call.method]) {
+        result([GeTuiSdk clientId]);
+    } else if([@"setBadge" isEqualToString:call.method]) {
+        [self setBadge:call result:result];
+    } else if([@"resetBadge" isEqualToString:call.method]) {
+        [GeTuiSdk resetBadge];
+    } else if([@"setLocalBadge" isEqualToString:call.method]) {
+        [self setLocalBadge:call result:result];
+    } else if([@"setPushMode" isEqualToString:call.method]) {
+        [self setPushMode:call result:result];
+    } else if([@"resume" isEqualToString:call.method]) {
+        //        [GeTuiSdk resume];
+    } else if([@"getLaunchNotification" isEqualToString:call.method]) {
+        result(_launchNotification ?: @{});
+    } else if([@"sdkVersion" isEqualToString:call.method]) {
+        result([GeTuiSdk version]);
+    } else if([@"registerActivityToken" isEqualToString:call.method]) {
+        [self registerActivityToken:call result:result];
+    } else {
+        result(FlutterMethodNotImplemented);
+    }
 }
 
 - (void)startSdk:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -111,7 +111,7 @@
 /** 远程通知注册成功委托 */
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // [3]:向个推服务器注册deviceToken 为了方便开发者，建议使用新方法
-//    [GeTuiSdk registerDeviceTokenData:deviceToken];
+    //    [GeTuiSdk registerDeviceTokenData:deviceToken];
     NSString *token = [self getHexStringForData:deviceToken];
     NSLog(@"\n>>>GTSDK [DeviceToken(NSString)]: %@\n\n", token);
     [_channel invokeMethod:@"onRegisterDeviceToken" arguments:token];
@@ -125,12 +125,15 @@
 - (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"\n>>>GTSDK didReceiveRemoteNotification %@ _started:%@", userInfo, @(_started));
     if (_started) {
+        /*
+         注释下面代码，因为开发者在appdelegate.m中重写application:didReceiveRemoteNotification:fetchCompletionHandler后，个推hook就正常了。此处不需要再转发给个推
+         */
         //sdk已启动，收到APNs静默, 回执&回调
-        [[GtSdkManager sharedInstance] Getui_didReceiveRemoteNotificationInner:userInfo fetchCompletionHandler:completionHandler];
+        //[[GtSdkManager sharedInstance] Getui_didReceiveRemoteNotificationInner:userInfo fetchCompletionHandler:completionHandler];
     } else {
         //sdk未启动，收到APNs静默后启动sdk。记录到内存，等cid在线后，回执&回调
         _apnsSlienceUserInfo = userInfo;
-        completionHandler(UIBackgroundFetchResultNewData);
+        //completionHandler(UIBackgroundFetchResultNewData); //注释，因为会导致flutter日志打印多份。
     }
     return YES;
 }
@@ -172,7 +175,7 @@
 
 - (void)GeTuiSdkDidReceiveNotification:(NSDictionary *)userInfo notificationCenter:(UNUserNotificationCenter *)center response:(UNNotificationResponse *)response fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSDate *time = response.notification.date;
-//    NSDictionary *userInfo = response.notification.request.content.userInfo;
+    //    NSDictionary *userInfo = response.notification.request.content.userInfo;
     NSLog(@"\n>>>GTSDK %@\nTime:%@\n%@", NSStringFromSelector(_cmd), time, userInfo);
     [_channel invokeMethod:@"onReceiveNotificationResponse" arguments:userInfo];
     if (completionHandler) {
@@ -284,12 +287,12 @@
 
 - (NSString *)getHexStringForData:(NSData *)data {
     NSUInteger len = [data length];
-        char *chars = (char *) [data bytes];
-        NSMutableString *hexString = [[NSMutableString alloc] init];
-        for (NSUInteger i = 0; i < len; i++) {
-            [hexString appendString:[NSString stringWithFormat:@"%0.2hhx", chars[i]]];
-        }
-        return hexString;
+    char *chars = (char *) [data bytes];
+    NSMutableString *hexString = [[NSMutableString alloc] init];
+    for (NSUInteger i = 0; i < len; i++) {
+        [hexString appendString:[NSString stringWithFormat:@"%0.2hhx", chars[i]]];
+    }
+    return hexString;
 }
 
 ///// MARK: - VOIP接入
