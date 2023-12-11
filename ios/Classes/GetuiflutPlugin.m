@@ -5,6 +5,10 @@
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 #import <UserNotifications/UserNotifications.h>
 #endif
+@interface GeTuiSdk(GetuiflutPlugin)
++ (BOOL)registerActivityToken:(NSString *)activityToken;
++ (BOOL)registerLiveActivity:(NSString *)liveActivityId activityToken:(NSString*)token sequenceNum:(NSString*)sn;
+@end
 
 @interface GtSdkManager : NSObject
 + (GtSdkManager *)sharedInstance;
@@ -13,7 +17,8 @@
 @end
 
 @interface GetuiflutPlugin()<GeTuiSdkDelegate> {
-    BOOL _started; 
+    BOOL _started;
+    NSDictionary *_launchOptions;
     NSDictionary *_launchNotification;
     NSDictionary *_apnsSlienceUserInfo;
 }
@@ -78,10 +83,10 @@
 }
 
 - (void)startSdk:(FlutterMethodCall*)call result:(FlutterResult)result {
-    NSLog(@"\n>>>GTSDK startSdk");
+    NSLog(@"\n>>>GTSDK startSdk launchNotification:%@", _launchNotification);
     _started = YES;
     NSDictionary *ConfigurationInfo = call.arguments;
-    [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self launchingOptions:_launchNotification ?: @{}];
+    [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self launchingOptions:_launchOptions ?: @{}];
     
     // 注册远程通知
     [GeTuiSdk registerRemoteNotification: (UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge)];
@@ -91,7 +96,7 @@
     NSLog(@"\n>>>GTSDK onlyStartSdk");
     _started = YES;
     NSDictionary *ConfigurationInfo = call.arguments;
-    [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self launchingOptions:_launchNotification ?: @{}];
+    [GeTuiSdk startSdkWithAppId:ConfigurationInfo[@"appId"] appKey:ConfigurationInfo[@"appKey"] appSecret:ConfigurationInfo[@"appSecret"] delegate:self launchingOptions:_launchOptions ?: @{}];
 }
 
 - (void)registerRemoteNotification:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -103,6 +108,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (launchOptions != nil) {
         NSLog(@"\n>>>GTSDK didFinishLaunchingWithOptions %@", launchOptions);
+        _launchOptions = launchOptions;
         _launchNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
     }
     return YES;
@@ -127,12 +133,16 @@
 - (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"\n>>>GTSDK didReceiveRemoteNotification %@ _started:%@", userInfo, @(_started));
     if (_started) {
+        /*
+         注释下面代码，因为开发者在appdelegate.m中重写application:didReceiveRemoteNotification:fetchCompletionHandler后，个推hook就正常了。
+         否则，此处需要再转发给个推处理回执
+         */
         //sdk已启动，收到APNs静默, 回执&回调
-        [[GtSdkManager sharedInstance] Getui_didReceiveRemoteNotificationInner:userInfo fetchCompletionHandler:completionHandler];
+        //[[GtSdkManager sharedInstance] Getui_didReceiveRemoteNotificationInner:userInfo fetchCompletionHandler:completionHandler];
     } else {
         //sdk未启动，收到APNs静默后启动sdk。记录到内存，等cid在线后，回执&回调
         _apnsSlienceUserInfo = userInfo;
-        completionHandler(UIBackgroundFetchResultNewData);
+        //completionHandler(UIBackgroundFetchResultNewData); //注释，因为会导致flutter日志打印多份。
     }
     return YES;
 }
@@ -253,7 +263,14 @@
 
 - (void)registerActivityToken:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
-    [GeTuiSdk registerActivityToken:ConfigurationInfo[@"token"]];
+    if ([GeTuiSdk respondsToSelector:@selector(registerActivityToken:)]) {
+        //sdk<=3020
+        [GeTuiSdk registerActivityToken:ConfigurationInfo[@"token"]];
+        return;
+    }
+    if ([GeTuiSdk respondsToSelector:@selector(registerLiveActivity:activityToken:sequenceNum:)]) {
+        [GeTuiSdk registerLiveActivity:ConfigurationInfo[@"aid"] activityToken:ConfigurationInfo[@"token"] sequenceNum:ConfigurationInfo[@"sn"]];
+    }
 }
 
 - (void)runBackgroundEnable:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -282,12 +299,26 @@
     [_channel invokeMethod:@"onAliasResult" arguments:dic];
 }
 
-- (void)GetuiSdkDidQueryTag:(NSArray *)aTags sequenceNum:(NSString *)aSn error:(NSError *)aError {
-    NSLog(@"\n>>>GTSDK GetuiSdkDidQueryTag : %@, SN : %@, error :%@", aTags, aSn, aError);
-    NSDictionary *dic = @{@"tags": aTags, @"sn": aSn?:@"", @"error": aError ? [aError localizedDescription] : @""};
+- (void)GetuiSdkDidQueryTag:(NSArray *)tags sequenceNum:(NSString *)sn error:(NSError *)error {
+    NSLog(@"\n>>>GTSDK GetuiSdkDidQueryTag : %@, SN : %@, error :%@", tags, sn, error);
+    NSDictionary *dic = @{@"tags": tags, @"sn": sn?:@"", @"error": error ? [error localizedDescription] : @""};
     [_channel invokeMethod:@"onQueryTagResult" arguments:dic];
 }
 
+- (void)GeTuiSdkDidRegisterLiveActivity:(NSString *)sn result:(BOOL)isSuccess error:(NSError *)error {
+    NSLog(@"\n>>>GTSDK GeTuiSdkDidRegisterLiveActivity SN : %@, success: %@, error :%@", sn, @(isSuccess), error);
+    NSDictionary *dic = @{@"success" : @(isSuccess), @"sn": sn?:@"", @"error": error ? [error localizedDescription] : @""};
+    [_channel invokeMethod:@"onLiveActivityResult" arguments:dic];
+}
+
+//- (void)GeTuiSdkPopupDidShow:(NSDictionary *)info {
+//    
+//}
+//
+//- (void)GeTuiSdkPopupDidClick:(NSDictionary *)info {
+//    
+//}
+ 
 
 /// MARK: - Private
 

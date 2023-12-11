@@ -68,83 +68,68 @@ class _MyAppState extends State<MyApp> {
       _notificationState = notificationState;
     });
 
-    Getuiflut().addEventHandler(
-      onReceiveClientId: (String message) async {
-        print("flutter onReceiveClientId: $message");
-        setState(() {
-          _getClientId = "ClientId: $message";
-        });
-      },
-      onReceiveMessageData: (Map<String, dynamic> msg) async {
-        print("flutter onReceiveMessageData: $msg");
-        setState(() {
-          _payloadInfo = msg['payload'];
-        });
-      },
-      onNotificationMessageArrived: (Map<String, dynamic> msg) async {
-        print("flutter onNotificationMessageArrived: $msg");
-        setState(() {
-          _notificationState = 'Arrived';
-        });
-      },
-      onNotificationMessageClicked: (Map<String, dynamic> msg) async {
-        print("flutter onNotificationMessageClicked: $msg");
-        setState(() {
-          _notificationState = 'Clicked';
-        });
-      },
-      onTransmitUserMessageReceive: (Map<String, dynamic> msg) async {
-        print("flutter onTransmitUserMessageReceive:$msg");
-        setState(() {
-          _userMsg = msg["msg"];
-        });
-      },
-      onRegisterDeviceToken: (String message) async {
-        print("flutter onRegisterDeviceToken: $message");
-        setState(() {
-          _getDeviceToken = "$message";
-        });
-      },
-      onReceivePayload: (Map<String, dynamic> message) async {
-        print("flutter onReceivePayload: $message");
-        setState(() {
-          _onReceivePayload = "$message";
-        });
-      },
-      onReceiveNotificationResponse: (Map<String, dynamic> message) async {
-        print("flutter onReceiveNotificationResponse: $message");
-        setState(() {
-          _onReceiveNotificationResponse = "$message";
-        });
-      },
-      onAppLinkPayload: (String message) async {
-        print("flutter onAppLinkPayload: $message");
-        setState(() {
-          _onAppLinkPayLoad = "$message";
-        });
-      },
-      onPushModeResult: (Map<String, dynamic> message) async {
-        print("flutter onPushModeResult: $message");
-      },
-      onSetTagResult: (Map<String, dynamic> message) async {
-        print("flutter onSetTagResult: $message");
-      },
-      onAliasResult: (Map<String, dynamic> message) async {
-        print("flutter onAliasResult: $message");
-      },
-      onQueryTagResult: (Map<String, dynamic> message) async {
-        print("flutter onQueryTagResult: $message");
-      },
-      onWillPresentNotification: (Map<String, dynamic> message) async {
-        print("flutter onWillPresentNotification: $message");
-      },
-      onOpenSettingsForNotification: (Map<String, dynamic> message) async {
-        print("flutter onOpenSettingsForNotification: $message");
-      },
-      onGrantAuthorization: (String granted) async {
-        print("flutter onGrantAuthorization: $granted");
-      },
-    );
+    Getuiflut().addEventHandler(onReceiveClientId: (String message) async {
+      print("flutter onReceiveClientId: $message");
+      setState(() {
+        _getClientId = "ClientId: $message";
+      });
+    }, onReceiveMessageData: (Map<String, dynamic> msg) async {
+      print("flutter onReceiveMessageData: $msg");
+      setState(() {
+        _payloadInfo = msg['payload'];
+      });
+    }, onNotificationMessageArrived: (Map<String, dynamic> msg) async {
+      print("flutter onNotificationMessageArrived: $msg");
+      setState(() {
+        _notificationState = 'Arrived';
+      });
+    }, onNotificationMessageClicked: (Map<String, dynamic> msg) async {
+      print("flutter onNotificationMessageClicked: $msg");
+      setState(() {
+        _notificationState = 'Clicked';
+      });
+    }, onTransmitUserMessageReceive: (Map<String, dynamic> msg) async {
+      print("flutter onTransmitUserMessageReceive:$msg");
+      setState(() {
+        _userMsg = msg["msg"];
+      });
+    }, onRegisterDeviceToken: (String message) async {
+      print("flutter onRegisterDeviceToken: $message");
+      setState(() {
+        _getDeviceToken = "$message";
+      });
+    }, onReceivePayload: (Map<String, dynamic> message) async {
+      print("flutter onReceivePayload: $message");
+      setState(() {
+        _onReceivePayload = "$message";
+      });
+    }, onReceiveNotificationResponse: (Map<String, dynamic> message) async {
+      print("flutter onReceiveNotificationResponse: $message");
+      setState(() {
+        _onReceiveNotificationResponse = "$message";
+      });
+    }, onAppLinkPayload: (String message) async {
+      print("flutter onAppLinkPayload: $message");
+      setState(() {
+        _onAppLinkPayLoad = "$message";
+      });
+    }, onPushModeResult: (Map<String, dynamic> message) async {
+      print("flutter onPushModeResult: $message");
+    }, onSetTagResult: (Map<String, dynamic> message) async {
+      print("flutter onSetTagResult: $message");
+    }, onAliasResult: (Map<String, dynamic> message) async {
+      print("flutter onAliasResult: $message");
+    }, onQueryTagResult: (Map<String, dynamic> message) async {
+      print("flutter onQueryTagResult: $message");
+    }, onWillPresentNotification: (Map<String, dynamic> message) async {
+      print("flutter onWillPresentNotification: $message");
+    }, onOpenSettingsForNotification: (Map<String, dynamic> message) async {
+      print("flutter onOpenSettingsForNotification: $message");
+    }, onGrantAuthorization: (String granted) async {
+      print("flutter onGrantAuthorization: $granted");
+    }, onLiveActivityResult: (Map<String, dynamic> message) async {
+      print("flutter onLiveActivityResult: $message");
+    });
   }
 
   Future<void> initGetuiSdk() async {
@@ -379,7 +364,8 @@ class _MyAppState extends State<MyApp> {
                             //开发者需自行获取token
                             String token =
                                 "8048e0825f0034231ce2f638743584f47fb4fd49b5a6ad2a8a91b154966997465e6292780ff648edfea69168cb5c0df55bdc1da919c7b423053f127dbc79b9520366c95bbc40d6c8c9b1f9f4d4c1e452";
-                            Getuiflut().registerActivityToken(token);
+                            Getuiflut().registerActivityToken(
+                                'aid_01', token, 'sn_01');
                           },
                           child: const Text('registerActivityToken'),
                         ),

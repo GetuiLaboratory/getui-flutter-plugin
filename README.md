@@ -16,7 +16,7 @@ flutter pub add getuiflut
 
 ```yaml
 dependencies:
-  getuiflut: ^0.2.23
+  getuiflut: ^0.2.24
 ```
 下载依赖：
 
@@ -181,58 +181,71 @@ Getuiflut.initGetuiSdk();
 
 ### 3.2、iOS API
 
+首先，开发者需要在AppDelegate.m中，重写APNs系统方法，如：
+
+```
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    //warning: 需要重写当前方法，gtsdk的接管系统方法就会生效，否则会影响回执
+    //保持空实现
+}
+```
+
+
+
+
+
 - GTSDK<=2.4.6.0版本，需要使用插件版本<=0.2.5
 - GTSDK>2.4.6.0版本，需要使用最新插件版本
 ```dart
-
-/**
+    /**
     *  启动sdk+通知授权
-    *
     */ 
     startSdk(appId,appKey,appSecret);
-    }
+    
 
-/**
+    /**
     *  启动sdk
-    *
     */ 
     startSdkSimple(appId,appKey,appSecret);
-    }
 
 
-
-/**
+    /**
     *  通知授权,需要先启动sdk。
-    *
     */ 
     registerRemoteNotification(appId,appKey,appSecret);
-    }
+ 
 
-
-/**
-  *  获取冷启动Apns参数
-    *
+    /**
+    *  获取冷启动APNs参数
     */
     getLaunchNotification();
 
-/**
-  *  同步服务端角标
-  *
- */
+    /**
+    *  同步服务端角标
+    */
     setBadge(badge);
 
-/**
-  *  复位服务端角标
-    *
+    /**
+    *  复位服务端角标
     */
     resetBadge();
 
-/**
-  *  同步App本地角标
+    /**
+    *  同步App本地角标
     *
     */
     setLocalBadge(badge); 
 
+    /*
+    *  开启\关闭后台模式
+    */
+    runBackgroundEnable(enable)
+    
+    /*
+    *  注册灵动岛token。支持版本2.7.3.0及以上。 
+    *  GTSDK>=3.0.3.0，会有onLiveActivityResult回调
+    */
+    registerActivityToken(aid, token,sn) 
 ```
 
 

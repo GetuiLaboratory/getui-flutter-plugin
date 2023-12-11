@@ -33,6 +33,7 @@ class Getuiflut {
   late EventHandlerMap _onWillPresentNotification;
   late EventHandlerMap _onOpenSettingsForNotification;
   late EventHandler _onGrantAuthorization;
+  late EventHandlerMap _onLiveActivityResult;
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -103,7 +104,8 @@ class Getuiflut {
   void runBackgroundEnable(int enable) {
     if (Platform.isAndroid) {
     } else {
-      _channel.invokeMethod('runBackgroundEnable', <String, dynamic>{'enable': enable});
+      _channel.invokeMethod(
+          'runBackgroundEnable', <String, dynamic>{'enable': enable});
     }
   }
 
@@ -129,9 +131,9 @@ class Getuiflut {
     _channel.invokeMethod('setTag', <String, dynamic>{'tags': tags});
   }
 
-  void registerActivityToken(String token) {
-    _channel.invokeMethod(
-        'registerActivityToken', <String, dynamic>{'token': token});
+  void registerActivityToken(String aid, String token, String sn) {
+    _channel.invokeMethod('registerActivityToken',
+        <String, dynamic>{'aid': aid, 'token': token, 'sn': sn});
   }
 
   void addEventHandler({
@@ -165,6 +167,8 @@ class Getuiflut {
     required EventHandlerMap onOpenSettingsForNotification,
     // ios通知授权结果
     required EventHandler onGrantAuthorization,
+    // ios收到实时活动（灵动岛）token回调
+    required EventHandlerMap onLiveActivityResult,
   }) {
     _onReceiveClientId = onReceiveClientId;
 
@@ -185,13 +189,12 @@ class Getuiflut {
     _onQueryTagResult = onQueryTagResult;
     _onWillPresentNotification = onWillPresentNotification;
     _onOpenSettingsForNotification = onOpenSettingsForNotification;
-    _onQueryTagResult = onQueryTagResult;
-    _onWillPresentNotification = onWillPresentNotification;
-    _onOpenSettingsForNotification = onOpenSettingsForNotification;
 
     _onTransmitUserMessageReceive = onTransmitUserMessageReceive;
 
     _onGrantAuthorization = onGrantAuthorization;
+
+    _onLiveActivityResult = onLiveActivityResult;
 
     _channel.setMethodCallHandler(_handleMethod);
   }
@@ -241,6 +244,9 @@ class Getuiflut {
 
       case "onGrantAuthorization":
         return _onGrantAuthorization(call.arguments);
+
+      case "onLiveActivityResult":
+        return _onLiveActivityResult(call.arguments);
 
       default:
         throw new UnsupportedError("Unrecongnized Event");
