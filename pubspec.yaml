@@ -4,7 +4,7 @@ version: 0.2.25
 homepage: https://www.getui.com
 
 environment:
-  sdk: ">=2.12.0 <3.2.3"
+  sdk: ">=2.12.0 <=3.2.3"
   flutter: ">=1.12.0"
 
 dependencies:
