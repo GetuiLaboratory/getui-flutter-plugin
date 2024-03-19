@@ -16,7 +16,7 @@ flutter pub add getuiflut
 
 ```yaml
 dependencies:
-  getuiflut: ^0.2.25
+  getuiflut: ^0.2.26
 ```
 下载依赖：
 

@@ -1,6 +1,7 @@
 package com.getui.getuiflut;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
@@ -12,7 +13,6 @@ import com.igexin.sdk.Tag;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +43,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
     public static GetuiflutPlugin instance;
 
     public GetuiflutPlugin() {
-        instance = this;
+        Log.d("flutterHandler", "GetuiflutPlugin init ");
     }
 
     @Override
@@ -51,11 +51,13 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
         fContext = flutterPluginBinding.getApplicationContext();
         channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "getuiflut");
         channel.setMethodCallHandler(this);
+        Log.d("flutterHandler", "GetuiflutPlugin onAttachedToEngine ");
     }
 
     @Override
     public void onDetachedFromEngine(FlutterPlugin.FlutterPluginBinding binding) {
         channel.setMethodCallHandler(null);
+        Log.d("flutterHandler", "GetuiflutPlugin onDetachedFromEngine ");
     }
 
 
@@ -153,6 +155,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
     private void initGtSdk() {
         Log.d(TAG, "init getui sdk...test");
         try {
+            instance = this;
             PushManager.getInstance().initialize(fContext);
         } catch (Throwable e) {
             try {
