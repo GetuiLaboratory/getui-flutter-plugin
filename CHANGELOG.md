@@ -90,3 +90,6 @@
 2. 
 ## 0.2.26
 1. andoird GetuiflutPlugin 实例在初始化的时候设置 
+
+## 0.2.27
+1. 提高dart版本
