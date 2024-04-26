@@ -25,3 +25,6 @@
 ## 0.0.9
 1. Android 修复FlutterIntentService的TAG
 
+## 0.0.10
+1. Android 修复FlutterIntentService的TAG
+

@@ -120,9 +120,9 @@ class Getuiflut {
     _channel.invokeMethod('setTag', <String, dynamic>{'tags': tags});
   }
 
-  void registerActivityToken(String token) {
+  void registerLiveActivity(String token, String liveActivityId, String sequenceNum) {
     _channel.invokeMethod(
-        'registerActivityToken', <String, dynamic>{'token': token});
+        'registerLiveActivity', <String, dynamic>{'token': token,"liveActivityId":liveActivityId,"sequenceNum":sequenceNum});
   }
 
   void addEventHandler({

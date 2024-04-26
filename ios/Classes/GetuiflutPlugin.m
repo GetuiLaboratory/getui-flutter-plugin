@@ -60,8 +60,8 @@
       result(_launchNotification ?: @{});
   } else if([@"sdkVersion" isEqualToString:call.method]) {
       result([GeTuiSdk version]);
-  } else if([@"registerActivityToken" isEqualToString:call.method]) {
-      [self registerActivityToken:call result:result];
+  } else if([@"registerLiveActivity" isEqualToString:call.method]) {
+      [self registerLiveActivity:call result:result];
   } else {
       result(FlutterMethodNotImplemented);
   }
@@ -201,6 +201,7 @@
 }
 
 - (void)setBadge:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSLog(@">>[GTSDK setBadge]");
     NSDictionary *ConfigurationInfo = call.arguments;
     NSUInteger value = [ConfigurationInfo[@"badge"] integerValue];
     [GeTuiSdk setBadge:value];
@@ -218,9 +219,14 @@
     [GeTuiSdk setPushModeForOff:value];
 }
 
-- (void)registerActivityToken:(FlutterMethodCall*)call result:(FlutterResult)result {
+- (void)registerLiveActivity:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
-    [GeTuiSdk registerActivityToken:ConfigurationInfo[@"token"]];
+    [GeTuiSdk registerLiveActivity:ConfigurationInfo[@"liveActivityId"] activityToken:ConfigurationInfo[@"token"] sequenceNum:ConfigurationInfo[@"sequenceNum"]];
+}
+
+- (void)GeTuiSdkDidRegisterLiveActivity:(NSString *)sequenceNum result:(BOOL)isSuccess error:(NSError *)error {
+    NSLog(@"GeTuiSdkDidRegisterLiveActivity SN: %@, isSuccess : %@, error :%@", sequenceNum, @(isSuccess), error);
+    
 }
 
 /** SDK设置推送模式回调 */
