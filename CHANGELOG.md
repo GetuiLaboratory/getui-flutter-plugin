@@ -25,6 +25,12 @@
 ## 0.0.9
 1. Android 修复FlutterIntentService的TAG
 
-## 0.0.10
+## 0.1.0
+1. iOS 修复APNs静默回调问题
+
+## 0.1.1
+1. iOS 开发者在Appdelegate中重写application:didReceiveRemoteNotification:fetchCompletionHandler, 个推插件不转发静默推送
+
+## 0.1.2
 1. Android 修复FlutterIntentService的TAG
 
