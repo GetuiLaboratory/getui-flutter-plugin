@@ -93,3 +93,6 @@
 
 ## 0.2.27
 1. 提高dart版本
+
+## 0.2.28
+1. Android 增加SetTag、Alias回调

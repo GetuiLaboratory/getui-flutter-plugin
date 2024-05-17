@@ -65,13 +65,16 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
         Default,
         onReceiveMessageData,
         onNotificationMessageArrived,
-        onNotificationMessageClicked
+        onSetTagResult,
+        onAliasResult,
+        onQueryTagResult
     }
 
     enum StateType {
         Default,
         onReceiveClientId,
-        onReceiveOnlineState
+        onReceiveOnlineState,
+        onReceiveCommandResult
     }
 
 
@@ -87,7 +90,13 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
                     } else if (msg.arg1 == StateType.onReceiveOnlineState.ordinal()) {
                         GetuiflutPlugin.instance.channel.invokeMethod("onReceiveOnlineState", msg.obj);
                         Log.d("flutterHandler", "onReceiveOnlineState >>> " + msg.obj);
+
+                    } else if (msg.arg1 == StateType.onReceiveCommandResult.ordinal()) {
+
+                        GetuiflutPlugin.instance.channel.invokeMethod("onReceiveCommandResult", msg.obj);
+                        Log.d("flutterHandler", "onReceiveCommandResult >>> " + msg.obj);
                     } else {
+
                         Log.d(TAG, "default state type...");
                     }
                     break;
@@ -100,9 +109,15 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
                         GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageArrived", msg.obj);
                         Log.d("flutterHandler", "onNotificationMessageArrived >>> " + msg.obj);
 
-                    } else if (msg.arg1 == MessageType.onNotificationMessageClicked.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageClicked", msg.obj);
-                        Log.d("flutterHandler", "onNotificationMessageClicked >>> " + msg.obj);
+                    } else if (msg.arg1 == MessageType.onSetTagResult.ordinal()) {
+                        GetuiflutPlugin.instance.channel.invokeMethod("onSetTagResult", msg.obj);
+                        Log.d("flutterHandler", "onSetTagResult >>> " + msg.obj);
+                    }  else if (msg.arg1 == MessageType.onAliasResult.ordinal()) {
+                        GetuiflutPlugin.instance.channel.invokeMethod("onAliasResult", msg.obj);
+                        Log.d("flutterHandler", "onAliasResult >>> " + msg.obj);
+                    }  else if (msg.arg1 == MessageType.onQueryTagResult.ordinal()) {
+                        GetuiflutPlugin.instance.channel.invokeMethod("onQueryTagResult", msg.obj);
+                        Log.d("flutterHandler", "onQueryTagResult >>> " + msg.obj);
                     } else {
                         Log.d(TAG, "default Message type...");
                     }
@@ -256,7 +271,9 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
             type = StateType.onReceiveClientId.ordinal();
         } else if (func.equals("onReceiveOnlineState")) {
             type = StateType.onReceiveOnlineState.ordinal();
-        } else {
+        } else if(func.equals("onReceiveCommandResult")){
+            type = StateType.onReceiveCommandResult.ordinal();
+        }else {
             type = StateType.Default.ordinal();
         }
         Message msg = Message.obtain();
@@ -276,8 +293,12 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
             type = MessageType.onReceiveMessageData.ordinal();
         } else if (func.equals("onNotificationMessageArrived")) {
             type = MessageType.onNotificationMessageArrived.ordinal();
-        } else if (func.equals("onNotificationMessageClicked")) {
-            type = MessageType.onNotificationMessageClicked.ordinal();
+        } else if (func.equals("onSetTagResult")) {
+            type = MessageType.onSetTagResult.ordinal();
+        } else if (func.equals("onAliasResult")) {
+            type = MessageType.onAliasResult.ordinal();
+        } else if (func.equals("onQueryTagResult")) {
+            type = MessageType.onQueryTagResult.ordinal();
         } else {
             type = MessageType.Default.ordinal();
         }

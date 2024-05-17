@@ -247,7 +247,6 @@ class Getuiflut {
 
       case "onLiveActivityResult":
         return _onLiveActivityResult(call.arguments);
-
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }
