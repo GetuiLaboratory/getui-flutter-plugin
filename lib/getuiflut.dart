@@ -136,6 +136,15 @@ class Getuiflut {
         <String, dynamic>{'aid': aid, 'token': token, 'sn': sn});
   }
 
+  void registerDeviceToken(String token) {
+    if (Platform.isIOS) {
+      _channel.invokeMethod('registerDeviceToken',
+          <String, dynamic>{'token': token});
+    }
+  }
+
+
+
   void addEventHandler({
     required EventHandler onReceiveClientId,
     required EventHandlerMap onReceiveMessageData,

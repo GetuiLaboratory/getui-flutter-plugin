@@ -75,6 +75,8 @@
       result([GeTuiSdk version]);
   } else if([@"registerActivityToken" isEqualToString:call.method]) {
       [self registerActivityToken:call result:result];
+  } else if([@"registerDeviceToken" isEqualToString:call.method]) {
+      [self registerDeviceToken:call result:result];
   } else if([@"runBackgroundEnable" isEqualToString:call.method]) {
       [self runBackgroundEnable:call result:result];
   } else {
@@ -272,6 +274,20 @@
         [GeTuiSdk registerLiveActivity:ConfigurationInfo[@"aid"] activityToken:ConfigurationInfo[@"token"] sequenceNum:ConfigurationInfo[@"sn"]];
     }
 }
+
+
+- (void)registerDeviceToken:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    if ([GeTuiSdk respondsToSelector:@selector(registerDeviceToken:)]) {
+       
+        //sdk<=3020
+       BOOL isSuccess =  [GeTuiSdk registerDeviceToken:ConfigurationInfo[@"token"]];
+        NSLog(@"registerDeviceToken isSuccess %@ %@ " , @(isSuccess) , ConfigurationInfo[@"token"]);
+        return;
+    }
+}
+
+
 
 - (void)runBackgroundEnable:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;

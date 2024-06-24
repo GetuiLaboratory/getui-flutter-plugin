@@ -96,3 +96,7 @@
 
 ## 0.2.28
 1. Android 增加SetTag、Alias回调
+
+
+## 0.2.29
+1. IOS 增加API registerDeviceToken
