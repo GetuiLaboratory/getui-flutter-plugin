@@ -1,33 +1,38 @@
 PODS:
-  - Flutter (1.0.0)
-  - getuiflut (0.0.1):
+  - bmwpushflut (0.0.1):
     - Flutter
-    - GTSDK (= 2.7.0.0)
-  - GTSDK (2.7.0.0):
-    - ZXSDK
-  - ZXSDK (3.1.1)
+    - GTCommonSDK (= 3.1.0.0-noidfa)
+    - GTSDK (= 3.0.5.0)
+  - Flutter (1.0.0)
+  - GTCommonSDK (3.1.0.0-noidfa):
+    - ZXSDK-Noidfa
+  - GTSDK (3.0.5.0):
+    - GTCommonSDK (> 3.0.9.0)
+  - ZXSDK-Noidfa (3.2.5)
 
 DEPENDENCIES:
+  - bmwpushflut (from `.symlinks/plugins/bmwpushflut/ios`)
   - Flutter (from `Flutter`)
-  - getuiflut (from `.symlinks/plugins/getuiflut/ios`)
 
 SPEC REPOS:
   trunk:
+    - GTCommonSDK
     - GTSDK
-    - ZXSDK
+    - ZXSDK-Noidfa
 
 EXTERNAL SOURCES:
+  bmwpushflut:
+    :path: ".symlinks/plugins/bmwpushflut/ios"
   Flutter:
     :path: Flutter
-  getuiflut:
-    :path: ".symlinks/plugins/getuiflut/ios"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  getuiflut: 74f28d04d5af72de59ccad86f5a0f7938d6e4f9c
-  GTSDK: 2bfff924a23f84294254c104e3b570893797560e
-  ZXSDK: 0b39b45bca947d8ec17cba9b9dbb52c5cc2485d4
+  bmwpushflut: a2844af1d9be1f9d17e2401538e9683660e8662c
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  GTCommonSDK: 9860f17506430918ce9ae1cf51cb67af3d6226a3
+  GTSDK: cc04d169c5c6cb8f8884849153eaac9e6ccfdd7c
+  ZXSDK-Noidfa: 2bdb16385e8824278f8e6297493d7c4355eeaba0
 
-PODFILE CHECKSUM: 663715e941f9adb426e33bf9376914006f9ea95b
+PODFILE CHECKSUM: 1a782344d33c12ced0182eeab11e8668d253eb48
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.15.2

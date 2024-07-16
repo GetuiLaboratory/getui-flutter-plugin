@@ -379,7 +379,15 @@ class _MyAppState extends State<MyApp> {
                             //开发者需自行获取token
                             String token =
                                 "8048e0825f0034231ce2f638743584f47fb4fd49b5a6ad2a8a91b154966997465e6292780ff648edfea69168cb5c0df55bdc1da919c7b423053f127dbc79b9520366c95bbc40d6c8c9b1f9f4d4c1e452";
-                            Getuiflut().registerActivityToken(token);
+                            // 业务id，用于绑定token的业务关系
+                            //[0，128],  内容要求：只能包含中文字符、英文字母、0-9、+-*.的组合（不支持空格）(同setTag的规则）
+                            //可传空，服务端支持通过token推送，不要laid
+                            String liveActivityId ="aasdsd";
+                            //aasdsd
+                            //请求序列码, 不为nil
+                            String sequenceNum ="223232";
+
+                            Getuiflut().registerLiveActivity(liveActivityId,token,sequenceNum);
                           },
                           child: const Text('registerActivityToken'),
                         ),

@@ -30,3 +30,10 @@
 
 ## 0.1.1
 1. iOS 开发者在Appdelegate中重写application:didReceiveRemoteNotification:fetchCompletionHandler, 个推插件不转发静默推送
+
+## 0.1.2
+1. 废弃
+
+## 0.1.3
+1. SDK升级隐私清单
+2. 废弃registerActivityToken 替换为 registerLiveActivity
