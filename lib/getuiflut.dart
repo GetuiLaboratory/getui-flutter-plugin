@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 
 typedef Future<dynamic> EventHandler(String res);
+typedef Future<dynamic> EventHandlerBool(bool res);
 typedef Future<dynamic> EventHandlerMap(Map<String, dynamic> event);
 
 class Getuiflut {
@@ -34,6 +35,7 @@ class Getuiflut {
   late EventHandlerMap _onOpenSettingsForNotification;
   late EventHandler _onGrantAuthorization;
   late EventHandlerMap _onLiveActivityResult;
+  late EventHandlerBool _onReceiveOnlineState;
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -151,7 +153,7 @@ class Getuiflut {
     required EventHandlerMap onNotificationMessageArrived,
     required EventHandlerMap onNotificationMessageClicked,
     required EventHandlerMap onTransmitUserMessageReceive,
-
+    required EventHandlerBool onReceiveOnlineState,
     //deviceToken
     required EventHandler onRegisterDeviceToken,
 
@@ -204,6 +206,7 @@ class Getuiflut {
     _onGrantAuthorization = onGrantAuthorization;
 
     _onLiveActivityResult = onLiveActivityResult;
+    _onReceiveOnlineState = onReceiveOnlineState;
 
     _channel.setMethodCallHandler(_handleMethod);
   }
@@ -256,6 +259,8 @@ class Getuiflut {
 
       case "onLiveActivityResult":
         return _onLiveActivityResult(call.arguments);
+      case "onReceiveOnlineState":
+        return _onReceiveOnlineState(call.arguments);
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }

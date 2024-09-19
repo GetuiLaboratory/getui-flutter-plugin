@@ -16,7 +16,7 @@ flutter pub add getuiflut
 
 ```yaml
 dependencies:
-  getuiflut: ^0.2.29
+  getuiflut: ^0.2.30
 ```
 下载依赖：
 
@@ -41,8 +41,8 @@ flutter插件默认包含自定义组件，Flutter用户不用处理以下配置
 ^0.2.19开始getuiflut不再默认依赖GTSDK，请自己在android/app/build.gradle文件下增加依赖，如：
 ```yaml
 dependencies {
-    implementation 'com.getui:gtsdk:3.2.18.0'  //个推SDK
-    implementation 'com.getui:gtc:3.2.6.0'  //个推核心组件
+    implementation 'com.getui:gtsdk:3.3.7.0'  //个推SDK
+    implementation 'com.getui:gtc:3.2.16.0'  //个推核心组件
 }
 ```
 
@@ -136,6 +136,9 @@ Getuiflut().addEventHandler(
           _onAppLinkPayLoad = "$message";
         });
       },
+        onReceiveOnlineState: (bool online) async {
+            print("flutter onReceiveOnlineState: $online");
+        },
     	//通知服务开启\关闭回调
       onPushModeResult: (Map<String, dynamic> message) async {
         print("flutter onPushModeResult: $message");

@@ -65,6 +65,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
         Default,
         onReceiveMessageData,
         onNotificationMessageArrived,
+        onNotificationMessageClicked,
         onSetTagResult,
         onAliasResult,
         onQueryTagResult
@@ -108,6 +109,10 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
                     } else if (msg.arg1 == MessageType.onNotificationMessageArrived.ordinal()) {
                         GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageArrived", msg.obj);
                         Log.d("flutterHandler", "onNotificationMessageArrived >>> " + msg.obj);
+
+                    } else if (msg.arg1 == MessageType.onNotificationMessageClicked.ordinal()) {
+                        GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageClicked", msg.obj);
+                        Log.d("flutterHandler", "onNotificationMessageClicked >>> " + msg.obj);
 
                     } else if (msg.arg1 == MessageType.onSetTagResult.ordinal()) {
                         GetuiflutPlugin.instance.channel.invokeMethod("onSetTagResult", msg.obj);
@@ -293,7 +298,11 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
             type = MessageType.onReceiveMessageData.ordinal();
         } else if (func.equals("onNotificationMessageArrived")) {
             type = MessageType.onNotificationMessageArrived.ordinal();
-        } else if (func.equals("onSetTagResult")) {
+        }
+        else if (func.equals("onNotificationMessageClicked")) {
+            type = MessageType.onNotificationMessageClicked.ordinal();
+        }
+        else if (func.equals("onSetTagResult")) {
             type = MessageType.onSetTagResult.ordinal();
         } else if (func.equals("onAliasResult")) {
             type = MessageType.onAliasResult.ordinal();

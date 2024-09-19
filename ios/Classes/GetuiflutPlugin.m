@@ -327,6 +327,12 @@
     [_channel invokeMethod:@"onLiveActivityResult" arguments:dic];
 }
 
+- (void)GeTuiSDkDidNotifySdkState:(SdkStatus)status {
+    NSLog(@"[GetuiSdk Status]:%u", status);
+    BOOL isOnLine = status == SdkStatusStarted;
+    [_channel invokeMethod:@"onReceiveOnlineState" arguments:@(isOnLine)];
+}
+
 //- (void)GeTuiSdkPopupDidShow:(NSDictionary *)info {
 //    
 //}
@@ -380,5 +386,6 @@
 //    NSLog(@"\n>>>GTSDK [Voip Payload]:%@,%@", payload, payload.dictionaryPayload);
 //    [_channel invokeMethod:@"onReceiveVoipPayLoad" arguments:payload.dictionaryPayload];
 //}
+
 
 @end

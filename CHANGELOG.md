@@ -100,3 +100,7 @@
 
 ## 0.2.29
 1. IOS 增加API registerDeviceToken
+
+## 0.2.3o
+1. 增加onReceiveOnlineState
+2. Android 增加onNotificationMessageClicked

@@ -41,6 +41,6 @@ repositories {
 }
 dependencies {
 
-     compileOnly('com.getui:gtsdk:3.2.14.0')
+     compileOnly('com.getui:gtsdk:3.3.7.0')
 
 }
