@@ -260,7 +260,7 @@ class Getuiflut {
       case "onLiveActivityResult":
         return _onLiveActivityResult(call.arguments);
       case "onReceiveOnlineState":
-        return _onReceiveOnlineState(call.arguments);
+        return _onReceiveOnlineState(bool.parse(call.arguments));
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }

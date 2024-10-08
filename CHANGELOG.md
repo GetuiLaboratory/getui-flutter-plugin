@@ -104,3 +104,7 @@
 ## 0.2.3o
 1. 增加onReceiveOnlineState
 2. Android 增加onNotificationMessageClicked
+
+
+## 0.2.31
+1. 增加onReceiveOnlineState 修复
