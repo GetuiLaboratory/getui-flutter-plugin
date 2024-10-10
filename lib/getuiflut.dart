@@ -35,6 +35,7 @@ class Getuiflut {
   late EventHandlerMap _onOpenSettingsForNotification;
   late EventHandler _onGrantAuthorization;
   late EventHandlerMap _onLiveActivityResult;
+  late EventHandlerMap _onRegisterPushToStartTokenResult;
   late EventHandlerBool _onReceiveOnlineState;
 
   static Future<String> get platformVersion async {
@@ -138,14 +139,17 @@ class Getuiflut {
         <String, dynamic>{'aid': aid, 'token': token, 'sn': sn});
   }
 
-  void registerDeviceToken(String token) {
-    if (Platform.isIOS) {
-      _channel.invokeMethod('registerDeviceToken',
-          <String, dynamic>{'token': token});
-    }
+  void registerPushToStartToken(String attribute, String token, String sn) {
+    _channel.invokeMethod('registerPushToStartToken',
+        <String, dynamic>{'attribute': attribute, 'token': token, 'sn': sn});
   }
 
-
+  void registerDeviceToken(String token) {
+    if (Platform.isIOS) {
+      _channel.invokeMethod(
+          'registerDeviceToken', <String, dynamic>{'token': token});
+    }
+  }
 
   void addEventHandler({
     required EventHandler onReceiveClientId,
@@ -180,6 +184,8 @@ class Getuiflut {
     required EventHandler onGrantAuthorization,
     // ios收到实时活动（灵动岛）token回调
     required EventHandlerMap onLiveActivityResult,
+    // ios收到实时活动push-to-start token回调
+    required EventHandlerMap onRegisterPushToStartTokenResult,
   }) {
     _onReceiveClientId = onReceiveClientId;
 
@@ -206,8 +212,8 @@ class Getuiflut {
     _onGrantAuthorization = onGrantAuthorization;
 
     _onLiveActivityResult = onLiveActivityResult;
+    _onRegisterPushToStartTokenResult = onRegisterPushToStartTokenResult;
     _onReceiveOnlineState = onReceiveOnlineState;
-
     _channel.setMethodCallHandler(_handleMethod);
   }
 
@@ -258,7 +264,12 @@ class Getuiflut {
         return _onGrantAuthorization(call.arguments);
 
       case "onLiveActivityResult":
-        return _onLiveActivityResult(call.arguments);
+        return _onLiveActivityResult(call.arguments.cast<String, dynamic>());
+
+      case "onRegisterPushToStartTokenResult":
+        return _onRegisterPushToStartTokenResult(
+            call.arguments.cast<String, dynamic>());
+
       case "onReceiveOnlineState":
         return _onReceiveOnlineState(bool.parse(call.arguments));
       default:

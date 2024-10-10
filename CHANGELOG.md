@@ -99,12 +99,17 @@
 
 
 ## 0.2.29
-1. IOS 增加API registerDeviceToken
+1. iOS 增加API registerDeviceToken
 
-## 0.2.3o
+## 0.2.30
 1. 增加onReceiveOnlineState
 2. Android 增加onNotificationMessageClicked
 
 
 ## 0.2.31
 1. 增加onReceiveOnlineState 修复
+
+
+## 0.2.32
+1. iOS适配灵动岛API，GTSDK 3.0.7.0
+2. 修复已知问题

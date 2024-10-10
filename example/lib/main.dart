@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
     Getuiflut().addEventHandler(onReceiveClientId: (String message) async {
       print("flutter onReceiveClientId: $message");
       setState(() {
-        _getClientId = "ClientId: $message";
+        _getClientId = "$message";
       });
     }, onReceiveMessageData: (Map<String, dynamic> msg) async {
       print("flutter onReceiveMessageData: $msg");
@@ -129,6 +129,8 @@ class _MyAppState extends State<MyApp> {
       print("flutter onGrantAuthorization: $granted");
     }, onLiveActivityResult: (Map<String, dynamic> message) async {
       print("flutter onLiveActivityResult: $message");
+    }, onRegisterPushToStartTokenResult: (Map<String, dynamic> message) async {
+      print("flutter onRegisterPushToStartTokenResult: $message");
     }, onReceiveOnlineState: (bool online) async {
       print("flutter onReceiveOnlineState: $online");
     });
@@ -280,7 +282,7 @@ class _MyAppState extends State<MyApp> {
                     ),
 
                     Text(
-                      'ios Public Function',
+                      'iOS Public Function',
                       style: TextStyle(
                         color: Colors.redAccent,
                         fontSize: 20.0,
@@ -364,18 +366,16 @@ class _MyAppState extends State<MyApp> {
                         ElevatedButton(
                           onPressed: () {
                             //开发者需自行获取token
-                            String token =
-                                "8048e0825f0034231ce2f638743584f47fb4fd49b5a6ad2a8a91b154966997465e6292780ff648edfea69168cb5c0df55bdc1da919c7b423053f127dbc79b9520366c95bbc40d6c8c9b1f9f4d4c1e452";
-                            Getuiflut().registerActivityToken(
-                                'aid_01', token, 'sn_01');
+                            String token = _getDeviceToken;
+                            Getuiflut().registerDeviceToken(token);
                           },
-                          child: const Text('registerActivityToken'),
+                          child: const Text('registerDeviceToken'),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             Getuiflut().runBackgroundEnable(1);
                           },
-                          child: const Text('runBackgroundEnable(0)'),
+                          child: const Text('runBackgroundEnable'),
                         ),
                       ],
                     ),
@@ -385,13 +385,26 @@ class _MyAppState extends State<MyApp> {
                         ElevatedButton(
                           onPressed: () {
                             //开发者需自行获取token
-                            String token = _getDeviceToken;
-                            Getuiflut().registerDeviceToken(token);
+                            String token =
+                                "8048e0825f0034231ce2f638743584f47fb4fd49b5a6ad2a8a91b154966997465e6292780ff648edfea69168cb5c0df55bdc1da919c7b423053f127dbc79b9520366c95bbc40d6c8c9b1f9f4d4c1e452";
+                            Getuiflut().registerActivityToken(
+                                'aid_01', token, 'sn_01');
                           },
-                          child: const Text('registerDeviceToken'),
+                          child: const Text('registerActivityToken'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            //开发者需自行获取token
+                            Getuiflut().registerPushToStartToken(
+                                "attribute1", "faketoken", "attribute1_sn");
+                          },
+                          child: const Text('registerPushToStartToken'),
                         ),
                       ],
                     ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[]),
                   ],
                 ),
               )

@@ -6,8 +6,8 @@
 #import <UserNotifications/UserNotifications.h>
 #endif
 @interface GeTuiSdk(GetuiflutPlugin)
+//3.0.3.0废弃的API
 + (BOOL)registerActivityToken:(NSString *)activityToken;
-+ (BOOL)registerLiveActivity:(NSString *)liveActivityId activityToken:(NSString*)token sequenceNum:(NSString*)sn;
 @end
 
 @interface GtSdkManager : NSObject
@@ -73,13 +73,15 @@
       result(_launchNotification ?: @{});
   } else if([@"sdkVersion" isEqualToString:call.method]) {
       result([GeTuiSdk version]);
-  } else if([@"registerActivityToken" isEqualToString:call.method]) {
-      [self registerActivityToken:call result:result];
   } else if([@"registerDeviceToken" isEqualToString:call.method]) {
       [self registerDeviceToken:call result:result];
   } else if([@"runBackgroundEnable" isEqualToString:call.method]) {
       [self runBackgroundEnable:call result:result];
-  } else {
+  } else if([@"registerActivityToken" isEqualToString:call.method]) {
+      [self registerActivityToken:call result:result];
+  } else if([@"registerPushToStartToken" isEqualToString:call.method]) {
+      [self registerPushToStartToken:call result:result];
+  }  else {
       result(FlutterMethodNotImplemented);
   }
 }
@@ -275,19 +277,21 @@
     }
 }
 
+- (void)registerPushToStartToken:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *ConfigurationInfo = call.arguments;
+    if ([GeTuiSdk respondsToSelector:@selector(registerLiveActivity:pushToStartToken:sequenceNum:)]) {
+        [GeTuiSdk registerLiveActivity:ConfigurationInfo[@"attribute"] pushToStartToken:ConfigurationInfo[@"token"] sequenceNum:ConfigurationInfo[@"sn"]];
+    }
+}
 
 - (void)registerDeviceToken:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
     if ([GeTuiSdk respondsToSelector:@selector(registerDeviceToken:)]) {
-       
         //sdk<=3020
-       BOOL isSuccess =  [GeTuiSdk registerDeviceToken:ConfigurationInfo[@"token"]];
+        BOOL isSuccess = [GeTuiSdk registerDeviceToken:ConfigurationInfo[@"token"]];
         NSLog(@"registerDeviceToken isSuccess %@ %@ " , @(isSuccess) , ConfigurationInfo[@"token"]);
-        return;
     }
 }
-
-
 
 - (void)runBackgroundEnable:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
@@ -325,6 +329,12 @@
     NSLog(@"\n>>>GTSDK GeTuiSdkDidRegisterLiveActivity SN : %@, success: %@, error :%@", sn, @(isSuccess), error);
     NSDictionary *dic = @{@"success" : @(isSuccess), @"sn": sn?:@"", @"error": error ? [error localizedDescription] : @""};
     [_channel invokeMethod:@"onLiveActivityResult" arguments:dic];
+}
+
+-(void)GeTuiSdkDidRegisterPushToStartToken:(NSString *)sn result:(BOOL)isSuccess error:(NSError *)error {
+    NSLog(@"\n>>>GTSDK GeTuiSdkDidRegisterPushToStartToken SN : %@, success: %@, error :%@", sn, @(isSuccess), error);
+    NSDictionary *dic = @{@"success" : @(isSuccess), @"sn": sn?:@"", @"error": error ? [error localizedDescription] : @""};
+    [_channel invokeMethod:@"onRegisterPushToStartTokenResult" arguments:dic];
 }
 
 - (void)GeTuiSDkDidNotifySdkState:(SdkStatus)status {

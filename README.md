@@ -16,7 +16,7 @@ flutter pub add getuiflut
 
 ```yaml
 dependencies:
-  getuiflut: ^0.2.31
+  getuiflut: ^0.2.32
 ```
 下载依赖：
 
@@ -249,6 +249,12 @@ Getuiflut.initGetuiSdk();
     *  GTSDK>=3.0.3.0，会有onLiveActivityResult回调
     */
     registerActivityToken(aid, token,sn) 
+    
+    /*
+    *  注册灵动岛token。支持版本3.0.7.0及以上。 
+    *  GTSDK>=3.0.7.0，会有onRegisterPushToStartTokenResult回调
+    */
+    registerPushToStartToken(attribute, token,sn) 
 ```
 
 
