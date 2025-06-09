@@ -24,6 +24,7 @@ rootProject.allprojects {
 }
 apply plugin: 'com.android.library'
 android {
+    namespace 'com.getui.getuiflut'
     compileSdkVersion 28
 
     defaultConfig {
