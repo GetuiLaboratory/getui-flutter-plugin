@@ -63,6 +63,11 @@ class Getuiflut {
     return info;
   }
 
+  static Future<Map> get getLaunchOptions async {
+    Map info = await _channel.invokeMethod('getLaunchOptions');
+    return info;
+  }
+
   void turnOnPush() {
     _channel.invokeMethod('resume');
   }

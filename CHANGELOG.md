@@ -113,3 +113,7 @@
 ## 0.2.32
 1. iOS适配灵动岛API，GTSDK 3.0.7.0
 2. 修复已知问题
+
+## 0.2.33
+1. iOS增加API getLaunchOptions
+

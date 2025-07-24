@@ -168,7 +168,17 @@ class _MyAppState extends State<MyApp> {
     Map info;
     try {
       info = await Getuiflut.getLaunchNotification;
-      print(info);
+      print("getLaunchNotification:$info");
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> getLaunchOptions() async {
+    Map info;
+    try {
+      info = await Getuiflut.getLaunchOptions;
+      print("getLaunchOptions:$info");
     } catch (e) {
       print(e.toString());
     }
@@ -300,6 +310,12 @@ class _MyAppState extends State<MyApp> {
                             getLaunchNotification();
                           },
                           child: const Text('getLaunchNotification'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            getLaunchOptions();
+                          },
+                          child: const Text('getLaunchOptions'),
                         ),
                       ],
                     ),

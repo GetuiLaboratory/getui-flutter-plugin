@@ -71,6 +71,8 @@
 //        [GeTuiSdk resume];
   } else if([@"getLaunchNotification" isEqualToString:call.method]) {
       result(_launchNotification ?: @{});
+  } else if([@"getLaunchOptions" isEqualToString:call.method]) {
+      result(_launchOptions ?: @{});
   } else if([@"sdkVersion" isEqualToString:call.method]) {
       result([GeTuiSdk version]);
   } else if([@"registerDeviceToken" isEqualToString:call.method]) {

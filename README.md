@@ -217,11 +217,16 @@ Getuiflut.initGetuiSdk();
     */ 
     registerRemoteNotification(appId,appKey,appSecret);
  
+    /**
+    *  获取App启动参数(包括冷启动时，本地\远程通知参数等）
+    */
+    getLaunchOptions();
 
     /**
     *  获取冷启动APNs参数
     */
     getLaunchNotification();
+
 
     /**
     *  同步服务端角标
