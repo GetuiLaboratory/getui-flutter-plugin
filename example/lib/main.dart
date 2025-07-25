@@ -131,7 +131,7 @@ class _MyAppState extends State<MyApp> {
       print("flutter onLiveActivityResult: $message");
     }, onRegisterPushToStartTokenResult: (Map<String, dynamic> message) async {
       print("flutter onRegisterPushToStartTokenResult: $message");
-    }, onReceiveOnlineState: (bool online) async {
+    }, onReceiveOnlineState: (String online) async {
       print("flutter onReceiveOnlineState: $online");
     });
   }

@@ -342,7 +342,7 @@
 - (void)GeTuiSDkDidNotifySdkState:(SdkStatus)status {
     NSLog(@"[GetuiSdk Status]:%u", status);
     BOOL isOnLine = status == SdkStatusStarted;
-    [_channel invokeMethod:@"onReceiveOnlineState" arguments:@(isOnLine)];
+    [_channel invokeMethod:@"onReceiveOnlineState" arguments:[NSString stringWithFormat:@"%@",@(isOnLine)]];
 }
 
 //- (void)GeTuiSdkPopupDidShow:(NSDictionary *)info {

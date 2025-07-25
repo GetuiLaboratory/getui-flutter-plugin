@@ -36,7 +36,7 @@ class Getuiflut {
   late EventHandler _onGrantAuthorization;
   late EventHandlerMap _onLiveActivityResult;
   late EventHandlerMap _onRegisterPushToStartTokenResult;
-  late EventHandlerBool _onReceiveOnlineState;
+  late EventHandler _onReceiveOnlineState;
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -162,7 +162,7 @@ class Getuiflut {
     required EventHandlerMap onNotificationMessageArrived,
     required EventHandlerMap onNotificationMessageClicked,
     required EventHandlerMap onTransmitUserMessageReceive,
-    required EventHandlerBool onReceiveOnlineState,
+    required EventHandler onReceiveOnlineState,
     //deviceToken
     required EventHandler onRegisterDeviceToken,
 
@@ -276,7 +276,8 @@ class Getuiflut {
             call.arguments.cast<String, dynamic>());
 
       case "onReceiveOnlineState":
-        return _onReceiveOnlineState(bool.parse(call.arguments));
+        //return _onReceiveOnlineState(bool.parse(call.arguments));
+        return _onReceiveOnlineState(call.arguments);
       default:
         throw new UnsupportedError("Unrecongnized Event");
     }

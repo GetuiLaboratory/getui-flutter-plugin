@@ -117,3 +117,6 @@
 ## 0.2.33
 1. iOS增加API getLaunchOptions
 
+## 0.2.34
+1. iOS onReceiveOnlineState回调参数bool改为string，避免dart2兼容性问题
+
