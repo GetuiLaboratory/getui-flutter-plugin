@@ -120,3 +120,9 @@
 ## 0.2.34
 1. iOS onReceiveOnlineState回调参数bool改为string，避免dart2兼容性问题
 
+## 0.2.35
+1.iOS 删除getLaunchOptions，新增getLaunchLocalNotification性问题
+
+## 0.2.36
+1.iOS 修改getLaunchLocalNotification返回值
+

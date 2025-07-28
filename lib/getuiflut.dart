@@ -63,8 +63,8 @@ class Getuiflut {
     return info;
   }
 
-  static Future<Map> get getLaunchOptions async {
-    Map info = await _channel.invokeMethod('getLaunchOptions');
+  static Future<Map> get getLaunchLocalNotification async {
+    Map info = await _channel.invokeMethod('getLaunchLocalNotification');
     return info;
   }
 

@@ -174,11 +174,11 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> getLaunchOptions() async {
+  Future<void> getLaunchLocalNotification() async {
     Map info;
     try {
-      info = await Getuiflut.getLaunchOptions;
-      print("getLaunchOptions:$info");
+      info = await Getuiflut.getLaunchLocalNotification;
+      print("getLaunchLocalNotification:$info");
     } catch (e) {
       print(e.toString());
     }
@@ -313,9 +313,9 @@ class _MyAppState extends State<MyApp> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            getLaunchOptions();
+                            getLaunchLocalNotification();
                           },
-                          child: const Text('getLaunchOptions'),
+                          child: const Text('getLaunchLocalNotification'),
                         ),
                       ],
                     ),

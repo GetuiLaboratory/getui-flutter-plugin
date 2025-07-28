@@ -20,6 +20,7 @@
     BOOL _started;
     NSDictionary *_launchOptions;
     NSDictionary *_launchNotification;
+    NSDictionary *_launchLocalNotification;
     NSDictionary *_apnsSlienceUserInfo;
 }
 @end
@@ -39,6 +40,10 @@
 
 - (id)init {
     self = [super init];
+    _launchOptions = @{};
+    _launchNotification = @{};
+    _launchLocalNotification = @{};
+    _apnsSlienceUserInfo = @{};
     return self;
 }
 
@@ -71,8 +76,8 @@
 //        [GeTuiSdk resume];
   } else if([@"getLaunchNotification" isEqualToString:call.method]) {
       result(_launchNotification ?: @{});
-  } else if([@"getLaunchOptions" isEqualToString:call.method]) {
-      result(_launchOptions ?: @{});
+  } else if([@"getLaunchLocalNotification" isEqualToString:call.method]) {
+      result(_launchLocalNotification ?: @{});
   } else if([@"sdkVersion" isEqualToString:call.method]) {
       result([GeTuiSdk version]);
   } else if([@"registerDeviceToken" isEqualToString:call.method]) {
@@ -116,6 +121,18 @@
         NSLog(@"\n>>>GTSDK didFinishLaunchingWithOptions %@", launchOptions);
         _launchOptions = launchOptions;
         _launchNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+        
+        if(launchOptions[UIApplicationLaunchOptionsLocalNotificationKey]) {
+            
+            // 获取本地通知对象（类型为 UILocalNotification）
+            UILocalNotification *localNotification = launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
+            if (localNotification &&
+                localNotification.userInfo &&
+                [localNotification.userInfo isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *userInfo = localNotification.userInfo;
+                _launchLocalNotification = userInfo;
+            }
+        }
     }
     return YES;
 }
