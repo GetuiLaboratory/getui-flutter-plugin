@@ -6,3 +6,7 @@
 .DS_Store
 /build
 /captures
+/.idea
+.idea/
+build/
+android/.idea/*

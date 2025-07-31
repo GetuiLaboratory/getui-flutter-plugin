@@ -9,9 +9,10 @@
 build/
 /build
 .gradle
+gradle
 android/.idea/*
+/android/.idea/*
 #.vscode/*
-
 Example/ios/Index/*
 example/.flutter-plugins-dependencies
 example/ios/Flutter/Flutter.podspec

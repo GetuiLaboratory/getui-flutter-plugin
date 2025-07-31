@@ -126,3 +126,7 @@
 ## 0.2.36
 1.iOS 修改getLaunchLocalNotification返回值
 
+
+## 0.2.37
+1.android 增加namespace
+
