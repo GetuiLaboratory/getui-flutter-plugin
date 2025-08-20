@@ -1,6 +1,6 @@
 name: getuiflut
 description: getui flutter plugin
-version: 0.2.37
+version: 0.2.38
 homepage: https://www.getui.com
 
 environment:
@@ -30,6 +30,8 @@ flutter:
         package: com.getui.getuiflut
         pluginClass: GetuiflutPlugin
       ios:
+        pluginClass: GetuiflutPlugin
+      ohos:
         pluginClass: GetuiflutPlugin
 
   # To add assets to your plugin package, add an assets section, like this:

@@ -1,7 +1,10 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
+import 'dart:ffi';
 import 'dart:io';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 
+// 事件回调类型定义
 typedef Future<dynamic> EventHandler(String res);
 typedef Future<dynamic> EventHandlerBool(bool res);
 typedef Future<dynamic> EventHandlerMap(Map<String, dynamic> event);
@@ -9,106 +12,147 @@ typedef Future<dynamic> EventHandlerMap(Map<String, dynamic> event);
 class Getuiflut {
   static const MethodChannel _channel = const MethodChannel('getuiflut');
 
+
+  /*-----------------------------
+   *         事件处理器
+   *----------------------------*/
   late EventHandler _onReceiveClientId;
-  late EventHandlerMap _onReceiveMessageData;
+  late EventHandler _onRegisterDeviceToken;
+  late EventHandler _onAppLinkPayload;
+  late EventHandler _onGrantAuthorization;
+  late EventHandler _onReceiveOnlineState;
+
   late EventHandlerMap _onNotificationMessageArrived;
   late EventHandlerMap _onNotificationMessageClicked;
   late EventHandlerMap _onTransmitUserMessageReceive;
-
-  // deviceToken
-  late EventHandler _onRegisterDeviceToken;
-
-  //  iOS收到的透传内容
-  late EventHandlerMap _onReceivePayload;
-
-  // ios 收到APNS消息
-  late EventHandlerMap _onReceiveNotificationResponse;
-
-  // ios 收到AppLink消息
-  late EventHandler _onAppLinkPayload;
-
-  late EventHandlerMap _onPushModeResult;
   late EventHandlerMap _onSetTagResult;
   late EventHandlerMap _onAliasResult;
   late EventHandlerMap _onQueryTagResult;
+  late EventHandlerMap _onReceivePayload;
+  late EventHandlerMap _onReceiveNotificationResponse;
+  late EventHandlerMap _onPushModeResult;
   late EventHandlerMap _onWillPresentNotification;
   late EventHandlerMap _onOpenSettingsForNotification;
-  late EventHandler _onGrantAuthorization;
   late EventHandlerMap _onLiveActivityResult;
   late EventHandlerMap _onRegisterPushToStartTokenResult;
-  late EventHandler _onReceiveOnlineState;
 
-  static Future<String> get platformVersion async {
+  /*-----------------------------
+   *         SDK基础方法
+   *----------------------------*/
+
+  /// 获取平台版本
+  Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
     print(version);
     return version;
   }
 
-  static Future<void> get initGetuiSdk async {
-    await _channel.invokeMethod('initGetuiPush');
+  /// 初始化SDK（Android/ohos）
+   void get initGetuiSdk {
+     _channel.invokeMethod('initGetuiPush');
   }
 
-  static Future<String> get getClientId async {
-    String cid = await _channel.invokeMethod('getClientId');
-    return cid;
+  /// 启动SDK（iOS标准模式）
+  void startSdk({
+    required String appId,
+    required String appKey,
+    required String appSecret,
+  }) {
+    _channel.invokeMethod(
+      'startSdk',
+      {'appId': appId, 'appKey': appKey, 'appSecret': appSecret},
+    );
   }
 
-  static Future<String> get sdkVersion async {
-    String ver = await _channel.invokeMethod('sdkVersion');
-    return ver;
+  /// 启动SDK（iOS简单模式）
+  void startSdkSimple({
+    required String appId,
+    required String appKey,
+    required String appSecret,
+  }) {
+    if (Platform.isIOS) {
+      _channel.invokeMethod(
+        'startSdkSimple',
+        {'appId': appId, 'appKey': appKey, 'appSecret': appSecret},
+      );
+    }
   }
 
-  static Future<Map> get getLaunchNotification async {
+  /*-----------------------------
+   *        客户端信息获取
+   *----------------------------*/
+
+  /// 获取个推ClientId
+   Future<String> get getClientId async {
+    return await _channel.invokeMethod('getClientId');
+  }
+
+  /// 获取SDK版本号
+   Future<String> get sdkVersion async {
+    return await _channel.invokeMethod('sdkVersion');
+  }
+   Future<Map> get getLaunchNotification async {
     Map info = await _channel.invokeMethod('getLaunchNotification');
     return info;
   }
 
-  static Future<Map> get getLaunchLocalNotification async {
+   Future<Map> get getLaunchLocalNotification async {
     Map info = await _channel.invokeMethod('getLaunchLocalNotification');
     return info;
   }
 
+
+  /*-----------------------------
+   *        推送控制方法
+   *----------------------------*/
+
+  /// 开启推送
   void turnOnPush() {
-    _channel.invokeMethod('resume');
+    if (!Platform.isIOS) {
+      _channel.invokeMethod('resume');
+    }
   }
 
+  /// 关闭推送
   void turnOffPush() {
-    if (Platform.isAndroid) {
+    if (!Platform.isIOS) {
       _channel.invokeMethod('stopPush');
     }
   }
 
+  /// Android 注册Activity
   void onActivityCreate() {
-    _channel.invokeMethod('onActivityCreate');
+    if (Platform.isAndroid) {
+      _channel.invokeMethod('onActivityCreate');
+    }
   }
 
+  /*-----------------------------
+   *        别名标签管理
+   *----------------------------*/
+
+  /// 绑定别名
   void bindAlias(String alias, String sn) {
-    if (Platform.isAndroid) {
-      _channel.invokeMethod(
-          'bindAlias', <String, dynamic>{'alias': alias, 'aSn': sn});
-    } else {
-      _channel.invokeMethod(
-          'bindAlias', <String, dynamic>{'alias': alias, 'aSn': sn});
-    }
+    _channel.invokeMethod('bindAlias', {'alias': alias, 'aSn': sn});
   }
 
+  /// 解绑别名
   void unbindAlias(String alias, String sn, bool isSelf) {
-    if (Platform.isAndroid) {
-      _channel.invokeMethod('unbindAlias',
-          <String, dynamic>{'alias': alias, 'aSn': sn, 'isSelf': isSelf});
-    } else {
-      _channel.invokeMethod('unbindAlias',
-          <String, dynamic>{'alias': alias, 'aSn': sn, 'isSelf': isSelf});
-    }
+    _channel.invokeMethod(
+        'unbindAlias', {'alias': alias, 'aSn': sn, 'isSelf': isSelf});
   }
 
-  void setPushMode(int mode) {
-    if (Platform.isAndroid) {
-    } else {
-      _channel.invokeMethod('setPushMode', <String, dynamic>{'mode': mode});
-    }
+  /// 设置标签
+  void setTag(List<String> tags, String sn) {
+    _channel.invokeMethod('setTag', {'tags': tags,'sn':sn});
   }
 
+  //查询标签
+  void queryTag(String sn) {
+    _channel.invokeMethod('queryTag', {'sn':sn});
+  }
+
+  ///设置后台运行
   void runBackgroundEnable(int enable) {
     if (Platform.isAndroid) {
     } else {
@@ -117,141 +161,180 @@ class Getuiflut {
     }
   }
 
+  /// 设置角标
   void setBadge(int badge) {
-    _channel.invokeMethod('setBadge', <String, dynamic>{'badge': badge});
+    _channel.invokeMethod('setBadge', {'badge': badge});
+  }
+  //设置静默时间
+  void setSilentTime(int beginHour, int duration) {
+    _channel.invokeMethod('setSilentTime', {'beginHour': beginHour, "duration": duration});
+  }
+ //自定义action
+  void sendFeedbackMessage(String taskId, String messageId, Int actionId) {
+    _channel.invokeMethod('sendFeedbackMessage', {'taskId': taskId , "messageId":messageId, "actionId":actionId});
   }
 
+
+  /*-----------------------------
+   *        iOS专属功能
+   *----------------------------*/
+
+  /// 设置推送模式（iOS）
+  void setPushMode(int mode) {
+    if (Platform.isIOS) {
+      _channel.invokeMethod('setPushMode', {'mode': mode});
+    }
+  }
+
+  /// 重置角标（iOS）
   void resetBadge() {
-    if (Platform.isAndroid) {
-    } else {
+    if (Platform.isIOS) {
       _channel.invokeMethod('resetBadge');
     }
   }
 
+  /// 设置本地角标（iOS）
   void setLocalBadge(int badge) {
-    if (Platform.isAndroid) {
-    } else {
-      _channel.invokeMethod('setLocalBadge', <String, dynamic>{'badge': badge});
+    if (Platform.isIOS) {
+      _channel.invokeMethod('setLocalBadge', {'badge': badge});
     }
   }
 
-  void setTag(List<dynamic> tags) {
-    _channel.invokeMethod('setTag', <String, dynamic>{'tags': tags});
-  }
+  /*-----------------------------
+   *        设备Token管理
+   *----------------------------*/
 
+  /// 注册ActivityToken（iOS灵动岛）
   void registerActivityToken(String aid, String token, String sn) {
-    _channel.invokeMethod('registerActivityToken',
-        <String, dynamic>{'aid': aid, 'token': token, 'sn': sn});
+    _channel.invokeMethod(
+        'registerActivityToken', {'aid': aid, 'token': token, 'sn': sn});
   }
 
+  /// 注册PushToStartToken（iOS）
   void registerPushToStartToken(String attribute, String token, String sn) {
     _channel.invokeMethod('registerPushToStartToken',
-        <String, dynamic>{'attribute': attribute, 'token': token, 'sn': sn});
+        {'attribute': attribute, 'token': token, 'sn': sn});
   }
 
+  /// 注册DeviceToken（iOS/Android）
   void registerDeviceToken(String token) {
+    _channel.invokeMethod('registerDeviceToken', {'token': token});
+  }
+
+  /// 注册远程通知（iOS）
+  void registerRemoteNotification() {
     if (Platform.isIOS) {
-      _channel.invokeMethod(
-          'registerDeviceToken', <String, dynamic>{'token': token});
+      _channel.invokeMethod('registerRemoteNotification');
     }
   }
 
+  /*-----------------------------
+   *        事件处理器配置
+   *----------------------------*/
   void addEventHandler({
     required EventHandler onReceiveClientId,
-    required EventHandlerMap onReceiveMessageData,
     required EventHandlerMap onNotificationMessageArrived,
     required EventHandlerMap onNotificationMessageClicked,
     required EventHandlerMap onTransmitUserMessageReceive,
     required EventHandler onReceiveOnlineState,
-    //deviceToken
     required EventHandler onRegisterDeviceToken,
-
-    //ios 收到的透传内容
     required EventHandlerMap onReceivePayload,
-    // ios 收到APNS消息
     required EventHandlerMap onReceiveNotificationResponse,
-    // ios 收到AppLink消息
     required EventHandler onAppLinkPayload,
-
-    // ios收到pushmode回调
     required EventHandlerMap onPushModeResult,
-    // ios收到setTag回调
     required EventHandlerMap onSetTagResult,
-    // ios收到别名回调
     required EventHandlerMap onAliasResult,
-    // ios收到查询tag回调
     required EventHandlerMap onQueryTagResult,
-    // ios收到APNs即将展示回调
     required EventHandlerMap onWillPresentNotification,
-    // ios收到APNs通知设置跳转回调
     required EventHandlerMap onOpenSettingsForNotification,
-    // ios通知授权结果
     required EventHandler onGrantAuthorization,
-    // ios收到实时活动（灵动岛）token回调
     required EventHandlerMap onLiveActivityResult,
-    // ios收到实时活动push-to-start token回调
     required EventHandlerMap onRegisterPushToStartTokenResult,
   }) {
+    // 初始化所有事件处理器
     _onReceiveClientId = onReceiveClientId;
-
     _onRegisterDeviceToken = onRegisterDeviceToken;
-
-    _onReceiveMessageData = onReceiveMessageData;
     _onNotificationMessageArrived = onNotificationMessageArrived;
     _onNotificationMessageClicked = onNotificationMessageClicked;
-
     _onReceivePayload = onReceivePayload;
     _onReceiveNotificationResponse = onReceiveNotificationResponse;
     _onAppLinkPayload = onAppLinkPayload;
-
     _onPushModeResult = onPushModeResult;
     _onSetTagResult = onSetTagResult;
     _onAliasResult = onAliasResult;
-
     _onQueryTagResult = onQueryTagResult;
     _onWillPresentNotification = onWillPresentNotification;
     _onOpenSettingsForNotification = onOpenSettingsForNotification;
-
     _onTransmitUserMessageReceive = onTransmitUserMessageReceive;
-
     _onGrantAuthorization = onGrantAuthorization;
-
     _onLiveActivityResult = onLiveActivityResult;
     _onRegisterPushToStartTokenResult = onRegisterPushToStartTokenResult;
     _onReceiveOnlineState = onReceiveOnlineState;
+
+    // 设置方法调用处理器
     _channel.setMethodCallHandler(_handleMethod);
   }
 
+  /*-----------------------------
+   *        内部处理方法
+   *----------------------------*/
   Future _handleMethod(MethodCall call) async {
-    print('_handleMethod:' + call.method);
+    print('_handleMethod  method:' + call.method);
+    print('_handleMethod  args :' +call.arguments );
     switch (call.method) {
       case "onReceiveClientId":
         return _onReceiveClientId(call.arguments);
-      case "onReceiveMessageData":
-        return _onReceiveMessageData(call.arguments.cast<String, dynamic>());
       case "onNotificationMessageArrived":
-        return _onNotificationMessageArrived(
-            call.arguments.cast<String, dynamic>());
+        dynamic result;
+        if (call.arguments is String) {
+          //将 JSON String 转换为 Map<String, dynamic>
+          result = jsonDecode(call.arguments) as Map<String, dynamic>;
+        } else {
+          result = call.arguments.cast<String, dynamic>();
+        }
+        return _onNotificationMessageArrived(result);
       case "onNotificationMessageClicked":
-        return _onNotificationMessageClicked(
-            call.arguments.cast<String, dynamic>());
+        dynamic result;
+        if (call.arguments is String) {
+          //将 JSON String 转换为 Map<String, dynamic>
+          result = jsonDecode(call.arguments) as Map<String, dynamic>;
+        } else {
+          result = call.arguments.cast<String, dynamic>();
+        }
+        return _onNotificationMessageClicked(result);
       case "onRegisterDeviceToken":
         return _onRegisterDeviceToken(call.arguments);
       case "onReceivePayload":
-        return _onReceivePayload(call.arguments.cast<String, dynamic>());
+        dynamic result;
+        if (call.arguments is String) {
+          result = jsonDecode(call.arguments) as Map<String, dynamic>;
+        } else {
+          result = call.arguments.cast<String, dynamic>();
+        }
+        return _onReceivePayload(result);
       case "onReceiveNotificationResponse":
         return _onReceiveNotificationResponse(
             call.arguments.cast<String, dynamic>());
       case "onAppLinkPayload":
         return _onAppLinkPayload(call.arguments);
-
       case "onPushModeResult":
         return _onPushModeResult(call.arguments.cast<String, dynamic>());
       case "onSetTagResult":
-        return _onSetTagResult(call.arguments.cast<String, dynamic>());
+        dynamic result;
+        if (call.arguments is String) {
+          result = jsonDecode(call.arguments) as Map<String, dynamic>;
+        } else {
+          result = call.arguments.cast<String, dynamic>();
+        }
+        return _onSetTagResult(result);
       case "onAliasResult":
-        return _onAliasResult(call.arguments.cast<String, dynamic>());
-
+        dynamic result;
+        if (call.arguments is String) {
+          result = jsonDecode(call.arguments) as Map<String, dynamic>;
+        } else {
+          result = call.arguments.cast<String, dynamic>();
+        }
+        return _onAliasResult(result);
       case "onWillPresentNotification":
         return _onWillPresentNotification(
             call.arguments.cast<String, dynamic>());
@@ -259,7 +342,13 @@ class Getuiflut {
         return _onOpenSettingsForNotification(
             call.arguments.cast<String, dynamic>());
       case "onQueryTagResult":
-        return _onQueryTagResult(call.arguments.cast<String, dynamic>());
+        dynamic result;
+        if (call.arguments is String) {
+          result = jsonDecode(call.arguments) as Map<String, dynamic>;
+        } else {
+          result = call.arguments.cast<String, dynamic>();
+        }
+        return _onQueryTagResult(result);
 
       case "onTransmitUserMessageReceive":
         return _onTransmitUserMessageReceive(
@@ -274,40 +363,10 @@ class Getuiflut {
       case "onRegisterPushToStartTokenResult":
         return _onRegisterPushToStartTokenResult(
             call.arguments.cast<String, dynamic>());
-
       case "onReceiveOnlineState":
-        //return _onReceiveOnlineState(bool.parse(call.arguments));
         return _onReceiveOnlineState(call.arguments);
       default:
         throw new UnsupportedError("Unrecongnized Event");
-    }
-  }
-
-  //ios
-  //初始化SDK
-  void startSdk({
-    required String appId,
-    required String appKey,
-    required String appSecret,
-  }) {
-    _channel.invokeMethod(
-        'startSdk', {'appId': appId, 'appKey': appKey, 'appSecret': appSecret});
-  }
-
-  void startSdkSimple({
-    required String appId,
-    required String appKey,
-    required String appSecret,
-  }) {
-    if (Platform.isIOS) {
-      _channel.invokeMethod('startSdkSimple',
-          {'appId': appId, 'appKey': appKey, 'appSecret': appSecret});
-    }
-  }
-
-  void registerRemoteNotification() {
-    if (Platform.isIOS) {
-      _channel.invokeMethod('registerRemoteNotification');
     }
   }
 }

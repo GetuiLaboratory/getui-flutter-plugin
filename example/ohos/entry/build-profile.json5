@@ -1,0 +1,19 @@
+
+{
+  "apiType": 'stageMode',
+  "buildOption": {
+    "arkOptions": {
+
+    }
+  },
+  "targets": [
+    {
+      "name": "default",
+      "runtimeOS": "HarmonyOS"
+    },
+    {
+      "name": "ohosTest",
+    }
+  ],
+
+}

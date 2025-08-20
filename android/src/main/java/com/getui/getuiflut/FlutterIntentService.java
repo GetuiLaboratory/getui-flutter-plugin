@@ -123,7 +123,7 @@ public class FlutterIntentService extends GTIntentService {
         payload.put("payload", new String(msg.getPayload()));
         payload.put("payloadId", msg.getPayloadId());
         payload.put("taskId", msg.getTaskId());
-        GetuiflutPlugin.transmitMessageReceive(payload, "onReceiveMessageData");
+        GetuiflutPlugin.transmitMessageReceive(payload, "onReceivePayload");
     }
 
     @Override

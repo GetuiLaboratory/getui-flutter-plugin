@@ -1,0 +1,11 @@
+{
+  "name": "getuiflut",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "index.ets",
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@getui/push": "file:./libs/GT-HM-1.0.9_u3.har"
+  }
+}

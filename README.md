@@ -1,266 +1,263 @@
-# Getui Flutter Plugin
+# Getui Flutter Plugin 集成与使用指南
 
+## 1. 引入插件
 
-## 1、引用
+在 `pubspec.yaml` 中添加以下依赖：
 
-Pub.dev:
-<a href="https://pub.dev/packages/getuiflut" target="_blank">getui-flutter-plugin</a>
-
-增加依赖：
-
-```shell
-flutter pub add getuiflut
-```
-
-或者手动在工程 pubspec.yaml 中加入 dependencies：
-
-```yaml
+```markdown
 dependencies:
-  getuiflut: ^0.2.37
+  getuiflut: ^0.2.38
 ```
-下载依赖：
+
+
+执行以下命令下载依赖并运行项目：
 
 ```shell
 flutter pub get
 flutter run
 ```
 
-## 2、配置
+或者直接通过命令行添加：
+```shell
+flutter pub add getuiflut
+```
 
-### 2.1、Android:
+## 2. 配置
 
-参考官网文档中心进行配置：https://docs.getui.com/getui/mobile/android/overview/
+### 2.1 Android 配置
+参考[个推官网文档](https://docs.getui.com/getui/mobile/android/overview/)进行配置。
+核心PushService、GTIntentService已经内置在flutter插件中
 
-flutter插件默认包含自定义组件，Flutter用户不用处理以下配置：
-
-- Android->集成指南-> 3.配置推送服务-> FlutterPushService ("继承自 com.igexin.sdk.PushService 的自定义 Service")
-
-- Android->集成指南-> 6.编写集成代码-> FlutterIntentService ("继承自 com.igexin.sdk.GTIntentService 的自定义 Service")
-
-**注意：**
-^0.2.19开始getuiflut不再默认依赖GTSDK，请自己在android/app/build.gradle文件下增加依赖，如：
+#### 配置 Maven 库地址
+在项目根目录 `build.gradle` 文件中添加：
 ```yaml
-dependencies {
-    implementation 'com.getui:gtsdk:3.3.7.0'  //个推SDK
-    implementation 'com.getui:gtc:3.2.16.0'  //个推核心组件
+allprojects {
+    repositories {
+        mavenCentral()
+        google()
+        maven {
+            url "https://mvn.getui.com/nexus/content/repositories/releases/"
+        }
+    }
 }
 ```
 
-### 2.2、iOS:
+#### 添加依赖
+在 `android/app/build.gradle` 文件中配置：
+```yaml
+android {
+    defaultConfig {
+        manifestPlaceholders = [
+            GETUI_APPID: "your appid"
+        ]
+    }
+}
 
-在你项目的main.dart中添加下列代码：
-```dart
-   Getuiflut().startSdk(
-      appId: "8eLAkGIYnGAwA9fVYZU93A",
-      appKey: "VFX8xYxvVF6w59tsvY6XN",
-      appSecret: "Kv3TeED8z19QwnMLdzdI35"
-   );
+dependencies {
+	//在官网查阅最新版本(https://docs.getui.com/getui/mobile/android/overview/)
+    implementation 'com.getui:gtsdk:3.3.12.0'  // 个推 SDK
+    implementation 'com.getui:gtc:3.2.18.0'    // 个推核心组件
+}
 ```
-启用notification：xcode主工程配置 > Signing & Capabilities > +Push Noticifations
 
-**注意：** 
+### 2.2 iOS 配置
+在 `main.dart` 中添加以下代码以启动 SDK：
+```dart
+Getuiflut().startSdk(
+    appId: "8eLAkGIYnGAwA9fVYZU93A",
+    appKey: "VFX8xYxvVF6w59tsvY6XN",
+    appSecret: "Kv3TeED8z19QwnMLdzdI35"
+);
+```
 
-Apple 在 iOS 10 中新增了Notification Service Extension机制，可在消息送达时进行业务处理。为精确统计消息送达率，在集成个推SDK时，可以添加 Notification Service Extension，并在 Extensions 中添加 GTExtensionSDK 的统计接口，实现消息展示回执统计功能。具体可参考[个推集成文档](https://docs.getui.com/getui/mobile/ios/xcode/)。
+#### 启用通知
+在 Xcode 中，进入 `Signing & Capabilities`，添加 `Push Notifications`。
 
-## 3、使用
+#### Notification Service Extension
+为精确统计消息送达率，可添加 `Notification Service Extension`，并在 Extensions 中调用 `GTExtensionSDK` 的统计接口。具体参考[个推 iOS 集成文档](https://docs.getui.com/getui/mobile/ios/xcode/)。
+
+### 2.3 HarmonyOS 配置
+* 使用鸿蒙定制版 Flutter，下载地址: [OpenHarmony Flutter](https://gitcode.com/openharmony-tpc/flutter_flutter) 及 [使用教程](https://developer.huawei.com/consumer/cn/blog/topic/03178381351651116)。
+* ohos工程需要兼容字节码包,在项目级build-profile.json5:
+```yaml
+    "buildOption": {
+      "strictMode": {
+         "useNormalizedOHMUrl": true
+      }
+    }
+```
+
+#### 配置 `module.json5`
+在项目中配置：
+```yaml
+"requestPermissions": [
+    {"name": "ohos.permission.INTERNET"},
+    {"name": "ohos.permission.GET_NETWORK_INFO"},
+    {"name": "ohos.permission.KEEP_BACKGROUND_RUNNING"},
+    {
+        "name": "ohos.permission.APP_TRACKING_CONSENT",
+        "reason": "$string:tracking_reason",
+        "usedScene": {
+            "abilities": ["EntryAbility"]
+        }
+    }
+],
+"metadata": [
+    {"name": "GETUI_APPID", "value": "djYjSlFVMf6p5YOy2OQUs8"},//你的appid
+    {"name": "ZX_CHANNELID_GT", "value": "C01-GEztJH0JLdBC"},
+    {"name": "client_id", "value": "109599703"},//厂商appid,开通在官网找技术支持协助
+    {"name": "GT_PUSH_LOG", "value": "false"} //sdk文件日志开关, 技术支持问题排查时使用
+]
+```
+
+#### 上报个推在线通知点击
+* 通过个推在线渠道展示的通知类消息，待通知点击打开目的页面后，由客户必须调用PushManager.setClickWant(want)完善报表和完成后续业务，以免影响消息业务使用（重要）
+  * 通知点击打开应用页面（目的页面由下发通知时决定）
+  * 通知点击打开浏览器
+参考demo代码: [EntryAbility.ets](example/ohos/entry/src/main/ets/entryability/EntryAbility.ets)
+
+#### 其他功能
+参考: [官网文档](https://docs.getui.com/getui/mobile/harmonyos/vendor/vendor_open/)
+
+## 3. 使用方法
+
+### 3.1 公共 API
+导入插件：
 ```dart
 import 'package:getuiflut/getuiflut.dart';
 ```
 
-### 3.1、公共 API
-
-* 公共 API
-
+#### 初始化 SDK (Android/IOS)
 ```dart
-/**
-	* 绑定别名功能:后台可以根据别名进行推送
-	*
-	* @param alias 别名字符串
-	* @param aSn   绑定序列码, Android中无效，仅在iOS有效
-	*/
+Getuiflut().initGetuiSdk;
+```
+
+#### 设置角标
+```dart
+setBadge(badge);
+```
+
+#### 绑定/解绑别名
+```dart
 bindAlias(alias, sn);
 unbindAlias(alias, sn);
-
-/**
-  *  给用户打标签 , 后台可以根据标签进行推送
-  *
-  *  @param tags 别名数组
-  */
-setTag(tags);
-
-/**
-  *  停止SDK服务
-  *
-  */
-turnOffPush();
-
-/**
-  *  开启SDK服务
-  *
-  */
-turnOnPush();
 ```
 
-* 回调方法
+#### 设置/查询标签
+```dart
+setTag(tags,sn);
+queryTag(sn)
+```
 
+#### 开启/关闭推送服务（iOS 不支持）
+```dart
+turnOnPush();
+turnOffPush();
+```
+
+#### 获取版本和 CID
+```dart
+getClientId();
+```
+
+#### 回调方法
+设置事件监听：
 ```dart
 Getuiflut().addEventHandler(
-    	// 注册收到 cid 的回调
-      onReceiveClientId: (String message) async {
-        print("flutter onReceiveClientId: $message");
-        setState(() {
-          _getClientId = "ClientId: $message";
-        });
-      },
-    	// 注册 DeviceToken 回调
-      onRegisterDeviceToken: (String message) async {
-        setState(() {
-          _getDeviceToken = "DeviceToken: $message";
-        });
-      },
-    	// SDK收到透传消息回调
-      onReceivePayload: (Map<String, dynamic> message) async {
-        setState(() {
-          _onReceivePayload = "$message";
-        });
-      },
-    	// 点击通知回调
-      onReceiveNotificationResponse: (Map<String, dynamic> message) async {
-        setState(() {
-          _onReceiveNotificationResponse = "$message";
-        });
-      },
-    	// APPLink中携带的透传payload信息
-      onAppLinkPayload: (String message) async {
-        setState(() {
-          _onAppLinkPayLoad = "$message";
-        });
-      },
-        onReceiveOnlineState: (bool online) async {
-            print("flutter onReceiveOnlineState: $online");
-        },
-    	//通知服务开启\关闭回调
-      onPushModeResult: (Map<String, dynamic> message) async {
-        print("flutter onPushModeResult: $message");
-      },
-	// SetTag回调
-      onSetTagResult: (Map<String, dynamic> message) async {
-        print("flutter onSetTagResult: $message");
-      },
-	//设置别名回调
-      onAliasResult: (Map<String, dynamic> message) async {
-        print("flutter onAliasResult: $message");
-      },
-	//查询别名回调
-      onQueryTagResult: (Map<String, dynamic> message) async {
-        print("flutter onQueryTagResult: $message");
-      },
-	//APNs通知即将展示回调
-      onWillPresentNotification: (Map<String, dynamic> message) async {
-        print("flutter onWillPresentNotification: $message");
-      }, 
-	//APNs通知设置跳转回调
-      onOpenSettingsForNotification: (Map<String, dynamic> message) async {
-        print("flutter onOpenSettingsForNotification: $message");
-      }, 
-      onGrantAuthorization: (String granted) async {
-        print("flutter onGrantAuthorization: $granted");
-      },
-    ）;
+  	onReceiveClientId: (String message) async {
+      print("flutter onReceiveClientId: $message");
+    }, onReceiveOnlineState: (String online) async {
+      print("flutter onReceiveOnlineState: $online");
+    },onReceivePayload: (Map<String, dynamic> message) async {
+      print("flutter onReceivePayload: $message");
+    },onSetTagResult: (Map<String, dynamic> message) async {
+      print("flutter onSetTagResult: $message");
+    }, onAliasResult: (Map<String, dynamic> message) async {
+      print("flutter onAliasResult: $message");
+    }, onQueryTagResult: (Map<String, dynamic> message) async {
+      print("flutter onQueryTagResult: $message");
+    },onRegisterDeviceToken: (String message) async {
+      print("flutter onRegisterDeviceToken: $message");
+    },
+  	//Android 、ohos 特有
+  	onNotificationMessageArrived: (Map<String, dynamic> msg) async {
+      print("flutter onNotificationMessageArrived: $msg");
+    }, onNotificationMessageClicked: (Map<String, dynamic> msg) async {
+      print("flutter onNotificationMessageClicked: $msg");
+    },
+    //以下IOS特有                        
+    onTransmitUserMessageReceive: (Map<String, dynamic> msg) async {
+      print("flutter onTransmitUserMessageReceive:$msg");
+    },onReceiveNotificationResponse: (Map<String, dynamic> message) async {
+      print("flutter onReceiveNotificationResponse: $message");
+    }, onAppLinkPayload: (String message) async {
+      print("flutter onAppLinkPayload: $message");
+    }, onPushModeResult: (Map<String, dynamic> message) async {
+      print("flutter onPushModeResult: $message");
+    }, onWillPresentNotification: (Map<String, dynamic> message) async {
+      print("flutter onWillPresentNotification: $message");
+    }, onOpenSettingsForNotification: (Map<String, dynamic> message) async {
+      print("flutter onOpenSettingsForNotification: $message");
+    }, onGrantAuthorization: (String granted) async {
+      print("flutter onGrantAuthorization: $granted");
+    }, onLiveActivityResult: (Map<String, dynamic> message) async {
+      print("flutter onLiveActivityResult: $message");
+    }, onRegisterPushToStartTokenResult: (Map<String, dynamic> message) async {
+      print("flutter onRegisterPushToStartTokenResult: $message");
+    });
 ```
 
-### 3.2、Android API
-
+### 3.2 iOS 专用 API
+#### 启动 SDK 并请求通知权限
 ```dart
-/**
-	*初始化个推sdk
-	*/
-Getuiflut.initGetuiSdk();
-/**
-*设置角标
-*/
-  setBadge(badge);
+startSdk(appId, appKey, appSecret);
 ```
 
-### 3.2、iOS API
-
-首先，开发者需要在AppDelegate.m中，重写APNs系统方法，如：
-
+#### 仅启动 SDK
+```dart
+startSdkSimple(appId, appKey, appSecret);
 ```
+
+#### 注册远程通知
+```dart
+registerRemoteNotification(appId, appKey, appSecret);
+```
+
+#### 获取启动参数
+```dart
+getLaunchOptions();
+getLaunchNotification();
+```
+
+#### 管理角标
+```dart
+setBadge(badge);
+resetBadge();
+setLocalBadge(badge);
+```
+
+#### 后台模式
+```dart
+runBackgroundEnable(enable);
+```
+
+#### 灵动岛支持（GTSDK ≥ 2.7.3.0）
+```dart
+registerActivityToken(aid, token, sn);
+registerPushToStartToken(attribute, token, sn);
+```
+
+#### AppDelegate 配置
+在 `AppDelegate.m` 中重写以下方法以确保 SDK 正常工作：
+```objc
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    //warning: 需要重写当前方法，gtsdk的接管系统方法就会生效，否则会影响回执
-    //保持空实现
+    // 保持空实现
 }
 ```
 
-
-
-
-
-- GTSDK<=2.4.6.0版本，需要使用插件版本<=0.2.5
-- GTSDK>2.4.6.0版本，需要使用最新插件版本
-```dart
-    /**
-    *  启动sdk+通知授权
-    */ 
-    startSdk(appId,appKey,appSecret);
-    
-
-    /**
-    *  启动sdk
-    */ 
-    startSdkSimple(appId,appKey,appSecret);
-
-
-    /**
-    *  通知授权,需要先启动sdk。
-    */ 
-    registerRemoteNotification(appId,appKey,appSecret);
- 
-    /**
-    *  获取App启动参数(包括冷启动时，本地\远程通知参数等）
-    */
-    getLaunchOptions();
-
-    /**
-    *  获取冷启动APNs参数
-    */
-    getLaunchNotification();
-
-
-    /**
-    *  同步服务端角标
-    */
-    setBadge(badge);
-
-    /**
-    *  复位服务端角标
-    */
-    resetBadge();
-
-    /**
-    *  同步App本地角标
-    *
-    */
-    setLocalBadge(badge); 
-
-    /*
-    *  开启\关闭后台模式
-    */
-    runBackgroundEnable(enable)
-    
-    /*
-    *  注册灵动岛token。支持版本2.7.3.0及以上。 
-    *  GTSDK>=3.0.3.0，会有onLiveActivityResult回调
-    */
-    registerActivityToken(aid, token,sn) 
-    
-    /*
-    *  注册灵动岛token。支持版本3.0.7.0及以上。 
-    *  GTSDK>=3.0.7.0，会有onRegisterPushToStartTokenResult回调
-    */
-    registerPushToStartToken(attribute, token,sn) 
+**版本兼容性**：
+- GTSDK ≤ 2.4.6.0：使用插件版本 ≤ 0.2.5
+- GTSDK > 2.4.6.0：使用最新插件版本
 ```
 
-
-
+**说明**：如需更多细节，可参考[个推官方文档](https://docs.getui.com),联系技术支持。

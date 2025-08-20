@@ -63,7 +63,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
 
     enum MessageType {
         Default,
-        onReceiveMessageData,
+        onReceivePayload,
         onNotificationMessageArrived,
         onNotificationMessageClicked,
         onSetTagResult,
@@ -102,9 +102,9 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
                     }
                     break;
                 case FLUTTER_CALL_BACK_MSG:
-                    if (msg.arg1 == MessageType.onReceiveMessageData.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onReceiveMessageData", msg.obj);
-                        Log.d("flutterHandler", "onReceiveMessageData >>> " + msg.obj);
+                    if (msg.arg1 == MessageType.onReceivePayload.ordinal()) {
+                        GetuiflutPlugin.instance.channel.invokeMethod("onReceivePayload", msg.obj);
+                        Log.d("flutterHandler", "onReceivePayload >>> " + msg.obj);
 
                     } else if (msg.arg1 == MessageType.onNotificationMessageArrived.ordinal()) {
                         GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageArrived", msg.obj);
@@ -142,6 +142,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
+
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
         } else if (call.method.equals("initGetuiPush")) {
@@ -160,13 +161,22 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
             unbindAlias(call.argument("alias").toString(), call.argument("aSn").toString(), Boolean.parseBoolean( call.argument("isSelf").toString()));
         } else if (call.method.equals("setTag")) {
             Log.d(TAG, "tags:" + (ArrayList<String>) call.argument("tags"));
-            setTag((ArrayList<String>) call.argument("tags"));
+            setTag((ArrayList<String>) call.argument("tags"), call.argument("sn").toString());
+        }else if (call.method.equals("queryTag")) {
+           PushManager.getInstance().queryTag(fContext,call.argument("sn"));
         } else if (call.method.equals("onActivityCreate")) {
             Log.d(TAG, "do onActivityCreate");
             onActivityCreate();
         } else if (call.method.equals("setBadge")) {
             Log.d(TAG, "do setBadge");
             setBadge((int) call.argument("badge"));
+        }else if (call.method.equals("registerDeviceToken")) {
+            Log.d(TAG, "do registerDeviceToken");
+            PushManager.getInstance().setDeviceToken(fContext, call.argument("token"));
+        }  else if (call.method == "setSilentTime") {
+            PushManager.getInstance().setSilentTime(fContext, call.argument("beginHour")  ,  call.argument("duration"));
+        } else if (call.method == "sendFeedbackMessage") {
+            PushManager.getInstance().sendFeedbackMessage(fContext, call.argument("taskId"), call.argument("messageId"), call.argument("actionId"));
         } else {
             result.notImplemented();
         }
@@ -251,7 +261,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
      *
      * @param tags 别名数组
      */
-    public void setTag(List<String> tags) {
+    public void setTag(List<String> tags,String sn) {
         if (tags == null || tags.size() == 0) {
             return;
         }
@@ -263,7 +273,7 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
             tagArray[i] = tag;
         }
 
-        PushManager.getInstance().setTag(fContext, tagArray, "setTag");
+        PushManager.getInstance().setTag(fContext, tagArray, sn);
     }
 
     static void transmitMessageReceive(String message, String func) {
@@ -294,8 +304,8 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
             return;
         }
         int type;
-        if (func.equals("onReceiveMessageData")) {
-            type = MessageType.onReceiveMessageData.ordinal();
+        if (func.equals("onReceivePayload")) {
+            type = MessageType.onReceivePayload.ordinal();
         } else if (func.equals("onNotificationMessageArrived")) {
             type = MessageType.onNotificationMessageArrived.ordinal();
         }

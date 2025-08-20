@@ -1,0 +1,13 @@
+{
+  "module": {
+    "name": "getuiflut",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ],
+    "requestPermissions": [
+      {"name": "ohos.permission.INTERNET"},  // 按需添加权限
+    ]
+  }
+}

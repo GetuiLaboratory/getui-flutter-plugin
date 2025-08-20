@@ -130,3 +130,10 @@
 ## 0.2.37
 1.android 增加namespace
 
+## 0.2.38
+1. 支持ohos
+2. 删除onReceiveMessageData. 使用onReceivePayload替换
+3. initGetuiSdk等类方法,全部改为对象实例方法
+4. 增加queryTag(sn) IOS不支持
+5. 修改setTag(tags)为setTag(tags,sn) 旧版本Android中sn固定为“setTag”,iOS的sn会根据tags自动生成sn
+6. 增加setSilentTime 、 sendFeedbackMessage

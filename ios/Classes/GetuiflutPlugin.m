@@ -62,6 +62,8 @@
       [self unbindAlias:call result:result];
   } else if([@"setTag" isEqualToString:call.method]) {
       [self setTag:call result:result];
+  }else if([@"queryTag" isEqualToString:call.method]) {
+      result(FlutterMethodNotImplemented);
   } else if([@"getClientId" isEqualToString:call.method]) {
       result([GeTuiSdk clientId]);
   } else if([@"setBadge" isEqualToString:call.method]) {
@@ -88,6 +90,9 @@
       [self registerActivityToken:call result:result];
   } else if([@"registerPushToStartToken" isEqualToString:call.method]) {
       [self registerPushToStartToken:call result:result];
+  } else if([@"sendFeedbackMessage" isEqualToString:call.method]) {
+      NSDictionary *ConfigurationInfo = call.arguments;
+      [GeTuiSdk sendFeedbackMessage:ConfigurationInfo[@"actionId"] andTaskId:ConfigurationInfo[@"taskId"] andMsgId:ConfigurationInfo[@"messageId"]];
   }  else {
       result(FlutterMethodNotImplemented);
   }
@@ -263,7 +268,7 @@
 
 - (void)setTag:(FlutterMethodCall*)call result:(FlutterResult)result {
     NSDictionary *ConfigurationInfo = call.arguments;
-    [GeTuiSdk setTags:ConfigurationInfo[@"tags"]];
+    [GeTuiSdk setTags:ConfigurationInfo[@"tags"] andSequenceNum:ConfigurationInfo[@"sn"]];
 }
 
 - (void)setBadge:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -362,6 +367,8 @@
     [_channel invokeMethod:@"onReceiveOnlineState" arguments:[NSString stringWithFormat:@"%@",@(isOnLine)]];
 }
 
+
+
 //- (void)GeTuiSdkPopupDidShow:(NSDictionary *)info {
 //    
 //}
@@ -382,6 +389,10 @@
         }
         return hexString;
 }
+
+
+
+
 
 ///// MARK: - VOIP接入
 
