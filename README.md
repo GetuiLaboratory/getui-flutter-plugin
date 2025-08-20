@@ -54,7 +54,7 @@ android {
 }
 
 dependencies {
-	//在官网查阅最新版本(https://docs.getui.com/getui/mobile/android/overview/)
+    //在官网查阅最新版本(https://docs.getui.com/getui/mobile/android/overview/)
     implementation 'com.getui:gtsdk:3.3.12.0'  // 个推 SDK
     implementation 'com.getui:gtc:3.2.18.0'    // 个推核心组件
 }
@@ -114,6 +114,7 @@ Getuiflut().startSdk(
 * 通过个推在线渠道展示的通知类消息，待通知点击打开目的页面后，由客户必须调用PushManager.setClickWant(want)完善报表和完成后续业务，以免影响消息业务使用（重要）
   * 通知点击打开应用页面（目的页面由下发通知时决定）
   * 通知点击打开浏览器
+
 参考demo代码: [EntryAbility.ets](example/ohos/entry/src/main/ets/entryability/EntryAbility.ets)
 
 #### 其他功能
@@ -127,7 +128,7 @@ Getuiflut().startSdk(
 import 'package:getuiflut/getuiflut.dart';
 ```
 
-#### 初始化 SDK (Android/IOS)
+#### 初始化 SDK (Android/ohos)
 ```dart
 Getuiflut().initGetuiSdk;
 ```
