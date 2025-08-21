@@ -357,10 +357,10 @@ class _MyAppState extends State<MyApp> {
                       ElevatedButton(
                         onPressed: Platform.isIOS
                             ? () {
-                                _getui.setLocalBadge(0);
+                                _getui.setLocalBadge(5);
                               }
                             : null,
-                        child: const Text('设置本地角标(0)'),
+                        child: const Text('设置本地角标(5)'),
                       ),
                     ],
                   ),
