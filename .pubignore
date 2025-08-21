@@ -18,3 +18,5 @@ example/.flutter-plugins-dependencies
 example/ios/Flutter/Flutter.podspec
 example/ios/Flutter/flutter_export_environment.sh
 lib/generated/i18n.dart
+.gradle/
+android/.idea/
