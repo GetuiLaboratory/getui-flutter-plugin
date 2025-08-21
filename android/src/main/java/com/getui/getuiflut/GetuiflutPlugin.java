@@ -1,20 +1,14 @@
 package com.getui.getuiflut;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.os.Handler;
 
-
+import com.google.gson.Gson;
 import com.igexin.sdk.PushManager;
 import com.igexin.sdk.Tag;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
@@ -22,247 +16,222 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
- * GetuiflutPlugin
+ * Flutter 插件类，用于与个推推送服务交互
  */
-public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
-
+public class GetuiflutPlugin implements FlutterPlugin, MethodCallHandler {
     private static final String TAG = "GetuiflutPlugin";
-    private static final int FLUTTER_CALL_BACK_CID = 1;
-    private static final int FLUTTER_CALL_BACK_MSG = 2;
-    private static final int FLUTTER_CALL_BACK_MSG_USER = 3;
+    private static final String CHANNEL_NAME = "getuiflut";
+    private static final int FLUTTER_CALL_BACK = 1;
+    private static final int FLUTTER_CALL_BACK_USER = 2;
 
-
-    /// The MethodChannel that will the communication between Flutter and native Android
-    ///
-    /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-    /// when the Flutter Engine is detached from the Activity
-    private MethodChannel channel;
-    private Context fContext;
-
-    public static GetuiflutPlugin instance;
-
-    public GetuiflutPlugin() {
-        Log.d("flutterHandler", "GetuiflutPlugin init ");
-    }
-
-    @Override
-    public void onAttachedToEngine(FlutterPlugin.FlutterPluginBinding flutterPluginBinding) {
-        fContext = flutterPluginBinding.getApplicationContext();
-        channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "getuiflut");
-        channel.setMethodCallHandler(this);
-        Log.d("flutterHandler", "GetuiflutPlugin onAttachedToEngine ");
-    }
-
-    @Override
-    public void onDetachedFromEngine(FlutterPlugin.FlutterPluginBinding binding) {
-        channel.setMethodCallHandler(null);
-        Log.d("flutterHandler", "GetuiflutPlugin onDetachedFromEngine ");
-    }
-
-
-    enum MessageType {
+    /**
+     * 状态类型枚举
+     */
+    enum StateType {
         Default,
+        onReceiveClientId,
+        onReceiveOnlineState,
         onReceivePayload,
         onNotificationMessageArrived,
         onNotificationMessageClicked,
         onSetTagResult,
         onAliasResult,
-        onQueryTagResult
+        onQueryTagResult,
+        thirdPartFeedback
     }
 
-    enum StateType {
-        Default,
-        onReceiveClientId,
-        onReceiveOnlineState,
-        onReceiveCommandResult
+    private MethodChannel channel;
+    private Context context;
+    public static GetuiflutPlugin instance;
+
+    public GetuiflutPlugin() {
+        Log.d(TAG, "Plugin initialized");
     }
-
-
-    private static Handler flutterHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case FLUTTER_CALL_BACK_CID:
-                    if (msg.arg1 == StateType.onReceiveClientId.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onReceiveClientId", msg.obj);
-                        Log.d("flutterHandler", "onReceiveClientId >>> " + msg.obj);
-
-                    } else if (msg.arg1 == StateType.onReceiveOnlineState.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onReceiveOnlineState", msg.obj);
-                        Log.d("flutterHandler", "onReceiveOnlineState >>> " + msg.obj);
-
-                    } else if (msg.arg1 == StateType.onReceiveCommandResult.ordinal()) {
-
-                        GetuiflutPlugin.instance.channel.invokeMethod("onReceiveCommandResult", msg.obj);
-                        Log.d("flutterHandler", "onReceiveCommandResult >>> " + msg.obj);
-                    } else {
-
-                        Log.d(TAG, "default state type...");
-                    }
-                    break;
-                case FLUTTER_CALL_BACK_MSG:
-                    if (msg.arg1 == MessageType.onReceivePayload.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onReceivePayload", msg.obj);
-                        Log.d("flutterHandler", "onReceivePayload >>> " + msg.obj);
-
-                    } else if (msg.arg1 == MessageType.onNotificationMessageArrived.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageArrived", msg.obj);
-                        Log.d("flutterHandler", "onNotificationMessageArrived >>> " + msg.obj);
-
-                    } else if (msg.arg1 == MessageType.onNotificationMessageClicked.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onNotificationMessageClicked", msg.obj);
-                        Log.d("flutterHandler", "onNotificationMessageClicked >>> " + msg.obj);
-
-                    } else if (msg.arg1 == MessageType.onSetTagResult.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onSetTagResult", msg.obj);
-                        Log.d("flutterHandler", "onSetTagResult >>> " + msg.obj);
-                    }  else if (msg.arg1 == MessageType.onAliasResult.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onAliasResult", msg.obj);
-                        Log.d("flutterHandler", "onAliasResult >>> " + msg.obj);
-                    }  else if (msg.arg1 == MessageType.onQueryTagResult.ordinal()) {
-                        GetuiflutPlugin.instance.channel.invokeMethod("onQueryTagResult", msg.obj);
-                        Log.d("flutterHandler", "onQueryTagResult >>> " + msg.obj);
-                    } else {
-                        Log.d(TAG, "default Message type...");
-                    }
-                    break;
-
-                case FLUTTER_CALL_BACK_MSG_USER:
-                    GetuiflutPlugin.instance.channel.invokeMethod("onTransmitUserMessageReceive", msg.obj);
-                    Log.d(TAG, "default user Message >>> " + msg.obj);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    };
-
 
     @Override
-    public void onMethodCall(MethodCall call, Result result) {
+    public void onAttachedToEngine(FlutterPluginBinding binding) {
+        context = binding.getApplicationContext();
+        channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
+        channel.setMethodCallHandler(this);
 
-        if (call.method.equals("getPlatformVersion")) {
-            result.success("Android " + android.os.Build.VERSION.RELEASE);
-        } else if (call.method.equals("initGetuiPush")) {
-            initGtSdk();
-        } else if (call.method.equals("getClientId")) {
-            result.success(getClientId());
-        } else if (call.method.equals("resume")) {
-            resume();
-        } else if (call.method.equals("stopPush")) {
-            stopPush();
-        } else if (call.method.equals("bindAlias")) {
-            Log.d(TAG, "bindAlias:" + call.argument("alias").toString() + call.argument("aSn").toString());
-            bindAlias(call.argument("alias").toString(), call.argument("aSn").toString());
-        } else if (call.method.equals("unbindAlias")) {
-            Log.d(TAG, "unbindAlias:" + call.argument("alias").toString() + call.argument("aSn").toString() + call.argument("isSelf").toString());
-            unbindAlias(call.argument("alias").toString(), call.argument("aSn").toString(), Boolean.parseBoolean( call.argument("isSelf").toString()));
-        } else if (call.method.equals("setTag")) {
-            Log.d(TAG, "tags:" + (ArrayList<String>) call.argument("tags"));
-            setTag((ArrayList<String>) call.argument("tags"), call.argument("sn").toString());
-        }else if (call.method.equals("queryTag")) {
-           PushManager.getInstance().queryTag(fContext,call.argument("sn"));
-        } else if (call.method.equals("onActivityCreate")) {
-            Log.d(TAG, "do onActivityCreate");
-            onActivityCreate();
-        } else if (call.method.equals("setBadge")) {
-            Log.d(TAG, "do setBadge");
-            setBadge((int) call.argument("badge"));
-        }else if (call.method.equals("registerDeviceToken")) {
-            Log.d(TAG, "do registerDeviceToken");
-            PushManager.getInstance().setDeviceToken(fContext, call.argument("token"));
-        }  else if (call.method == "setSilentTime") {
-            PushManager.getInstance().setSilentTime(fContext, call.argument("beginHour")  ,  call.argument("duration"));
-        } else if (call.method == "sendFeedbackMessage") {
-            PushManager.getInstance().sendFeedbackMessage(fContext, call.argument("taskId"), call.argument("messageId"), call.argument("actionId"));
-        } else {
-            result.notImplemented();
+        Log.d(TAG, "Attached to Flutter engine");
+    }
+
+    @Override
+    public void onDetachedFromEngine(FlutterPluginBinding binding) {
+        channel.setMethodCallHandler(null);
+        Log.d(TAG, "Detached from Flutter engine");
+    }
+
+    /**
+     * 处理 Flutter 端调用
+     */
+    @Override
+    public void onMethodCall(MethodCall call, Result result) {
+        Log.d(TAG, "Method call: " + call.method + ", arguments: " + (call.arguments == null ? "none" : call.arguments));
+        switch (call.method) {
+            case "getPlatformVersion":
+                result.success("Android " + android.os.Build.VERSION.RELEASE);
+                break;
+            case "initGetuiPush":
+                initGtSdk();
+                result.success(null);
+                break;
+            case "getClientId":
+                result.success(getClientId());
+                break;
+            case "resume":
+                resume();
+                result.success(null);
+                break;
+            case "stopPush":
+                stopPush();
+                result.success(null);
+                break;
+            case "bindAlias":
+                bindAlias(call.argument("alias"), call.argument("aSn"));
+                result.success(null);
+                break;
+            case "unbindAlias":
+                unbindAlias(call.argument("alias"), call.argument("aSn"), Boolean.TRUE.equals(call.argument("isSelf")));
+                result.success(null);
+                break;
+            case "setTag":
+                setTag(call.argument("tags"), call.argument("sn"));
+                result.success(null);
+                break;
+            case "queryTag":
+                PushManager.getInstance().queryTag(context, call.argument("sn"));
+                result.success(null);
+                break;
+            case "onActivityCreate":
+                onActivityCreate();
+                result.success(null);
+                break;
+            case "setBadge":
+                setBadge(call.argument("badge"));
+                result.success(null);
+                break;
+            case "registerDeviceToken":
+                PushManager.getInstance().setDeviceToken(context, call.argument("token"));
+                result.success(null);
+                break;
+            case "setSilentTime":
+                PushManager.getInstance().setSilentTime(context, call.argument("beginHour"), call.argument("duration"));
+                result.success(null);
+                break;
+            case "sendFeedbackMessage":
+                PushManager.getInstance().sendFeedbackMessage(context, call.argument("taskId"), call.argument("messageId"), call.argument("actionId"));
+                result.success(null);
+                break;
+            default:
+                result.notImplemented();
+                break;
         }
     }
 
+    /**
+     * 初始化个推 SDK
+     */
     private void initGtSdk() {
-        Log.d(TAG, "init getui sdk...test");
+        instance =  this;
+        Log.d(TAG, "Initializing Getui SDK");
         try {
-            instance = this;
-            PushManager.getInstance().initialize(fContext);
+            PushManager.getInstance().initialize(context);
         } catch (Throwable e) {
+            Log.e(TAG, "Initialization failed, setting privacy policy", e);
             try {
                 Method setPrivacyPolicyStrategy = PushManager.class.getDeclaredMethod("setPrivacyPolicyStrategy", Context.class, boolean.class);
-                setPrivacyPolicyStrategy.invoke(PushManager.getInstance(), fContext, true);
+                setPrivacyPolicyStrategy.invoke(PushManager.getInstance(), context, true);
             } catch (Throwable ex) {
-                throw new RuntimeException(ex);
+                throw new RuntimeException("Failed to set privacy policy", ex);
             }
-            PushManager.getInstance().registerPushIntentService(fContext, FlutterIntentService.class);
-            PushManager.getInstance().initialize(fContext, FlutterPushService.class);
+            PushManager.getInstance().registerPushIntentService(context, FlutterIntentService.class);
+            PushManager.getInstance().initialize(context, FlutterPushService.class);
         }
-
     }
 
+    /**
+     * 注册推送 Activity
+     */
     private void onActivityCreate() {
         try {
             Method method = PushManager.class.getDeclaredMethod("registerPushActivity", Context.class, Class.class);
             method.setAccessible(true);
-            method.invoke(PushManager.getInstance(), fContext, GetuiPluginActivity.class);
+            method.invoke(PushManager.getInstance(), context, GetuiPluginActivity.class);
+            Log.d(TAG, "Push activity registered");
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.e(TAG, "Failed to register push activity", e);
         }
     }
 
+    /**
+     * 设置应用角标
+     */
     private void setBadge(int badgeNum) {
         try {
             Method method = PushManager.class.getDeclaredMethod("setBadgeNum", Context.class, int.class);
             method.setAccessible(true);
-            method.invoke(PushManager.getInstance(), fContext, badgeNum);
+            method.invoke(PushManager.getInstance(), context, badgeNum);
+            Log.d(TAG, "Badge set to: " + badgeNum);
         } catch (Throwable e) {
-            e.printStackTrace();
+            Log.e(TAG, "Failed to set badge", e);
         }
     }
 
+    /**
+     * 获取客户端 ID
+     */
     private String getClientId() {
-        Log.d(TAG, "get client id");
-        return PushManager.getInstance().getClientid(fContext);
+        String clientId = PushManager.getInstance().getClientid(context);
+        Log.d(TAG, "Client ID: " + clientId);
+        return clientId;
     }
 
+    /**
+     * 恢复推送服务
+     */
     private void resume() {
-        Log.d(TAG, "resume push service");
-        PushManager.getInstance().turnOnPush(fContext);
+        PushManager.getInstance().turnOnPush(context);
+        Log.d(TAG, "Push service resumed");
     }
 
+    /**
+     * 停止推送服务
+     */
     private void stopPush() {
-        Log.d(TAG, "stop push service");
-        PushManager.getInstance().turnOffPush(fContext);
+        PushManager.getInstance().turnOffPush(context);
+        Log.d(TAG, "Push service stopped");
     }
 
     /**
-     * 绑定别名功能:后台可以根据别名进行推送
-     *
-     * @param alias 别名字符串
-     * @param aSn   绑定序列码, Android中无效，仅在iOS有效
+     * 绑定别名
      */
-    public void bindAlias(String alias, String aSn) {
-        PushManager.getInstance().bindAlias(fContext, alias);
+    private void bindAlias(String alias, String sn) {
+        PushManager.getInstance().bindAlias(context, alias,sn);
+        Log.d(TAG, "Binding alias: " + alias + ", sn: " + sn);
     }
 
     /**
-     * 取消绑定别名功能
-     *
-     * @param alias  别名字符串
-     * @param aSn    绑定序列码, Android中无效，仅在iOS有效
-     * @param isSelf boolean 是否只对当前cid有效，如果是true，只对当前cid做解绑；如果是false，对所有绑定该别名的cid列表做解绑.
+     * 解绑别名
      */
-    public void unbindAlias(String alias, String aSn, boolean isSelf) {
-        PushManager.getInstance().unBindAlias(fContext, alias, isSelf, aSn);
+    private void unbindAlias(String alias, String sn, boolean isSelf) {
+        PushManager.getInstance().unBindAlias(context, alias, isSelf, sn);
+        Log.d(TAG, "Unbinding alias: " + alias + ", sn: " + sn + ", isSelf: " + isSelf);
     }
 
     /**
-     * 给用户打标签 , 后台可以根据标签进行推送
-     *
-     * @param tags 别名数组
+     * 设置标签
      */
-    public void setTag(List<String> tags,String sn) {
-        if (tags == null || tags.size() == 0) {
+    private void setTag(List<String> tags, String sn) {
+        if (tags == null || tags.isEmpty()) {
+            Log.d(TAG, "No tags provided");
             return;
         }
 
@@ -272,66 +241,59 @@ public class GetuiflutPlugin implements MethodCallHandler, FlutterPlugin {
             tag.setName(tags.get(i));
             tagArray[i] = tag;
         }
-
-        PushManager.getInstance().setTag(fContext, tagArray, sn);
+        PushManager.getInstance().setTag(context, tagArray, sn);
+        Log.d(TAG, "Tags set: " + tags + ", sn: " + sn);
     }
 
-    static void transmitMessageReceive(String message, String func) {
+    /**
+     * 处理消息回调的 Handler
+     */
+    private static final Handler flutterHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case FLUTTER_CALL_BACK:
+                    StateType type = StateType.values()[msg.arg1];
+                    instance.channel.invokeMethod(type.name(), msg.obj);
+                    Log.d(TAG, type.name() + ": " + msg.obj);
+                    break;
+                case FLUTTER_CALL_BACK_USER:
+                    instance.channel.invokeMethod("onTransmitUserMessageReceive", msg.obj);
+                    Log.d(TAG, "User message: " + msg.obj);
+                    break;
+                default:
+                    Log.d(TAG, "Unknown message type: " + msg.what);
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 传输消息到 Flutter
+     */
+    static void transmitMessageReceive(String message, StateType type) {
         if (instance == null) {
-            Log.d(TAG, "Getui flutter plugin doesn't exist");
+            Log.d(TAG, "Plugin instance is null");
             return;
         }
-        int type;
-        if (func.equals("onReceiveClientId")) {
-            type = StateType.onReceiveClientId.ordinal();
-        } else if (func.equals("onReceiveOnlineState")) {
-            type = StateType.onReceiveOnlineState.ordinal();
-        } else if(func.equals("onReceiveCommandResult")){
-            type = StateType.onReceiveCommandResult.ordinal();
-        }else {
-            type = StateType.Default.ordinal();
-        }
         Message msg = Message.obtain();
-        msg.what = FLUTTER_CALL_BACK_CID;
-        msg.arg1 = type;
+        msg.what = FLUTTER_CALL_BACK;
+        msg.arg1 = type.ordinal();
         msg.obj = message;
         flutterHandler.sendMessage(msg);
     }
 
-    static void transmitMessageReceive(Map<String, Object> message, String func) {
-        if (instance == null) {
-            Log.d(TAG, "Getui flutter plugin doesn't exist");
-            return;
-        }
-        int type;
-        if (func.equals("onReceivePayload")) {
-            type = MessageType.onReceivePayload.ordinal();
-        } else if (func.equals("onNotificationMessageArrived")) {
-            type = MessageType.onNotificationMessageArrived.ordinal();
-        }
-        else if (func.equals("onNotificationMessageClicked")) {
-            type = MessageType.onNotificationMessageClicked.ordinal();
-        }
-        else if (func.equals("onSetTagResult")) {
-            type = MessageType.onSetTagResult.ordinal();
-        } else if (func.equals("onAliasResult")) {
-            type = MessageType.onAliasResult.ordinal();
-        } else if (func.equals("onQueryTagResult")) {
-            type = MessageType.onQueryTagResult.ordinal();
-        } else {
-            type = MessageType.Default.ordinal();
-        }
+    /**
+     * 传输用户消息到 Flutter
+     */
+   public static void transmitUserMessage(Map<String, Object> message) {
+       if (instance == null) {
+           Log.d(TAG, "Plugin instance is null");
+           return;
+       }
         Message msg = Message.obtain();
-        msg.what = FLUTTER_CALL_BACK_MSG;
-        msg.arg1 = type;
-        msg.obj = message;
-        flutterHandler.sendMessage(msg);
-    }
-
-    public static void transmitUserMessage(Map<String, Object> message) {
-        Message msg = Message.obtain();
-        msg.what = FLUTTER_CALL_BACK_MSG_USER;
-        msg.obj = message;
+        msg.what = FLUTTER_CALL_BACK_USER;
+        msg.obj = new Gson().toJson(message);
         flutterHandler.sendMessage(msg);
     }
 }

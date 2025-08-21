@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
@@ -13,7 +15,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  String _payloadInfo = 'Null';
   String _userMsg = '';
   String _notificationState = '';
   String _getClientId = '';
@@ -60,7 +61,6 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _platformVersion = platformVersion;
-      _payloadInfo = payloadInfo;
       _notificationState = notificationState;
     });
 
@@ -204,7 +204,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                   Text('用户消息: $_userMsg\n'),
-                  Text('Payload: $_payloadInfo\n'),
+                  Text('Payload: $_onReceivePayload'),
                   Text('通知状态: $_notificationState\n'),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -304,6 +304,24 @@ class _MyAppState extends State<MyApp> {
                       ),
                     ],
                   ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        _getui.setSilentTime(13,0);
+                      },
+                      child: const Text('设置静默时间(非IOS)'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _getui.sendFeedbackMessage("taskId","messageId", 90002 );
+                      },
+                      child: const Text('自定义数据回执'),
+                    )
+                  ]
+              ),
+
                   Text(
                     'iOS 专用功能',
                     style: TextStyle(
@@ -313,7 +331,6 @@ class _MyAppState extends State<MyApp> {
                   ),
                   Text('设备令牌: $_getDeviceToken'),
                   Text('AppLink Payload: $_onAppLinkPayLoad'),
-                  Text('Payload: $_onReceivePayload'),
                   Text('APNs 通知: $_onReceiveNotificationResponse'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,

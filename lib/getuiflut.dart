@@ -170,7 +170,7 @@ class Getuiflut {
     _channel.invokeMethod('setSilentTime', {'beginHour': beginHour, "duration": duration});
   }
  //自定义action
-  void sendFeedbackMessage(String taskId, String messageId, Int actionId) {
+  void sendFeedbackMessage(String taskId, String messageId, int actionId) {
     _channel.invokeMethod('sendFeedbackMessage', {'taskId': taskId , "messageId":messageId, "actionId":actionId});
   }
 
@@ -280,14 +280,15 @@ class Getuiflut {
    *----------------------------*/
   Future _handleMethod(MethodCall call) async {
     print('_handleMethod  method:' + call.method);
-    print('_handleMethod  args :' +call.arguments );
+    print('_handleMethod  args :' + call.arguments.toString());
     switch (call.method) {
       case "onReceiveClientId":
         return _onReceiveClientId(call.arguments);
+      case "onRegisterDeviceToken":
+        return _onRegisterDeviceToken(call.arguments);
       case "onNotificationMessageArrived":
         dynamic result;
         if (call.arguments is String) {
-          //将 JSON String 转换为 Map<String, dynamic>
           result = jsonDecode(call.arguments) as Map<String, dynamic>;
         } else {
           result = call.arguments.cast<String, dynamic>();
@@ -296,14 +297,11 @@ class Getuiflut {
       case "onNotificationMessageClicked":
         dynamic result;
         if (call.arguments is String) {
-          //将 JSON String 转换为 Map<String, dynamic>
           result = jsonDecode(call.arguments) as Map<String, dynamic>;
         } else {
           result = call.arguments.cast<String, dynamic>();
         }
         return _onNotificationMessageClicked(result);
-      case "onRegisterDeviceToken":
-        return _onRegisterDeviceToken(call.arguments);
       case "onReceivePayload":
         dynamic result;
         if (call.arguments is String) {
@@ -312,13 +310,6 @@ class Getuiflut {
           result = call.arguments.cast<String, dynamic>();
         }
         return _onReceivePayload(result);
-      case "onReceiveNotificationResponse":
-        return _onReceiveNotificationResponse(
-            call.arguments.cast<String, dynamic>());
-      case "onAppLinkPayload":
-        return _onAppLinkPayload(call.arguments);
-      case "onPushModeResult":
-        return _onPushModeResult(call.arguments.cast<String, dynamic>());
       case "onSetTagResult":
         dynamic result;
         if (call.arguments is String) {
@@ -335,12 +326,6 @@ class Getuiflut {
           result = call.arguments.cast<String, dynamic>();
         }
         return _onAliasResult(result);
-      case "onWillPresentNotification":
-        return _onWillPresentNotification(
-            call.arguments.cast<String, dynamic>());
-      case "onOpenSettingsForNotification":
-        return _onOpenSettingsForNotification(
-            call.arguments.cast<String, dynamic>());
       case "onQueryTagResult":
         dynamic result;
         if (call.arguments is String) {
@@ -349,17 +334,26 @@ class Getuiflut {
           result = call.arguments.cast<String, dynamic>();
         }
         return _onQueryTagResult(result);
-
+      case "onReceiveNotificationResponse":
+        return _onReceiveNotificationResponse(
+            call.arguments.cast<String, dynamic>());
+      case "onAppLinkPayload":
+        return _onAppLinkPayload(call.arguments);
+      case "onPushModeResult":
+        return _onPushModeResult(call.arguments.cast<String, dynamic>());
+      case "onWillPresentNotification":
+        return _onWillPresentNotification(
+            call.arguments.cast<String, dynamic>());
+      case "onOpenSettingsForNotification":
+        return _onOpenSettingsForNotification(
+            call.arguments.cast<String, dynamic>());
       case "onTransmitUserMessageReceive":
         return _onTransmitUserMessageReceive(
             call.arguments.cast<String, dynamic>());
-
       case "onGrantAuthorization":
         return _onGrantAuthorization(call.arguments);
-
       case "onLiveActivityResult":
         return _onLiveActivityResult(call.arguments.cast<String, dynamic>());
-
       case "onRegisterPushToStartTokenResult":
         return _onRegisterPushToStartTokenResult(
             call.arguments.cast<String, dynamic>());

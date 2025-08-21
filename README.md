@@ -143,12 +143,15 @@ setBadge(badge);
 bindAlias(alias, sn);
 unbindAlias(alias, sn);
 ```
+* sn:  绑定序列码,不为nil
+
 
 #### 设置/查询标签
 ```dart
 setTag(tags,sn);
 queryTag(sn)
 ```
+* sn:  绑定序列码,不为nil
 
 #### 开启/关闭推送服务（iOS 不支持）
 ```dart
@@ -160,6 +163,20 @@ turnOffPush();
 ```dart
 getClientId();
 ```
+
+#### 设置静默时间(IOS不支持)
+```dart
+setSilentTime(beginHour,duration)
+```
+* 开始时间，beginHour >= 0 && beginHour < 24，单位 h
+* duration：持续时间，duration > 0 && duration <= 23，持续时间为 0 则取消静默，单位 h
+
+
+#### 自定义回执
+```dart
+sendFeedbackMessage( taskId,  messageId,  actionId)
+```
+* actionId：自定义的actionId，取值范围是 90001-90999
 
 #### 回调方法
 设置事件监听：
