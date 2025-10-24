@@ -11,7 +11,9 @@ build/
 .gradle
 android/.idea/*
 .settings
-#.vscode/*
+flutter.iml
+getuiflut.iml
+.vscode
 
 Example/ios/Index/*
 example/.flutter-plugins-dependencies

@@ -21,3 +21,6 @@ lib/generated/i18n.dart
 .gradle/
 android/.idea/
 .settings
+flutter.iml
+getuiflut.iml
+.vscode
