@@ -6,7 +6,7 @@
 
 ```markdown
 dependencies:
-  getuiflut: ^0.2.38
+  getuiflut: ^0.2.39
 ```
 
 

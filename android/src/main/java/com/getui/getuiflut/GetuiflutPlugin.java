@@ -141,7 +141,11 @@ public class GetuiflutPlugin implements FlutterPlugin, MethodCallHandler {
      */
     private void initGtSdk() {
         instance =  this;
-        Log.d(TAG, "Initializing Getui SDK");
+        try {
+             Log.d(TAG, "Initializing Getui SDK "+PushManager.getInstance().getVersion(context));
+        } catch (Throwable e) {
+
+        }
         try {
             PushManager.getInstance().initialize(context);
         } catch (Throwable e) {

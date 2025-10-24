@@ -25,7 +25,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 android {
     namespace 'com.getui.getuiflut'
-    compileSdkVersion 28
+    compileSdkVersion 34
     defaultConfig {
         minSdkVersion 17
     }

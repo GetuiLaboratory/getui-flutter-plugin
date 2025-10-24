@@ -8,13 +8,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.PushConsts;
+import com.igexin.sdk.Tag;
 import com.igexin.sdk.message.BindAliasCmdMessage;
+import com.igexin.sdk.message.FeedbackCmdMessage;
 import com.igexin.sdk.message.GTCmdMessage;
 import com.igexin.sdk.message.GTNotificationMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.QueryTagCmdMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 import com.igexin.sdk.message.UnBindAliasCmdMessage;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 推送服务处理类，继承自 GTIntentService，处理推送相关事件
@@ -43,9 +48,12 @@ public class FlutterIntentService extends GTIntentService {
     @Override
     public void onReceiveMessageData(Context context, GTTransmitMessage msg) {
         log("Received message data");
-        JsonObject result = JsonParser.parseString(GSON.toJson(msg)).getAsJsonObject();
-        result.addProperty("payload", new String(msg.getPayload()));
-        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(result), GetuiflutPlugin.StateType.onReceivePayload);
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("messageId", msg.getMessageId());
+        payload.put("payload", new String(msg.getPayload()));
+        payload.put("payloadId", msg.getPayloadId());
+        payload.put("taskId", msg.getTaskId());
+        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(payload), GetuiflutPlugin.StateType.onReceivePayload);
     }
 
     @Override
@@ -55,56 +63,213 @@ public class FlutterIntentService extends GTIntentService {
     }
 
     @Override
-    public void onReceiveCommandResult(Context context, GTCmdMessage cmdMessage) {
-        log("Received command result: " + cmdMessage.getClass().getSimpleName());
-        int action = cmdMessage.getAction();
-        JsonObject result = JsonParser.parseString(GSON.toJson(cmdMessage)).getAsJsonObject();
-        GetuiflutPlugin.StateType stateType;
-
-        switch (action) {
-            case PushConsts.SET_TAG_RESULT:
-                SetTagCmdMessage setTagCmd = (SetTagCmdMessage) cmdMessage;
-                result.addProperty("message", getResources().getString(getMessageResIdForTag(setTagCmd.getCode())));
-                result.addProperty("result", Integer.parseInt(setTagCmd.getCode()) == 0);
-                stateType = GetuiflutPlugin.StateType.onSetTagResult;
-                break;
-            case PushConsts.BIND_ALIAS_RESULT:
-                BindAliasCmdMessage bindCmd = (BindAliasCmdMessage) cmdMessage;
-                result.addProperty("message", getResources().getString(getMessageResIdForAlias(bindCmd.getCode(), true)));
-                result.addProperty("result", Integer.parseInt(bindCmd.getCode()) == 0);
-                stateType = GetuiflutPlugin.StateType.onAliasResult;
-                break;
-            case PushConsts.UNBIND_ALIAS_RESULT:
-                UnBindAliasCmdMessage unbindCmd = (UnBindAliasCmdMessage) cmdMessage;
-                result.addProperty("message", getResources().getString(getMessageResIdForAlias(unbindCmd.getCode(), false)));
-                result.addProperty("result", Integer.parseInt(unbindCmd.getCode()) == 0);
-                stateType = GetuiflutPlugin.StateType.onAliasResult;
-                break;
-            case PushConsts.QUERY_TAG_RESULT:
-                result.addProperty("result", Integer.parseInt(((QueryTagCmdMessage) cmdMessage).getCode()) == 0);
-                stateType = GetuiflutPlugin.StateType.onQueryTagResult;
-                break;
-            case PushConsts.THIRDPART_FEEDBACK:
-                stateType = GetuiflutPlugin.StateType.thirdPartFeedback;
-                break;
-            default:
-                log("Unhandled command result action: " + action);
-                return;
+    public void onReceiveCommandResult(Context context, GTCmdMessage gtCmdMessage) {
+        int action = gtCmdMessage.getAction();
+        if (action == PushConsts.SET_TAG_RESULT) {
+            GetuiflutPlugin.transmitMessageReceive(getTagResult((SetTagCmdMessage) gtCmdMessage), GetuiflutPlugin.StateType.onSetTagResult);
+        } else if (action == PushConsts.BIND_ALIAS_RESULT) {
+            GetuiflutPlugin.transmitMessageReceive(bindAliasResult((BindAliasCmdMessage) gtCmdMessage),GetuiflutPlugin.StateType.onAliasResult);
+        } else if (action == PushConsts.UNBIND_ALIAS_RESULT) {
+            GetuiflutPlugin.transmitMessageReceive(unBindAliasResult((UnBindAliasCmdMessage) gtCmdMessage),GetuiflutPlugin.StateType.onAliasResult);
+        } else if ((action == PushConsts.THIRDPART_FEEDBACK)) {
+            GetuiflutPlugin.transmitMessageReceive(feedbackResult((FeedbackCmdMessage) gtCmdMessage),GetuiflutPlugin.StateType.thirdPartFeedback);
+        }else if(action == PushConsts.QUERY_TAG_RESULT){
+            GetuiflutPlugin.transmitMessageReceive(onQueryTagResult((QueryTagCmdMessage) gtCmdMessage), GetuiflutPlugin.StateType.onQueryTagResult);
         }
 
-        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(result), stateType);
+
+    }
+
+    private String onQueryTagResult(QueryTagCmdMessage gtCmdMessage) {
+        String code = gtCmdMessage.getCode();
+        String sn = gtCmdMessage.getSn();
+        Tag[] tags = gtCmdMessage.getTags();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("sn",sn);
+        map.put("result",Integer.parseInt(code)==0);
+        map.put("code",Integer.parseInt(code));
+        map.put("tags",tags);
+        return GSON.toJson(map);
+    }
+
+    private String feedbackResult(FeedbackCmdMessage feedbackCmdMsg) {
+        String appid = feedbackCmdMsg.getAppid();
+        String taskid = feedbackCmdMsg.getTaskId();
+        String actionid = feedbackCmdMsg.getActionId();
+        String result = feedbackCmdMsg.getResult();
+        long timestamp = feedbackCmdMsg.getTimeStamp();
+        String cid = feedbackCmdMsg.getClientId();
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("appid",appid);
+        map.put("taskid",taskid);
+        map.put("actionid",actionid);
+        map.put("result",result);
+        map.put("timestamp",timestamp);
+        map.put("cid",cid);
+        return GSON.toJson(map);
+    }
+
+    private String unBindAliasResult(UnBindAliasCmdMessage gtCmdMessage) {
+        String sn = gtCmdMessage.getSn();
+        String code = gtCmdMessage.getCode();
+
+        int text = R.string.unbind_alias_unknown_exception;
+        switch (Integer.parseInt(code)) {
+            case PushConsts.UNBIND_ALIAS_SUCCESS:
+                text = R.string.unbind_alias_success;
+                break;
+            case PushConsts.ALIAS_ERROR_FREQUENCY:
+                text = R.string.unbind_alias_error_frequency;
+                break;
+            case PushConsts.ALIAS_OPERATE_PARAM_ERROR:
+                text = R.string.unbind_alias_error_param_error;
+                break;
+            case PushConsts.ALIAS_REQUEST_FILTER:
+                text = R.string.unbind_alias_error_request_filter;
+                break;
+            case PushConsts.ALIAS_OPERATE_ALIAS_FAILED:
+                text = R.string.unbind_alias_unknown_exception;
+                break;
+            case PushConsts.ALIAS_CID_LOST:
+                text = R.string.unbind_alias_error_cid_lost;
+                break;
+            case PushConsts.ALIAS_CONNECT_LOST:
+                text = R.string.unbind_alias_error_connect_lost;
+                break;
+            case PushConsts.ALIAS_INVALID:
+                text = R.string.unbind_alias_error_alias_invalid;
+                break;
+            case PushConsts.ALIAS_SN_INVALID:
+                text = R.string.unbind_alias_error_sn_invalid;
+                break;
+            default:
+                break;
+
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("sn",sn);
+        map.put("result",Integer.parseInt(code)==0);
+        map.put("code",Integer.parseInt(code));
+        map.put("message",getResources().getString(text));
+        return GSON.toJson(map);
+    }
+
+    private String bindAliasResult(BindAliasCmdMessage gtCmdMessage) {
+        String sn = gtCmdMessage.getSn();
+        String code = gtCmdMessage.getCode();
+
+        int text = R.string.bind_alias_unknown_exception;
+        switch (Integer.parseInt(code)) {
+            case PushConsts.BIND_ALIAS_SUCCESS:
+                text = R.string.bind_alias_success;
+                break;
+            case PushConsts.ALIAS_ERROR_FREQUENCY:
+                text = R.string.bind_alias_error_frequency;
+                break;
+            case PushConsts.ALIAS_OPERATE_PARAM_ERROR:
+                text = R.string.bind_alias_error_param_error;
+                break;
+            case PushConsts.ALIAS_REQUEST_FILTER:
+                text = R.string.bind_alias_error_request_filter;
+                break;
+            case PushConsts.ALIAS_OPERATE_ALIAS_FAILED:
+                text = R.string.bind_alias_unknown_exception;
+                break;
+            case PushConsts.ALIAS_CID_LOST:
+                text = R.string.bind_alias_error_cid_lost;
+                break;
+            case PushConsts.ALIAS_CONNECT_LOST:
+                text = R.string.bind_alias_error_connect_lost;
+                break;
+            case PushConsts.ALIAS_INVALID:
+                text = R.string.bind_alias_error_alias_invalid;
+                break;
+            case PushConsts.ALIAS_SN_INVALID:
+                text = R.string.bind_alias_error_sn_invalid;
+                break;
+            default:
+                break;
+
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("sn",sn);
+        map.put("result",Integer.parseInt(code)==0);
+        map.put("code",Integer.parseInt(code));
+        map.put("message",getResources().getString(text));
+        return GSON.toJson(map);
+    }
+
+    private String getTagResult(SetTagCmdMessage gtCmdMessage) {
+        String sn = gtCmdMessage.getSn();
+        String code = gtCmdMessage.getCode();
+        int text = R.string.add_tag_unknown_exception;
+        switch (Integer.parseInt(code)) {
+            case PushConsts.SETTAG_SUCCESS:
+                text = R.string.add_tag_success;
+                break;
+            case PushConsts.SETTAG_ERROR_COUNT:
+                text = R.string.add_tag_error_count;
+                break;
+            case PushConsts.SETTAG_ERROR_FREQUENCY:
+                text = R.string.add_tag_error_frequency;
+                break;
+            case PushConsts.SETTAG_ERROR_REPEAT:
+                text = R.string.add_tag_error_repeat;
+                break;
+            case PushConsts.SETTAG_ERROR_UNBIND:
+                text = R.string.add_tag_error_unbind;
+                break;
+            case PushConsts.SETTAG_ERROR_EXCEPTION:
+                text = R.string.add_tag_unknown_exception;
+                break;
+            case PushConsts.SETTAG_ERROR_NULL:
+                text = R.string.add_tag_error_null;
+                break;
+            case PushConsts.SETTAG_NOTONLINE:
+                text = R.string.add_tag_error_not_online;
+                break;
+            case PushConsts.SETTAG_IN_BLACKLIST:
+                text = R.string.add_tag_error_black_list;
+                break;
+            case PushConsts.SETTAG_NUM_EXCEED:
+                text = R.string.add_tag_error_exceed;
+                break;
+            case PushConsts.SETTAG_TAG_ILLEGAL:
+                text = R.string.add_tag_error_tagIllegal;
+                break;
+            default:
+                break;
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("sn",sn);
+        map.put("result",Integer.parseInt(code)==0);
+        map.put("code",Integer.parseInt(code));
+        map.put("message",getResources().getString(text));
+        return GSON.toJson(map);
     }
 
     @Override
     public void onNotificationMessageArrived(Context context, GTNotificationMessage message) {
         log("Notification arrived");
-        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(message), GetuiflutPlugin.StateType.onNotificationMessageArrived);
+        Map<String, Object> notification = new HashMap<String, Object>();
+        notification.put("messageId",message.getMessageId());
+        notification.put("taskId",message.getTaskId());
+        notification.put("title",message.getTitle());
+        notification.put("content",message.getContent());
+        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(notification), GetuiflutPlugin.StateType.onNotificationMessageArrived);
     }
 
     @Override
     public void onNotificationMessageClicked(Context context, GTNotificationMessage message) {
         log("Notification clicked");
-        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(message), GetuiflutPlugin.StateType.onNotificationMessageClicked);
+        Map<String, Object> notification = new HashMap<String, Object>();
+        notification.put("messageId",message.getMessageId());
+        notification.put("taskId",message.getTaskId());
+        notification.put("title",message.getTitle());
+        notification.put("content",message.getContent());
+        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(notification), GetuiflutPlugin.StateType.onNotificationMessageClicked);
     }
 
     // 统一日志记录方法
