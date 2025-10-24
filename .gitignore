@@ -10,7 +10,7 @@ build/
 /build
 .gradle
 android/.idea/*
-
+.settings
 #.vscode/*
 
 Example/ios/Index/*
