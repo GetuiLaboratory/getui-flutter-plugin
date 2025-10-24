@@ -10,6 +10,7 @@ build/
 /build
 .gradle
 android/.idea/*
+
 #.vscode/*
 
 Example/ios/Index/*
@@ -20,3 +21,4 @@ lib/generated/i18n.dart
 
 # FVM Version Cache
 .fvm/
+
