@@ -115,6 +115,9 @@ ohos工程需要兼容字节码包,在项目级build-profile.json5:
 #### 2.3.3 注册插件
 * GeneratedPluginRegistrant由 flutter create --platforms ohos <projectName> 创建生成
 ```yaml
+import { FlutterEngine, Log } from '@ohos/flutter_ohos';
+import GetuiflutPlugin from 'getuiflut';
+
 const TAG = "GeneratedPluginRegistrant";
 
 export class GeneratedPluginRegistrant {
