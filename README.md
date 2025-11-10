@@ -79,6 +79,7 @@ Getuiflut().startSdk(
 ### 2.3 HarmonyOS 配置
 *  引入插件, 见上文
 * 使用鸿蒙定制版 Flutter，否则报错依赖缺失, 下载地址: [OpenHarmony Flutter](https://gitcode.com/openharmony-tpc/flutter_flutter) 及 [使用教程](https://developer.huawei.com/consumer/cn/blog/topic/03178381351651116)。
+* [启动应用教程](https://gitcode.com/openharmony-tpc/flutter_flutter#%E6%9E%84%E5%BB%BA%E6%AD%A5%E9%AA%A4)
 
 #### 2.3.1 配置 `build-profile.json5`
 ohos工程需要兼容字节码包,在项目级build-profile.json5:
@@ -113,29 +114,9 @@ ohos工程需要兼容字节码包,在项目级build-profile.json5:
 ]
 ```
 #### 2.3.3 注册插件
-* GeneratedPluginRegistrant由 flutter create --platforms ohos <projectName> 创建生成
-```yaml
-import { FlutterEngine, Log } from '@ohos/flutter_ohos';
-import GetuiflutPlugin from 'getuiflut';
+运行 fvm flutter build hap 后自动生成 GeneratedPluginRegistrant
 
-const TAG = "GeneratedPluginRegistrant";
 
-export class GeneratedPluginRegistrant {
-
-  static registerWith(flutterEngine: FlutterEngine) {
-    try {
-      flutterEngine.getPlugins()?.add(new GetuiflutPlugin());
-    } catch (e) {
-      Log.e( TAG,
-        "Tried to register plugins with FlutterEngine ("
-        + flutterEngine
-        + ") failed.");
-    
-      Log.e(TAG, "Received exception while registering", e);
-     }
-  }
-}
-```
 #### 2.3.4 配置在线通知点击事件
 * 通过个推在线渠道展示的通知类消息，待通知点击打开目的页面后，由客户必须调用PushManager.setClickWant(want)完善报表和完成后续业务，以免影响消息业务使用（重要）
   * 通知点击打开应用页面（目的页面由下发通知时决定）
