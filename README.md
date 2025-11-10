@@ -77,8 +77,11 @@ Getuiflut().startSdk(
 为精确统计消息送达率，可添加 `Notification Service Extension`，并在 Extensions 中调用 `GTExtensionSDK` 的统计接口。具体参考[个推 iOS 集成文档](https://docs.getui.com/getui/mobile/ios/xcode/)。
 
 ### 2.3 HarmonyOS 配置
-* 使用鸿蒙定制版 Flutter，下载地址: [OpenHarmony Flutter](https://gitcode.com/openharmony-tpc/flutter_flutter) 及 [使用教程](https://developer.huawei.com/consumer/cn/blog/topic/03178381351651116)。
-* ohos工程需要兼容字节码包,在项目级build-profile.json5:
+*  引入插件, 见上文
+* 使用鸿蒙定制版 Flutter，否则报错依赖缺失, 下载地址: [OpenHarmony Flutter](https://gitcode.com/openharmony-tpc/flutter_flutter) 及 [使用教程](https://developer.huawei.com/consumer/cn/blog/topic/03178381351651116)。
+
+#### 2.3.1 配置 `build-profile.json5`
+ohos工程需要兼容字节码包,在项目级build-profile.json5:
 ```yaml
     "buildOption": {
       "strictMode": {
@@ -87,7 +90,7 @@ Getuiflut().startSdk(
     }
 ```
 
-#### 配置 `module.json5`
+#### 2.3.2 配置 `module.json5`
 在项目中配置：
 ```yaml
 "requestPermissions": [
@@ -109,15 +112,36 @@ Getuiflut().startSdk(
     {"name": "GT_PUSH_LOG", "value": "false"} //sdk文件日志开关, 技术支持问题排查时使用
 ]
 ```
+#### 2.3.3 注册插件
+* GeneratedPluginRegistrant由 flutter create --platforms ohos <projectName> 创建生成
+```yaml
+const TAG = "GeneratedPluginRegistrant";
 
-#### 上报个推在线通知点击
+export class GeneratedPluginRegistrant {
+
+  static registerWith(flutterEngine: FlutterEngine) {
+    try {
+      flutterEngine.getPlugins()?.add(new GetuiflutPlugin());
+    } catch (e) {
+      Log.e( TAG,
+        "Tried to register plugins with FlutterEngine ("
+        + flutterEngine
+        + ") failed.");
+    
+      Log.e(TAG, "Received exception while registering", e);
+     }
+  }
+}
+```
+#### 2.3.4 配置在线通知点击事件
 * 通过个推在线渠道展示的通知类消息，待通知点击打开目的页面后，由客户必须调用PushManager.setClickWant(want)完善报表和完成后续业务，以免影响消息业务使用（重要）
   * 通知点击打开应用页面（目的页面由下发通知时决定）
   * 通知点击打开浏览器
+* 配置参考demo代码: [EntryAbility.ets](example/ohos/entry/src/main/ets/entryability/EntryAbility.ets)
 
-参考demo代码: [EntryAbility.ets](example/ohos/entry/src/main/ets/entryability/EntryAbility.ets)
 
-#### 其他功能
+
+#### 2.3.5 其他API功能
 参考: [官网文档](https://docs.getui.com/getui/mobile/harmonyos/vendor/vendor_open/)
 
 ## 3. 使用方法
