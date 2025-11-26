@@ -128,6 +128,8 @@ ohos工程需要兼容字节码包,在项目级build-profile.json5:
 #### 2.3.5 其他API功能
 参考: [官网文档](https://docs.getui.com/getui/mobile/harmonyos/vendor/vendor_open/)
 
+
+
 ## 3. 使用方法
 
 ### 3.1 公共 API
@@ -273,7 +275,10 @@ registerActivityToken(aid, token, sn);
 registerPushToStartToken(attribute, token, sn);
 ```
 
+
+
 #### AppDelegate 配置
+
 在 `AppDelegate.m` 中重写以下方法以确保 SDK 正常工作：
 ```objc
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
@@ -287,3 +292,53 @@ registerPushToStartToken(attribute, token, sn);
 ```
 
 **说明**：如需更多细节，可参考[个推官方文档](https://docs.getui.com),联系技术支持。
+```
+
+
+
+
+
+#### UIScene 配置
+
+在 `SceneDelegate.m` 中需要将启动参数传递给flutter插件，[GetuiflutPlugin handleSceneWillConnectWithOptions:connectionOptions];
+
+```
+#import "SceneDelegate.h"
+#import <Flutter/Flutter.h>
+#import "GeneratedPluginRegistrant.h"
+#import <GTSDK/GetuiSdk.h>
+#import "GetuiflutPlugin.h"
+
+@interface SceneDelegate () <GeTuiSdkDelegate>
+
+@end
+  
+@implementation SceneDelegate
+
+- (void)scene:(UIScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
+    // 配置窗口场景
+    if (@available(iOS 13.0, *)) {
+        UIWindowScene *windowScene = (UIWindowScene *)scene;
+        self.window = [[UIWindow alloc] initWithWindowScene:windowScene];
+    } else {
+        self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    }
+    
+    // 创建并设置 Flutter 视图控制器
+    FlutterViewController *flutterViewController = [FlutterViewController new];
+    self.window.rootViewController = flutterViewController;
+    
+    // 注册 Flutter 插件
+    [GeneratedPluginRegistrant registerWithRegistry:flutterViewController];
+    
+     
+    
+    //TODO:用于获取UIScene模式下的通知数据
+    [GetuiflutPlugin handleSceneWillConnectWithOptions:connectionOptions];
+     
+    
+    // 使窗口可见
+    [self.window makeKeyAndVisible];
+}
+```
+
