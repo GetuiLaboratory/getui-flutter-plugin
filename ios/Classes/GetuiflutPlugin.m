@@ -1,4 +1,5 @@
 #import "GetuiflutPlugin.h"
+#import <UIKit/UIKit.h>
 #import <GTSDK/GeTuiSdk.h>
 #import <PushKit/PushKit.h>
 
@@ -16,11 +17,12 @@
 - (void)Getui_didReceiveRemoteNotificationInner:(NSDictionary*)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler;
 @end
 
+
+NSDictionary *_launchNotification;
+NSDictionary *_launchLocalNotification;
 @interface GetuiflutPlugin()<GeTuiSdkDelegate> {
     BOOL _started;
     NSDictionary *_launchOptions;
-    NSDictionary *_launchNotification;
-    NSDictionary *_launchLocalNotification;
     NSDictionary *_apnsSlienceUserInfo;
 }
 @end
@@ -36,13 +38,33 @@
   [registrar addApplicationDelegate:instance];
   [registrar addMethodCallDelegate:instance channel:channel];
 //  [instance registerRemoteNotification];
+    
+//  [instance registerObservers];
 }
+
+//- (void)registerObservers {
+//    NSLog(@">>>GTSDK registerObservers");
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(onSceneConnected:)
+//                                                 name:UISceneWillConnectNotification
+//                                               object:nil];
+//}
+//
+//// 尝试处理Scene模式启动参数
+//- (void)onSceneConnected:(NSNotification *)notification {
+//    //但这个通知的userInfo 不包含 connectionOptions。它只提供notification.object是一个scene对象，无法直接提取APNS数据
+//    
+//    NSLog(@">>>GTSDK onSceneConnected %@ userinfo:%@",notification, notification.userInfo);
+//    // 获取UIScene对象
+//    UIScene *scene = notification.object;
+//    NSLog(@">>>GTSDK Scene connection established");
+//}
 
 - (id)init {
     self = [super init];
     _launchOptions = @{};
-    _launchNotification = @{};
-    _launchLocalNotification = @{};
+    _launchNotification = nil;
+    _launchLocalNotification = nil;
     _apnsSlienceUserInfo = @{};
     return self;
 }
@@ -77,8 +99,10 @@
   } else if([@"resume" isEqualToString:call.method]) {
 //        [GeTuiSdk resume];
   } else if([@"getLaunchNotification" isEqualToString:call.method]) {
+      NSLog(@">>>GTSDK getLaunchNotification %@", _launchNotification);
       result(_launchNotification ?: @{});
   } else if([@"getLaunchLocalNotification" isEqualToString:call.method]) {
+      NSLog(@">>>GTSDK getLaunchLocalNotification %@", _launchLocalNotification);
       result(_launchLocalNotification ?: @{});
   } else if([@"sdkVersion" isEqualToString:call.method]) {
       result([GeTuiSdk version]);
@@ -121,12 +145,16 @@
 
 /// MARK: - AppDelegate
 
+
+//兼容非Scene的启动方式
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     if (launchOptions != nil) {
-        NSLog(@"\n>>>GTSDK didFinishLaunchingWithOptions %@", launchOptions);
         _launchOptions = launchOptions;
-        _launchNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         
+        _launchNotification = @{};//避免后续错误赋值
+        _launchLocalNotification = @{};//避免后续错误赋值
+        
+        _launchNotification = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
         if(launchOptions[UIApplicationLaunchOptionsLocalNotificationKey]) {
             
             // 获取本地通知对象（类型为 UILocalNotification）
@@ -138,8 +166,70 @@
                 _launchLocalNotification = userInfo;
             }
         }
+        
+        NSLog(@"\n>>>GTSDK didFinishLaunchingWithOptions launchOptions:%@ noti:%@ local_noti:%@", launchOptions,_launchNotification, _launchLocalNotification);
     }
     return YES;
+}
+
+// 兼容非Scene的启动方式（iOS>=13）
+// 公共类方法，让主App的SceneDelegate调用（处理冷启动APNS数据）
++ (void)handleSceneWillConnectWithOptions:(UISceneConnectionOptions *)connectionOptions {
+    if (!connectionOptions) {
+        NSLog(@">>>GTSDK handleSceneWillConnectWithOptions: No options provided");
+        return;
+    }
+    NSLog(@">>>GTSDK handleSceneWillConnectWithOptions: %@",connectionOptions);
+    
+    //统计回执
+    [GeTuiSdk handleSceneWillConnectWithOptions:connectionOptions];
+    
+    
+    //给开发者返回参数
+    UNNotification *note = connectionOptions.notificationResponse.notification;
+    [self checkLocalAndLaunchNotification:note];
+//    NSDictionary *userInfo = note.request.content.userInfo;
+//    UNNotificationTrigger *trigger = note.request.trigger;
+//    if (note && userInfo) {
+//        if ([trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+//            NSLog(@">>>GTSDK handleSceneWillConnectWithOptions 远程通知 %@", userInfo);
+//            _launchNotification = userInfo;
+//        } else {
+//            NSLog(@">>>GTSDK handleSceneWillConnectWithOptions 本地通知 %@", userInfo);
+//            _launchLocalNotification = userInfo;
+//        }
+//    }
+}
+
+// 处理收到的通知信息，设置_launchNotification变量
+- (void)checkLaunchNotification:(NSDictionary *)userInfo {
+    if (!_launchNotification && userInfo) {
+        //_launchNotification=nil表示当前启动不是通过点击通知栏进来的，没有启动参数，
+        //_launchNotification=@{}表示,是在willpresent逻辑中重置了，避免这里错误赋值
+        _launchNotification = userInfo;
+        NSLog(@">>>GTSDK _launchNotification = %@", _launchNotification);
+    }
+}
+
++ (void)checkLocalAndLaunchNotification:(UNNotification *)note {
+    //给开发者返回参数
+    //UNNotification *note = connectionOptions.notificationResponse.notification;
+    NSDictionary *userInfo = note.request.content.userInfo;
+    UNNotificationTrigger *trigger = note.request.trigger;
+    NSLog(@">>>GTSDK checkLocalAndLaunchNotification note=%@ userInfo=%@ trigger=%@", note, userInfo,trigger);
+    if (note && userInfo) {
+        if ([trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+            if (!_launchNotification) {// _launchNotification = nil才会赋值哦
+                NSLog(@">>>GTSDK handleSceneWillConnectWithOptions 远程通知 %@", userInfo);
+                _launchNotification = userInfo;
+            }
+        } else {
+            if (!_launchLocalNotification) {// _launchLocalNotification = nil才会赋值哦
+                NSLog(@">>>GTSDK handleSceneWillConnectWithOptions 本地通知 %@", userInfo);
+                _launchLocalNotification = userInfo;
+            }
+        }
+    }
 }
 
 /// MARK: - 远程通知(推送)回调
@@ -159,7 +249,11 @@
 }
 
 - (BOOL)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    NSLog(@"\n>>>GTSDK didReceiveRemoteNotification %@ _started:%@", userInfo, @(_started));
+    NSLog(@">>>GTSDK didReceiveRemoteNotification %@ _started:%@", userInfo, @(_started));
+    
+    //UIScene启动方式下, 静默通知可能会通过这里补发启动参数哦
+    [self checkLaunchNotification:userInfo];
+    
     if (_started) {
         /*
          注释下面代码，因为开发者在appdelegate.m中重写application:didReceiveRemoteNotification:fetchCompletionHandler后，个推hook就正常了。
@@ -205,6 +299,16 @@
 /// @param completionHandler completionHandler
 - (void)GeTuiSdkNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification completionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
     NSLog(@"\n>>>GTSDK willPresentNotification :%@", notification.request.content.userInfo);
+    
+    // 启动参数如果没有， 则设置为@{}, 避免后续被错误赋值
+    if (!_launchNotification) {
+        _launchNotification = @{};
+    }
+    if (!_launchLocalNotification) {
+        _launchLocalNotification = @{};
+    }
+    
+    
     // 根据APP需要，判断是否要提示用户Badge、Sound、Alert
     completionHandler(UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
     [_channel invokeMethod:@"onWillPresentNotification" arguments:notification.request.content.userInfo];
@@ -214,6 +318,11 @@
     NSDate *time = response.notification.date;
 //    NSDictionary *userInfo = response.notification.request.content.userInfo;
     NSLog(@"\n>>>GTSDK %@\nTime:%@\n%@", NSStringFromSelector(_cmd), time, userInfo);
+    
+    //注意: UIScene启动方式下， 反复多次点击通知冷启动App后杀死app，发现willConnectToSession不是每次冷启动都会调用的，可能因为复用机制而不走willConnectToSession方法。
+    //此时系统会将apns参数通过GeTuiSdkDidReceiveNotification回调app, 让app也能拿到apns数据
+    [GetuiflutPlugin checkLocalAndLaunchNotification:response.notification];
+    
     [_channel invokeMethod:@"onReceiveNotificationResponse" arguments:userInfo];
     if (completionHandler) {
         completionHandler(UIBackgroundFetchResultNoData);
@@ -229,6 +338,10 @@
     NSString *payloadMsg = userInfo[@"payload"];
     NSDictionary *payloadMsgDic = @{ @"taskId": taskId ?: @"", @"messageId": msgId ?: @"", @"payloadMsg" : payloadMsg, @"offLine" : @(offLine), @"fromGetui": @(fromGetui)};
     NSLog(@"\n>>>GTSDK GeTuiSdkDidReceiveSlience:%@", payloadMsgDic);
+    
+    // 处理静默通知内容
+    //[self updateLaunchNotification:userInfo];
+    
     [_channel invokeMethod:@"onReceivePayload" arguments:payloadMsgDic];
     
 }
@@ -427,5 +540,36 @@
 //    [_channel invokeMethod:@"onReceiveVoipPayLoad" arguments:payload.dictionaryPayload];
 //}
 
+
+- (void)pushLocalNotification:(NSString *)title {
+    // 创建通知内容
+    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+    content.title = @"测试通知";
+    content.body = @"长按以查看扩展";
+    content.userInfo = @{@"aa":@"b",@"c":@1};
+    content.categoryIdentifier = @"cate1";
+    content.sound = [UNNotificationSound defaultSound];
+    
+    // 设置触发条件（5秒后触发）
+    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger
+                                                 triggerWithTimeInterval:5
+                                                                 repeats:NO];
+    
+    // 创建通知请求（使用 UUID 作为唯一标识符）
+    NSUUID *uuid = [NSUUID UUID];
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:[uuid UUIDString]
+                                                                              content:content
+                                                                              trigger:trigger];
+    
+    // 添加通知请求到通知中心
+    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request
+                                                         withCompletionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"通知调度失败: %@", error);
+        } else {
+            NSLog(@"通知已调度");
+        }
+    }];
+}
 
 @end

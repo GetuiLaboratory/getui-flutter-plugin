@@ -141,3 +141,6 @@
 ## 0.2.39
 1. compileSdkVersion 改为34
 2. FlutterIntentService bug修复
+
+## 0.2.40
+1. iOS兼容UIScene场景，新增handleSceneWillConnectWithOptions API
