@@ -18,7 +18,10 @@ import com.igexin.sdk.message.QueryTagCmdMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 import com.igexin.sdk.message.UnBindAliasCmdMessage;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -253,23 +256,69 @@ public class FlutterIntentService extends GTIntentService {
     @Override
     public void onNotificationMessageArrived(Context context, GTNotificationMessage message) {
         log("Notification arrived");
-        Map<String, Object> notification = new HashMap<String, Object>();
-        notification.put("messageId",message.getMessageId());
-        notification.put("taskId",message.getTaskId());
-        notification.put("title",message.getTitle());
-        notification.put("content",message.getContent());
-        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(notification), GetuiflutPlugin.StateType.onNotificationMessageArrived);
+        GetuiflutPlugin.transmitMessageReceive(
+                GSON.toJson(gtNotificationMessageToMap(message)),
+                GetuiflutPlugin.StateType.onNotificationMessageArrived);
     }
 
     @Override
     public void onNotificationMessageClicked(Context context, GTNotificationMessage message) {
         log("Notification clicked");
-        Map<String, Object> notification = new HashMap<String, Object>();
-        notification.put("messageId",message.getMessageId());
-        notification.put("taskId",message.getTaskId());
-        notification.put("title",message.getTitle());
-        notification.put("content",message.getContent());
-        GetuiflutPlugin.transmitMessageReceive(GSON.toJson(notification), GetuiflutPlugin.StateType.onNotificationMessageClicked);
+        GetuiflutPlugin.transmitMessageReceive(
+                GSON.toJson(gtNotificationMessageToMap(message)),
+                GetuiflutPlugin.StateType.onNotificationMessageClicked);
+    }
+
+    /**
+     * 通过反射调用 {@link GTNotificationMessage} 上所有无参 public {@code get*} 方法，写入 Map。
+     * SDK 版本增减 getter 时无需改此处代码；调用失败的方法会被跳过。
+     */
+    private static Map<String, Object> gtNotificationMessageToMap(GTNotificationMessage message) {
+        Map<String, Object> map = new HashMap<>();
+        if (message == null) {
+            return map;
+        }
+        for (Method method : message.getClass().getMethods()) {
+            if (!java.lang.reflect.Modifier.isPublic(method.getModifiers())) {
+                continue;
+            }
+            if (method.getParameterTypes().length != 0) {
+                continue;
+            }
+            String name = method.getName();
+            if (!name.startsWith("get") || "getClass".equals(name)) {
+                continue;
+            }
+            String key = getterNameToMapKey(name);
+            if (key == null) {
+                continue;
+            }
+            try {
+                map.put(key, method.invoke(message));
+            } catch (IllegalAccessException e) {
+                Log.w(TAG, "Skip GTNotificationMessage." + name + "()", e);
+            } catch (InvocationTargetException e) {
+                Log.w(TAG, "Skip GTNotificationMessage." + name + "()", e);
+            }
+        }
+        return map;
+    }
+
+    /** {@code getMessageId} -> {@code messageId}，与 Gson 常用字段命名一致 */
+    private static String getterNameToMapKey(String getterName) {
+        if (getterName.length() <= 3 || !getterName.startsWith("get")) {
+            return null;
+        }
+        String base = getterName.substring(3);
+        if (base.isEmpty()) {
+            return null;
+        }
+        if (base.length() >= 2
+                && Character.isUpperCase(base.charAt(0))
+                && Character.isUpperCase(base.charAt(1))) {
+            return base;
+        }
+        return base.substring(0, 1).toLowerCase(Locale.US) + base.substring(1);
     }
 
     // 统一日志记录方法

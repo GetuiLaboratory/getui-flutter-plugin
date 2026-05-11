@@ -144,3 +144,6 @@
 
 ## 0.2.40
 1. iOS兼容UIScene场景，新增handleSceneWillConnectWithOptions API
+2. 
+## 0.2.41
+1. android通知回调补全所有成员变量
