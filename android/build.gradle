@@ -2,9 +2,10 @@ group 'com.getui.getuiflut'
 version '1.0-SNAPSHOT'
 buildscript {
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
         mavenCentral()
         google()
-        jcenter()
     }
 
     dependencies {
@@ -13,12 +14,13 @@ buildscript {
 }
 rootProject.allprojects {
     repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
         mavenCentral()
         //Maven URL地址
         maven {
             url "https://mvn.getui.com/nexus/content/repositories/releases/"
         }
-        jcenter()
         google()
     }
 }
@@ -41,6 +43,6 @@ repositories {
 }
 dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
-     compileOnly('com.getui:gtsdk:3.3.7.0')
+    compileOnly('com.getui:gtsdk:3.3.16.0')
 
 }

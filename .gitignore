@@ -23,4 +23,9 @@ lib/generated/i18n.dart
 
 # FVM Version Cache
 .fvm/
+/.fvmrc
+
+# Local dependency lockfiles
+/pubspec.lock
+/example/pubspec.lock
 
